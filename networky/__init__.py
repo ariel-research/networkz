@@ -1,2 +1,2 @@
 from networkx import *
-from networky.algorithms import *
+from networky import ealgorithms
