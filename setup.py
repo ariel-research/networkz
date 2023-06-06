@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open('requirements.txt') as r:
+    install_requires = r.readlines()
+
 setup(
     name='networky',
     version='1.0.0',
@@ -7,7 +10,7 @@ setup(
     author_email='ariel_research23@gmail.com',
     description='Extended Graph Library on Top of NetworkX',
     packages=['networky'],
-    install_requires=open('requirements.txt').readlines(),
+    install_requires= install_requires,
     scripts=['scripts/update_nx.py'],
 
 )
