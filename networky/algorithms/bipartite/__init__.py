@@ -1,1 +1,1 @@
-from networkx.algoritms.bipartite import *
+from networkx.algorithms.bipartite import *
