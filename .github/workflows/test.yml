@@ -53,13 +53,13 @@ jobs:
 
       - name: Test NetworkY
         run: |
-          pytest --doctest-modules --durations=10 --pyargs networkx
+          pytest --doctest-modules --durations=10 --pyargs networky
 
       - name: Test Dispatching
         # Limit this to only a single combination from the matrix
         if: ${{ (matrix.os == 'ubuntu') && (matrix.python-version == '3.11') }}
         run: |
-          NETWORKX_GRAPH_CONVERT=nx-loopback pytest --doctest-modules --durations=10 --pyargs networkx
+          NETWORKY_GRAPH_CONVERT=nx-loopback pytest --doctest-modules --durations=10 --pyargs networky
 
   extra:
     runs-on: ${{ matrix.os }}
@@ -117,9 +117,9 @@ jobs:
           python -m pip install .
           python -m pip list
 
-      - name: Test NetworkX
+      - name: Test NetworkY
         run: |
-          pytest --doctest-modules --durations=10 --pyargs networkx
+          pytest --doctest-modules --durations=10 --pyargs networky
 
   prerelease:
     runs-on: ${{ matrix.os }}-latest
@@ -142,6 +142,6 @@ jobs:
           pip install .
           pip list
 
-      - name: Test NetworkX
+      - name: Test Networky
         run: |
-          pytest --doctest-modules --durations=10 --pyargs networkx
+          pytest --doctest-modules --durations=10 --pyargs networky
