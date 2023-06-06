@@ -1,1 +1,1 @@
-from networkx.algoritms import *
+from networkx.algorithms import *
