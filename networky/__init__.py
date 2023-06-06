@@ -1,1 +1,1 @@
-from networkx import *
+from networkx.drawing import *
