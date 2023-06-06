@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as r:
+with open('requirements/default.txt') as r:
     install_requires = r.readlines()
 
 setup(
