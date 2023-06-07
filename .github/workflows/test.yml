@@ -142,6 +142,6 @@ jobs:
           pip install .
           pip list
 
-      - name: Test Networky
+      - name: Test NetworkY
         run: |
           pytest --doctest-modules --durations=10 --pyargs networky
