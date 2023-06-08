@@ -1,0 +1,35 @@
+name: example
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  base:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python # Set Python version
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      # Install pip and pytest
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install -r requirements/default.txt
+          python -m pip install -r requirements/test.txt
+          python -m pip install .
+          python -m pip list
+      - name: Test with pytest
+        run: pytest tests.py --doctest-modules networky
