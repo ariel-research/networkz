@@ -1,12 +1,11 @@
 import pytest
 import networky as nx
-import networky.algorithms.bipartite.rank_maximal_matching as rmm
-
+from networky.algorithms.bipartite.rank_maximal_matching import rank_maximal_matching as rmm
 
 class TestRankMaximalMatching:
     def test_rank_maximal_matching_empty_graph(self):
         G = nx.Graph()
-        M = rmm.rank_maximal_matching(G)
+        M = rmm(G)
         assert M == dict()
 
     def test_rank_maximal_matching_no_edges(self):
