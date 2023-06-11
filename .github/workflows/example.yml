@@ -32,4 +32,4 @@ jobs:
           python -m pip install .
           python -m pip list
       - name: Test with pytest
-        run: pytest tests.py --doctest-modules networky
+        run: pytest --doctest-modules
