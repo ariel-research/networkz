@@ -11,6 +11,4 @@ setup(
     description='Extended Graph Library on Top of NetworkX',
     packages=['networky'],
     install_requires= install_requires,
-    scripts=['scripts/update_nx.py'],
-
 )
