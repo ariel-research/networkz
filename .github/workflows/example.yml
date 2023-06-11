@@ -33,8 +33,4 @@ jobs:
           python -m pip install .
           python -m pip list
       - name: Test with pytest
-<<<<<<< HEAD
         run: pytest --doctest-modules
-=======
-        run: pytest --doctest-modules --durations=10 --pyargs networky
->>>>>>> 044357e901fe41c7c98bb464bcf1dfe50e863b0a
