@@ -7,10 +7,10 @@ packages = find_packages()
 
 setup(
     name='networky',
-    version='1.0.1',
+    version='1.0.2',
     author='Ariel University',
-    author_email='ariel_research23@gmail.com',
-    description='Extended Graph Library on Top of NetworkX',
+    author_email='networky@csariel.xyz',
+    description='Extended Graph-Algorithms Library on Top of NetworkX',
     packages=packages,
     install_requires= install_requires,
 )
