@@ -10,11 +10,11 @@ NetworkZ is a library of graph algorithms in Python. It is an extension of the [
 ```
 import networkz as nx
 G = nx.Graph()
-matching = {"a1": "p1", "a2": "p2", "p1": "a1", "p2": "a2"}
 G.add_nodes_from(["a1", "a2"], bipartite=0)
 G.add_nodes_from(["p1", "p2"], bipartite=1)
 G.add_weighted_edges_from([("a1", "p2", 1), ("a1", "p1", 1), ("a2", "p2", 2)])
-M = nx.rank_maximal_matching(G, rank="weight")
+matching = nx.rank_maximal_matching(G, rank="weight")
+print(matching)
 ```
 
 ## Contribution
