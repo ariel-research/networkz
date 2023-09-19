@@ -15,7 +15,7 @@ VERSION = (HERE / NAME / "VERSION").read_text().strip()
 # See https://packaging.python.org/en/latest/guides/single-sourcing-package-version/
 
 setuptools.setup(
-    name='networky',
+    name='networkz',
     packages=setuptools.find_packages(),
     version=VERSION,
     install_requires=REQUIRES,
