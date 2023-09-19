@@ -1,5 +1,5 @@
 import pytest
-import networky as nx
+import networkz as nx
 
 class TestExample:
     def test_ex(self):

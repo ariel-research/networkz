@@ -1,4 +1,4 @@
-import networky as nx
+import networkz as nx
 from networkx.algorithms.bipartite import sets as bipartite_sets
 
 def rank_maximal_matching(G, rank="rank", top_nodes=None):

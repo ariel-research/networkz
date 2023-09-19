@@ -1,5 +1,5 @@
 import pytest
-import networky as nx
+import networkz as nx
 
 class TestRankMaximalMatching:
     def test_rank_maximal_matching_empty_graph(self):

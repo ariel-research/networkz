@@ -1,7 +1,7 @@
 import pathlib
 import setuptools
 
-NAME = "networky"
+NAME = "networkz"
 URL = "https://github.com/ariel-research/" + NAME
 HERE = pathlib.Path(__file__).parent
 print(f"\nHERE = {HERE.absolute()}\n")
@@ -21,7 +21,7 @@ setuptools.setup(
     install_requires=REQUIRES,
 
     author='Ariel University',
-    author_email='networky@csariel.xyz',
+    author_email='networkz@csariel.xyz',
     description='Extended Graph-Algorithms Library on Top of NetworkX',
 
     url=URL,
