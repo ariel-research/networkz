@@ -18,5 +18,7 @@ print(matching)
 ```
 
 ## Contribution
-New additions are welcome! \
+
+New additions are welcome! 
+
 For essential guidance on contributing, consult the [NetworkX Contributor Guide](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst).
