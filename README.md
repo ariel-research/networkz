@@ -38,6 +38,11 @@ See [demo website](https://rmm.csariel.xyz/) for more information.
 
 ## Contribution
 
-New additions are welcome! 
+Any additions or bug-fixes to `networkx` should first be submitted there, according to the [NetworkX Contributor Guide](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst).
 
-For essential guidance on contributing, consult the [NetworkX Contributor Guide](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst).
+If the pull-request is not handled, you are welcome to submit it here too.
+
+
+
+
+
