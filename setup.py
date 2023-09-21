@@ -7,7 +7,8 @@ HERE = pathlib.Path(__file__).parent
 print(f"\nHERE = {HERE.absolute()}\n")
 
 README = (HERE / "README.md").read_text()
-REQUIRES = ["networkx"]
+REQUIRES = (HERE / "requirements.txt").read_text().strip().split("\n")
+REQUIRES = [lin.strip() for lin in REQUIRES]
 
 print(f'\nVERSION = {(HERE / NAME / "VERSION").absolute()}\n')
 VERSION = (HERE / NAME / "VERSION").read_text().strip()
