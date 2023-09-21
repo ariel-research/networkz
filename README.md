@@ -23,7 +23,7 @@ A rank-maximal matching is a matching that maximizes the number of agents who ar
 import networkz as nx
 G = nx.Graph()
 G.add_nodes_from(["agent1", "agent2"], bipartite=0)
-G.add_nodes_from(["p1", "p2"], bipartite=1)
+G.add_nodes_from(["product1", "product2"], bipartite=1)
 G.add_weighted_edges_from([("agent1", "product1", 1), ("agent1", "product2", 1), ("agent2", "product2", 2)])
 matching = nx.rank_maximal_matching(G, rank="weight")
 print(matching)
