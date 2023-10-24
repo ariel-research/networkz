@@ -103,7 +103,7 @@ def rank_maximal_matching(G, rank="rank", top_nodes=None):
     M = nx.bipartite.hopcroft_karp_matching(Gi, left)
     matching_length = len(M)
     free_nodes = find_free_vertices(Gi, M)
-    for i in range(min_rank, max_rank):
+    for i in range(min_rank, max_rank+1):
         even, odd, unreachable = divide_to_sets(Gi, M.items(), free_nodes)
         remove_edges(graph, odd, unreachable, i, rank=rank)
         create_Gi(graph, Gi, i + 1, rank=rank)
