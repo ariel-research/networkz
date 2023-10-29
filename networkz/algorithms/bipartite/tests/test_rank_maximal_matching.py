@@ -206,3 +206,17 @@ class TestRankMaximalMatching:
         G.add_edge("a2", "p1", length=2)
         M = nx.rank_maximal_matching(G, rank="length")
         assert M == matching
+
+    def test_rank_maximal_matching_skipped_ranks(self):
+        result_vector = {1:3, 4:1}
+        G = nx.Graph()
+        G.add_edges_from([("a1","p2"),("a2","p2"),("a3","p4"),("a4","p3"),("a5","p2")], rank=1)
+        G.add_edges_from([("a1","p3"),("a2","p3"),("a3","p2"),("a4","p2"),("a5","p4")], rank=2)      
+        G.add_edges_from([("a1","p1"),("a2","p4"),("a3","p1"),("a4","p1"),("a5","p3")], rank=3)
+        G.add_edges_from([("a1","p4"),("a2","p1"),("a3","p3"),("a4","p4"),("a5","p1")], rank=4)
+        M = nx.rank_maximal_matching(G)
+        from collections import Counter
+        count_ranks = [G[agent][item]['rank'] 
+                       for agent,item in M.items() if agent.startswith('a')]
+        V = Counter(count_ranks)
+        assert result_vector == dict(V)
