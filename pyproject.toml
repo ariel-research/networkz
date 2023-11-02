@@ -2,6 +2,104 @@
 requires = ["setuptools>=46.4.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = "--doctest-modules "
+[project]
+name = 'networkz'
+description = 'Extended Graph-Algorithms Library on Top of NetworkX'
+readme = 'README.MD'
+requires-python = '>=3.8'
+dynamic = ['version']
+keywords = [
+    'Networks',
+    'Graph Theory',
+    'Mathematics',
+    'network',
+    'graph',
+    'discrete mathematics',
+    'math',
+]
+
+dependencies = [
+    "networkx",
+]
+
+[[project.authors]]
+name = 'Ariel University'
+email = 'networkz@csariel.xyz'
+
+[[project.maintainers]]
+name = 'NetworkZ Developers'
+email = 'networkz-discuss@googlegroups.com'
+
+[project.urls]
+"Source Code" = 'https://github.com/ariel-research/networkz'
+
+[project.optional-dependencies]
+default = [
+    'networkx',
+    'numpy>=1.22',
+    'scipy>=1.9,!=1.11.0,!=1.11.1',
+]
+developer = [
+    'changelist==0.4',
+    'pre-commit>=3.2',
+    'mypy>=1.1',
+    'rtoml',
+]
+extra = [
+    'lxml>=4.6',
+    'pygraphviz>=1.11',
+    'pydot>=1.4.2',
+    'sympy>=1.10',
+]
+test = [
+    'pytest>=7.2',
+    'pytest-cov>=4.0',
+]
+
+[tool.setuptools]
+zip-safe = false
+include-package-data = false
+packages = [
+    'networkz',
+    'networkz.algorithms',
+    'networkz.algorithms.bipartite',
+    'networkz.algorithms.approximation',
+    'networkz.classes',
+    'networkz.generators',
+    'networkz.drawing',
+    'networkz.linalg',
+    'networkz.readwrite',
+    'networkz.tests',
+    'networkz.utils',
+]
+platforms = [
+    'Linux',
+    'Mac OSX',
+    'Windows',
+    'Unix',
+]
+
+[tool.setuptools.dynamic.version]
+attr = 'networkz.__version__'
+
+
+[tool.setuptools.package-data]
+networkz = ['tests/*.py']
+"networkz.algorithms" = ['tests/*.py']
+"networkz.algorithms.bipartite" = ['tests/*.py']
+"networkz.algorithms.approximation" = ['tests/*.py']
+
+[tool.ruff]
+line-length = 88
+target-version = 'py39'
+select = [
+    'I',
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ['I']
+
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = 'subgraphviews|reportviews'
