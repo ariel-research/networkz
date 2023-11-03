@@ -35,25 +35,16 @@ email = 'networkz-discuss@googlegroups.com'
 
 [project.optional-dependencies]
 default = [
-    'networkx',
-    'numpy>=1.22',
-    'scipy>=1.9,!=1.11.0,!=1.11.1',
+    'networkx[default]',
 ]
 developer = [
-    'changelist==0.4',
-    'pre-commit>=3.2',
-    'mypy>=1.1',
-    'rtoml',
+    'networkx[developer],
 ]
 extra = [
-    'lxml>=4.6',
-    'pygraphviz>=1.11',
-    'pydot>=1.4.2',
-    'sympy>=1.10',
+    'networkx[extra],
 ]
 test = [
-    'pytest>=7.2',
-    'pytest-cov>=4.0',
+    'networkx[test],
 ]
 
 [tool.setuptools]
