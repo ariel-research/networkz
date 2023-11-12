@@ -16,7 +16,7 @@ This installs the latest version of networkx, and the new algorithms added in ne
 
 ## Usage
 
-### Rank Maximal Matching Algorithm
+### Rank Maximal Matching
 A rank-maximal matching is a matching that maximizes the number of agents who are matched to their 1st priority; subject to that, it maximizes the number of agents matched to their 2nd priority; and so on.
 
 ```
@@ -31,7 +31,20 @@ print(matching)
 
 See [demo website](https://rmm.csariel.xyz/) for more information.
 
-### Social-aware coalition formation
+
+### Maximum-Weight Fractional Matching
+Maximum-weight fractional matching is a graph optimization problem where the goal is to find a set of edges with maximum total weight, allowing for fractional inclusion of edges.
+
+```
+import networkz as nx
+G = nx.Graph()
+G.add_nodes_from(["a1", "a2"])
+G.add_edge("a1", "a2", weight=3)
+F = nx.maximum_weight_fractional_matching(G)
+print(F)
+```
+
+### Social-Aware Coalition Formation
 
 (TODO)
 
