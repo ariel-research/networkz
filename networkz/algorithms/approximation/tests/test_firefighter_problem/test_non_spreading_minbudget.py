@@ -2,8 +2,8 @@ import pytest
 import networkx as nx
 import json
 
-from firefighter_problem.Firefighter_Problem import non_spreading_minbudget
-from firefighter_problem.Utils import parse_json_to_networkx
+from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import non_spreading_minbudget
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
 
 @pytest.fixture
 def sample_json_data():
@@ -23,7 +23,7 @@ def sample_json_data():
     }
 
 def get_graphs():
-    with open("src/graphs.json", "r") as file:
+    with open("networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data)
     return graphs

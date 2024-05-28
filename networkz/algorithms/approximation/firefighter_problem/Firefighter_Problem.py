@@ -5,9 +5,7 @@ import json
 import random
 
 # TODO: fix this shit, when we run tests needs src.Utils, and when we run this, we need Utils only..
-#from networkz.algorithms.approximation.firefighter_problem.Utils import *
-#from networkz.algorithms.approximation.firefighter_problem.Utils import *
-from firefighter_problem.Utils import *
+from networkz.algorithms.approximation.firefighter_problem.Utils import *
 #from Utils import *
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, flag=None) -> list:

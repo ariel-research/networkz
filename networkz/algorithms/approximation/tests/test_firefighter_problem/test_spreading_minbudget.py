@@ -3,8 +3,8 @@ import networkx as nx
 import json
 import random
 
-from firefighter_problem.Firefighter_Problem import spreading_minbudget
-from firefighter_problem.Utils import parse_json_to_networkx, calculate_gamma, calculate_epsilon, find_best_direct_vaccination
+from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import spreading_minbudget
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, calculate_gamma, calculate_epsilon, find_best_direct_vaccination
 
 @pytest.fixture
 def sample_json_data():
@@ -24,7 +24,7 @@ def sample_json_data():
     }
 
 def get_graphs():
-    with open("src/graphs.json", "r") as file:
+    with open("networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data)
     return graphs

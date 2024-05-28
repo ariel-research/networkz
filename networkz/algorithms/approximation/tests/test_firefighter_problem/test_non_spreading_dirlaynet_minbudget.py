@@ -2,18 +2,18 @@ import pytest
 import networkx as nx
 import json
 
-from firefighter_problem.Firefighter_Problem import non_spreading_dirlaynet_minbudget
-from firefighter_problem.Utils import adjust_nodes_capacity
-from firefighter_problem.Utils import create_st_graph
-from firefighter_problem.Utils import parse_json_to_networkx
-from firefighter_problem.Utils import graph_flow_reduction
-from firefighter_problem.Utils import calculate_vaccine_matrix
-from firefighter_problem.Utils import min_cut_N_groups
-from firefighter_problem.Utils import matrix_to_integers_values
-from firefighter_problem.Utils import min_budget_calculation
+from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import non_spreading_dirlaynet_minbudget
+from networkz.algorithms.approximation.firefighter_problem.Utils import adjust_nodes_capacity
+from networkz.algorithms.approximation.firefighter_problem.Utils import create_st_graph
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
+from networkz.algorithms.approximation.firefighter_problem.Utils import graph_flow_reduction
+from networkz.algorithms.approximation.firefighter_problem.Utils import calculate_vaccine_matrix
+from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_N_groups
+from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
+from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
 def get_graphs(): 
-    with open("src/graphs.json", "r") as file:
+    with open("networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data = json_data)
     return graphs
@@ -25,48 +25,48 @@ def test_source_not_in_graph():
     This test checks if the source node is not a real node in the graph.
     """
     with pytest.raises(ValueError, match = "Error: The source node is not on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], -3 [0,5])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], -3, [0,5])
 
     with pytest.raises(ValueError, match = "Error: The source node is not on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 13 [0,1,4])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 13, [0,1,4])
     
     with pytest.raises(ValueError, match = "Error: The source node is not on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 15 [0,6,7])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 15, [0,6,7])
 
     with pytest.raises(ValueError, match = "Error: The source node is not on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1 [1,3,5,7])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1, [1,3,5,7])
 
 def test_target_not_in_graph():
     """
     This test checks if a node we're trying to save is not in the graph.
     """
     with pytest.raises(ValueError, match = "Error: Not all nodes we're trying to save are on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0 [1,5,7]) #7#
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [1,5,7]) #7#
 
     with pytest.raises(ValueError, match = "Error: Not all nodes we're trying to save are on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1 [0,2,-1,9]) #-1,9#
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0,2,-1,9]) #-1,9#
     
     with pytest.raises(ValueError, match = "Error: Not all nodes we're trying to save are on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 4 [0,1,2,11,12,13,14]) #11,12,13,14#
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 4, [0,1,2,11,12,13,14]) #11,12,13,14#
 
     with pytest.raises(ValueError, match = "Error: Not all nodes we're trying to save are on the graph"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 0 [1,3,5,7,15,20]) #15,20#
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 0, [1,3,5,7,15,20]) #15,20#
 
 def test_source_is_target():
     """
     This test checks if we're trying to save a source node.
     """
     with pytest.raises(ValueError, match = "Error: The source node can not be a part of the targets vector"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0 [0,5])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [0,5])
 
     with pytest.raises(ValueError, match = "Error: The source node can not be a part of the targets vector"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1 [0,1,4])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0,1,4])
     
     with pytest.raises(ValueError, match = "Error: The source node can not be a part of the targets vector"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 6 [0,6,7])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 6, [0,6,7])
 
     with pytest.raises(ValueError, match = "Error: The source node can not be a part of the targets vector"):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3 [1,3,5,7])
+        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3, [1,3,5,7])
     
 
 #Test 1
@@ -248,7 +248,7 @@ def test_calculate_vaccine_matrix():
     #checking equality
     matrix_2 = [[1.5, 0.5]
                 [1, 0.5]
-                [0,0.5]]
+                [0, 0.5]]
     assert set(calculate_vaccine_matrix(layers_2,N_2_groups)) == matrix_2
 
     #Test 3
@@ -261,9 +261,9 @@ def test_calculate_vaccine_matrix():
     #Test 4
     #checking equality
     matrix_4 = [[  0, 0.5, 1/3, 0, 0]
-                [  0, 0.5, 1/3, 0 ,0]
-                [  0,  0, 1/3, 0 ,0]
-                [  0,  0,  0, 0 ,0]
+                [  0, 0.5, 1/3, 0, 0]
+                [  0,  0, 1/3, 0, 0]
+                [  0,  0,  0, 0, 0]
                 [  0,  0,  0,   0, 0]]
     assert set(calculate_vaccine_matrix(layers_4,N_4_groups)) == matrix_4
     

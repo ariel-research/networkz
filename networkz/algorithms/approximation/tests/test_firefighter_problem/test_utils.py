@@ -3,7 +3,7 @@ import pytest
 import sys
 import os
 
-from firefighter_problem.Utils import *
+from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 @pytest.fixture
 def test_graph():

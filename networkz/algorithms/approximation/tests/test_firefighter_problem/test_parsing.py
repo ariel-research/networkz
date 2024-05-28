@@ -1,7 +1,7 @@
 import pytest
 import networkx as nx
 
-from firefighter_problem.Utils import parse_json_to_networkx
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
 
 @pytest.fixture
 def sample_json_data():
