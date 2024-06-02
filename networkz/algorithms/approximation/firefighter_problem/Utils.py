@@ -174,7 +174,7 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
-    display_graph(graph)
+    #display_graph(graph)
     return bool(infected_nodes)
 
 def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
@@ -195,7 +195,7 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node) 
-    display_graph(graph)              
+    #display_graph(graph)              
     return
 
 def vaccinate_node(graph:nx.DiGraph, node:int)->None:
@@ -208,7 +208,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     """
     graph.nodes[node]['status'] = 'directly vaccinated'
     print("node " + f'{node}' + " has been directly vaccinated")
-    display_graph(graph)
+    #display_graph(graph)
     return
 
 def clean_graph(graph:nx.DiGraph)->None:
