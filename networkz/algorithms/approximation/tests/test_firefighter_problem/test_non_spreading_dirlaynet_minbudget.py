@@ -239,7 +239,7 @@ def test_min_cut_N_groups():
     result_4 = min_cut_N_groups(reduction_G4, 0, layers_4)
     assert sort_dict_values(result_4) == sort_dict_values(N4_groups_check)
     
-def test_calculate_vaccine_matrix(): 
+def test_calculate_vaccine_matrix(): #TODO: This tets is not working for now, need to fix its imeplemntation!
     """
     This test checks that the calculations made to create the triangular matrix from the min-cut nodes are correct.
     A matrix is valid if, for any column j, the column sum is exactly |Nj|.

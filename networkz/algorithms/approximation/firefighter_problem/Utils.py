@@ -281,7 +281,7 @@ def graph_flow_reduction(graph:nx.DiGraph, source:int)->nx.DiGraph:
             H.add_edge(in_node, out_node, weight=graph.nodes[node]['capacity'])
     for edge in graph.edges:
         H.add_edge(f'{edge[0]}_out', f'{edge[1]}_in', weight=float('inf'))
-    display_graph(H)
+    # display_graph(H)
     return H
 
 def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
@@ -314,99 +314,99 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     return groups
 
 
-def calculate_vaccine_matrix(layers:list, min_cut_nodes:list)->np.matrix: 
+def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix: 
+    "TODO: Fix this to work, its not working for now with tests.."
+
     """
     Calculate the vaccine matrix based on the calculation in the article at the DirLayNet algorithm section.
 
     Parameters:
     - layers (list): List of nodes grouped by layers.
-    - min_cut_nodes (list): List of nodes in the minimum cut.
+    - min_cut_nodes_group (list): List of nodes in the minimum cut grouped into layers of them.
 
     Returns:
     - matrix (np.matrix): Vaccine matrix.
     """
-    nodes_list = [] # = N_i 
-    #print(layers, min_cut_nodes)
-    for i in range(1,len(layers)):
-        common_elements = set(min_cut_nodes) & set(layers[i])
-        nodes_list.append(common_elements)
-    #print(nodes_list)
-    matrix = np.zeros((len(layers)-1, len(layers)-1))
-    for i in range (len(layers)-1):
-        for j in range(i, len(layers)-1):
-            matrix[i][j] = ((len(nodes_list[j])/(j+1))) # here we can chose ceil or floor.
-    #print(matrix)
-    return matrix
-    
-import numpy as np
-import networkx as nx
 
-import numpy as np
-import networkx as nx
+    print("Layers:", layers)
+    print("Min cut nodes grouped:", min_cut_nodes_grouped)
+    # Mij ': =  Nj j , 1≤i≤j≤l
+    # Determine the size of the matrix based on the number of groups
+    matrix_length = max(min_cut_nodes_grouped.keys()) 
+    matrix = np.zeros((matrix_length, matrix_length))  # Use a tuple for the shape
+
+    for j in range(matrix_length):
+        for i in range(j+1):
+                N_j = len(min_cut_nodes_grouped[j+1])
+                value = N_j / (j + 1) 
+                matrix[j][i] = value
+
+    print("MATRIX IS ->>>>>>>>>", matrix)
+    return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
+    "TODO: keep testing this, it should be ok, but only for sure after done with the above method"
     """
-    Convert matrix values to integers.
-    
-    Parameters:
-    - matrix (np.matrix): Input fractional matrix.
-    
-    Returns:
-    - np.matrix: Integral matrix satisfying the row-sum and column-sum constraints.
-    """
-    num_rows, num_cols = matrix.shape
-    floor_matrix = np.floor(matrix)
-    ceil_matrix = np.ceil(matrix)
-    integral_matrix = np.copy(floor_matrix)
+    Convert a matrix with fractional entries to an integral matrix such that
+    the row and column sums are either the floor or ceiling of the original sums.
 
-    # Calculate row sums and column sums for the original matrix
-    row_sums = np.sum(matrix, axis=1)
-    col_sums = np.sum(matrix, axis=0)
+    Parameters:
+    matrix (np.matrix): The input matrix with fractional entries.
+
+    Returns:
+    np.matrix: The converted integral matrix.
+    """
+    # dimensions of the matrix
+    rows, cols = matrix.shape
     
-    # Calculate required row and column sums for the integral matrix
-    required_row_sums = np.round(row_sums).astype(int)
-    required_col_sums = np.round(col_sums).astype(int)
+    # row and column sums
+    row_sums = np.array(matrix.sum(axis=1)).flatten()
+    col_sums = np.array(matrix.sum(axis=0)).flatten()
     
-    # Construct flow network
+    print("Row sums:", row_sums)
+    print("Column sums:", col_sums)
+    
     G = nx.DiGraph()
     
-    # Add source and sink nodes
-    source = 'source'
-    sink = 'sink'
+    # add source and sink nodes
+    source = 's'
+    sink = 't'
     G.add_node(source)
     G.add_node(sink)
     
-    # Add nodes for rows and columns
-    for i in range(num_rows):
-        G.add_node(f"row_{i}")
-    for j in range(num_cols):
-        G.add_node(f"col_{j}")
+    # add nodes for rows and columns
+    row_nodes = ['r{}'.format(i) for i in range(rows)]
+    col_nodes = ['c{}'.format(j) for j in range(cols)]
+    G.add_nodes_from(row_nodes)
+    G.add_nodes_from(col_nodes)
     
-    # Add edges from source to row nodes with capacities as required row sums
-    for i in range(num_rows):
-        G.add_edge(source, f"row_{i}", capacity=required_row_sums[i])
+    # add edges from source to row nodes with capacities as the ceiling of row sums
+    for i in range(rows):
+        G.add_edge(source, row_nodes[i], capacity=np.ceil(row_sums[i]))
     
-    # Add edges from column nodes to sink with capacities as required column sums
-    for j in range(num_cols):
-        G.add_edge(f"col_{j}", sink, capacity=required_col_sums[j])
+    # add edges from column nodes to sink with capacities as the ceiling of column sums
+    for j in range(cols):
+        G.add_edge(col_nodes[j], sink, capacity=np.ceil(col_sums[j]))
     
-    # Add edges between row and column nodes with capacities based on the floor and ceiling values
-    for i in range(num_rows):
-        for j in range(num_cols):
-            capacity = ceil_matrix[i, j] - floor_matrix[i, j]
-            if capacity > 0:
-                G.add_edge(f"row_{i}", f"col_{j}", capacity=capacity)
+    # add edges from row nodes to column nodes with capacity 1
+    for i in range(rows):
+        for j in range(cols):
+            G.add_edge(row_nodes[i], col_nodes[j], capacity=1)
     
-    # Compute the maximum flow
+    # computes the maximum flow
     flow_value, flow_dict = nx.maximum_flow(G, source, sink)
     
-    # Adjust the integral matrix based on the flow
-    for i in range(num_rows):
-        for j in range(num_cols):
-            if flow_dict.get((f"row_{i}", f"col_{j}"), 0) > 0:
-                integral_matrix[i, j] += 1
-    print("MATRIX!!!!!!______>>>>", integral_matrix)
-    return integral_matrix
+    # builds the integral matrix
+    integral_matrix = np.zeros_like(matrix, dtype=int)
+    for i in range(rows):
+        for j in range(cols):
+            if flow_dict[row_nodes[i]][col_nodes[j]] > 0:
+                integral_matrix[i, j] = np.ceil(matrix[i, j])
+            else:
+                integral_matrix[i, j] = np.floor(matrix[i, j])
+    print("MATRIXXXX->>>>", integral_matrix)
+    return np.matrix(integral_matrix)
+
 
 def min_budget_calculation(matrix: np.matrix) -> int:
     """
@@ -422,7 +422,6 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     row_sums = integral_matrix.sum(axis=1)
     min_budget = int(row_sums.max())
     return min_budget
-
 
 
 "Heuristic approach:"
