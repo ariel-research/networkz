@@ -51,6 +51,8 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
         raise ValueError("Error: The budget must be at least 1")
         exit()
     validate_parameters(Graph,source,targets)
+    print("starting the spreading maxsave function with a source node " +  f'{source}' + ", the budget is " + f'{budget}' +", and the targets are: " + str(targets))
+
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
@@ -122,6 +124,8 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
     3
     """
     validate_parameters(Graph,source,targets)
+    print("starting the spreading minbudget function with a source node " +  f'{source}' + ", and the targets are: " + str(targets))
+
     original_targets = list(targets)
     direct_vaccinations = calculate_gamma(Graph, source, targets)[1]
     min_value = 1
@@ -139,8 +143,10 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
         common_elements = set(nodes_saved) & set(original_targets)
 
         if len(common_elements) == len(original_targets):
+            print("the current budget " + f'{middle}' + " has saved all the targets!")
             max_value = middle
         else:
+            print("the current budget " + f'{middle}' + " didn't saved all the targets!")
             min_value = middle + 1
 
         middle = math.floor((min_value + max_value) / 2)
@@ -225,6 +231,8 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         raise ValueError("Error: The budget must be at least 1")
         exit()
     validate_parameters(Graph,source,targets)
+    print("starting the heuristic maxsave function with a source node " +  f'{source}' + ", the budget is " + f'{budget}' +", the targets are: " + str(targets) + ", and the function is spreading=" + str(spreading))
+
     clean_graph(Graph)
     infected_nodes = []
     vaccinated_nodes = []
@@ -255,6 +263,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
 
 def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bool)-> int:
     validate_parameters(Graph,source,targets)
+    print("starting the heuristic minbudget function with a source node " +  f'{source}' + ", the targets are: " + str(targets) + ", and the function is spreading=" + str(spreading))
     original_targets = list(targets)
     min_value = 1
     max_value = len(targets)
@@ -270,8 +279,10 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
                 break
         
         if saved_everyone:
+            print("the current budget " + f'{middle}' + " has saved all the targets!")
             max_value = middle
         else:
+            print("the current budget " + f'{middle}' + " didn't saved all the targets!")
             min_value = middle + 1
 
         middle = math.floor((min_value + max_value) / 2)
