@@ -220,7 +220,7 @@ def clean_graph(graph:nx.DiGraph)->None:
 
 "Non-Spreading:"
 
-def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
+def adjust_nodes_capacity(graph: nx.DiGraph, source: int) -> list:
     """
     Adjust the capacity of nodes based on the layer they belong to.
     The capacity is based on the formula in the article at the DirLayNet algorithm section.
@@ -232,14 +232,18 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     Returns:
     - layers (list): List of nodes grouped by layers.
     """
-    layers = (list(nx.bfs_layers(graph,source)))
-    harmonic_sum = 0.0
-    for i in range(1,len(layers)):
-        harmonic_sum = harmonic_sum + 1/i
-    for index in range(1,len(layers)):
-        for node in layers[index]:
-            graph.nodes[node]['capacity'] = 1/(index*harmonic_sum)
-    #print("Layers: ", layers)       
+    layers = list(nx.bfs_layers(graph, source))
+    total_layers = len(layers)
+    
+    # Compute the harmonic sum for the total number of layers
+    harmonic_sum = sum(1 / i for i in range(1, total_layers))
+
+    for index, layer in enumerate(layers):
+        if index == 0:
+            continue  # Skip the source layer
+        for node in layer:
+            graph.nodes[node]['capacity'] = 1 / (index * harmonic_sum)
+            print("CAPACITY ->>>>>>>>>>>>>>>>>", 1 / (index * harmonic_sum))
     return layers
 
 def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
