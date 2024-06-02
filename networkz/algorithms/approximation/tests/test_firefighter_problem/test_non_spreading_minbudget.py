@@ -97,6 +97,3 @@ def test_save_subgroup_vertices():
     assert 4 > non_spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,3,5,6,8,9]) #answer is 1
     assert 2 == non_spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [0,2,5,6]) #answer is 2
     assert 3 == non_spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14]) #answer is 3
-
-def test_correct_st_cut(): 
-    pass

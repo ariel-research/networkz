@@ -5,8 +5,8 @@ import json
 import random
 
 # TODO: fix this shit, when we run tests needs src.Utils, and when we run this, we need Utils only..
-from networkz.algorithms.approximation.firefighter_problem.Utils import *
-#from Utils import *
+#from networkz.algorithms.approximation.firefighter_problem.Utils import *
+from Utils import *
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, flag=None) -> list:
     """
@@ -219,10 +219,13 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     return min_budget
 
 def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading:bool,  flag=None) -> list:
+    """ This heuristic approach is based on the local search problem. 
+    We will select the best neighbor that save the most nodes from targets"""
     if budget < 1:
         raise ValueError("Error: The budget must be at least 1")
         exit()
     validate_parameters(Graph,source,targets)
+    clean_graph(Graph)
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
@@ -244,35 +247,29 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         if flag is not None:
             # only for min budget - a stoping condition in case we saved all nodes or one of the target nodes in infected 
             if len(targets)==0 or any(node in infected_nodes for node in targets):
-                clean_graph(Graph)
                 return vaccination_strategy
         
         time_step = time_step + 1
     
-    clean_graph(Graph)
     return vaccination_strategy
 
 def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bool)-> int:
     validate_parameters(Graph,source,targets)
     original_targets = list(targets)
-    direct_vaccinations = calculate_gamma(Graph, source, targets)[1]
     min_value = 1
     max_value = len(targets)
     middle = math.floor((min_value + max_value) / 2)
+    saved_everyone = True
 
     while min_value < max_value:
-        strategy = heuristic_maxsave(Graph, middle, source, targets, spreading, True)
-        nodes_saved = set()
+        heuristic_maxsave(Graph, middle, source, targets, spreading, True)
 
-        for option in strategy:
-            # works good for spreading. for non-spreading, we need to find a solution for the use of direct_vaccination
-            list_of_nodes = direct_vaccinations.get(option)
-            nodes_saved.update(list_of_nodes)
-
-        common_elements = set(nodes_saved) & set(original_targets)
-        print(common_elements)
-
-        if len(common_elements) == len(original_targets):
+        for node in original_targets:
+            if Graph.nodes[node]['status'] == 'infected':
+                saved_everyone = False
+                break
+        
+        if saved_everyone:
             max_value = middle
         else:
             min_value = middle + 1
@@ -283,11 +280,11 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     return middle
     
 if __name__ == "__main__":
-    import doctest
-    doctest.testmod(verbose=True)
+    #import doctest
+    #doctest.testmod(verbose=True)
 
     G3 = nx.DiGraph() 
     G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
     G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
-    print(heuristic_minbudget(G3,0,[2,6,1,8], False))
-    print(spreading_minbudget(G3,0,[2,6,1,8]))
+    print(heuristic_minbudget(G3,0,[2,6,1,8], True))
+    #print(spreading_minbudget(G3,0,[2,6,1,8]))
