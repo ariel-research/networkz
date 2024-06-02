@@ -304,7 +304,7 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     
     # Populate the groups dictionary
     for item in flow_graph:
-        node = item.split('_')
+        node , suffix = item.split('_')
         node = int(node)
         for i, layer_nodes in enumerate(layers):
             if node in layer_nodes:
