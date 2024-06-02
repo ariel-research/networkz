@@ -220,7 +220,7 @@ def clean_graph(graph:nx.DiGraph)->None:
 
 "Non-Spreading:"
 
-def adjust_nodes_capacity(graph: nx.DiGraph, source: int) -> list:
+def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     """
     Adjust the capacity of nodes based on the layer they belong to.
     The capacity is based on the formula in the article at the DirLayNet algorithm section.
@@ -232,18 +232,14 @@ def adjust_nodes_capacity(graph: nx.DiGraph, source: int) -> list:
     Returns:
     - layers (list): List of nodes grouped by layers.
     """
-    layers = list(nx.bfs_layers(graph, source))
-    total_layers = len(layers)
-    
-    # Compute the harmonic sum for the total number of layers
-    harmonic_sum = sum(1 / i for i in range(1, total_layers))
-
-    for index, layer in enumerate(layers):
-        if index == 0:
-            continue  # Skip the source layer
-        for node in layer:
-            graph.nodes[node]['capacity'] = 1 / (index * harmonic_sum)
-            print("CAPACITY ->>>>>>>>>>>>>>>>>", 1 / (index * harmonic_sum))
+    layers = (list(nx.bfs_layers(graph,source)))
+    harmonic_sum = 0.0
+    for i in range(1,len(layers)):
+        harmonic_sum = harmonic_sum + 1/i
+    for index in range(1,len(layers)):
+        for node in layers[index]:
+            graph.nodes[node]['capacity'] = 1/(index*harmonic_sum)
+    # print("Layers: ", layers)       
     return layers
 
 def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
@@ -288,20 +284,35 @@ def graph_flow_reduction(graph:nx.DiGraph, source:int)->nx.DiGraph:
     display_graph(H)
     return H
 
-def min_cut_N_groups(graph:nx.DiGraph, source:int) -> list: 
+def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     """
     Find the minimum cut and group nodes accordingly.
 
     Parameters:
     - graph (nx.DiGraph): Graph after flow reduction.
     - source (int): Source node.
+    - layers (list): List of lists, where each sublist contains nodes belonging to that layer.
 
     Returns:
-    - n_groups (list): List of nodes in the minimum cut.
+    - groups (dict): Dictionary with layers as keys and lists of nodes in the minimum cut as values.
     """
-    flow_graph = algo.minimum_st_node_cut(graph,f'{source}_out','t_in') #run algo on the graph after reduction and get the min-cut
-    n_groups = {int(item.split('_')[0]) for item in flow_graph} # split it to the groups accordingly.
-    return n_groups
+    # Compute the minimum cut
+    flow_graph = algo.minimum_st_node_cut(graph, f'{source}_out', 't_in')
+    
+    # Initialize the groups dictionary with empty lists for each layer index
+    groups = {i+1: [] for i in range(len(layers)-1)}
+    
+    # Populate the groups dictionary
+    for item in flow_graph:
+        node = item.split('_')
+        node = int(node)
+        for i, layer_nodes in enumerate(layers):
+            if node in layer_nodes:
+                groups[i].append(node)
+                break
+
+    return groups
+
 
 def calculate_vaccine_matrix(layers:list, min_cut_nodes:list)->np.matrix: 
     """

@@ -87,7 +87,7 @@ layers_1 = adjust_nodes_capacity(graph_1, 0) # src is 0
 targets_1 = [1, 2, 3]  # saving 1,2,3
 G1 = create_st_graph(graph_1, targets_1)
 reduction_G1 = graph_flow_reduction(G1, 0)
-N_1_groups = min_cut_N_groups(reduction_G1, 0)
+N_1_groups = min_cut_N_groups(reduction_G1, 0,layers_1)
 matrix_1 = calculate_vaccine_matrix(layers_1, N_1_groups)
 integer_matrix_1 = matrix_to_integers_values(matrix_1) 
 min_budget_1 = min_budget_calculation(integer_matrix_1)
@@ -99,7 +99,7 @@ layers_2 = adjust_nodes_capacity(graph_2, 0)  # src is 0
 targets_2 = [2, 4]  # saving 2,4
 G2 = create_st_graph(graph_2, targets_2)
 reduction_G2 = graph_flow_reduction(G2, 0) 
-N_2_groups = min_cut_N_groups(reduction_G2, 0)
+N_2_groups = min_cut_N_groups(reduction_G2, 0, layers_2)
 matrix_2 = calculate_vaccine_matrix(layers_2, N_2_groups)
 integer_matrix_2 = matrix_to_integers_values(matrix_2)
 min_budget_2 = min_budget_calculation(integer_matrix_2)
@@ -111,7 +111,7 @@ layers_3 = adjust_nodes_capacity(graph_3, 0)  # src is 0
 targets_3 = [1, 5, 7]  # saving 1,5,7
 G3 = create_st_graph(graph_3, targets_3)
 reduction_G3 = graph_flow_reduction(G3, 0)
-N_3_groups = min_cut_N_groups(reduction_G3, 0)
+N_3_groups = min_cut_N_groups(reduction_G3, 0, layers_3)
 matrix_3 = calculate_vaccine_matrix(layers_3, N_3_groups)
 integer_matrix_3 = matrix_to_integers_values(matrix_3)
 min_budget_3 = min_budget_calculation(integer_matrix_3)
@@ -123,7 +123,7 @@ layers_4 = adjust_nodes_capacity(graph_4, 0)  # src is 0
 targets_4 = [4, 5, 6, 8]  # saving 4,5,6,8
 G4 = create_st_graph(graph_4, targets_4)
 reduction_G4 = graph_flow_reduction(G4, 0)
-N_4_groups = min_cut_N_groups(reduction_G4, 0)
+N_4_groups = min_cut_N_groups(reduction_G4, 0, layers_4)
 matrix_4 = calculate_vaccine_matrix(layers_4, N_4_groups)
 integer_matrix_4 = matrix_to_integers_values(matrix_4)
 min_budget_4 = min_budget_calculation(integer_matrix_4)
@@ -212,25 +212,32 @@ def test_min_cut_N_groups():
     """
     This test validates the nodes taken from the min-cut create the right groups (N_1...N_l).
     """
+    def sort_dict_values(d): #| this is for sorting purposes , cases where [1,2] or [2,1] it does not really matters as we need to vaccinate them.
+        return {k: sorted(v) for k, v in d.items()}
+
     # Test 1 
     # checking equality
-    N1_groups_check = [{1, 2}, set(), set(), set()]
-    assert min_cut_N_groups(reduction_G1, 0) == N1_groups_check
+    N1_groups_check = {1: [1, 2], 2: [], 3: [], 4: []}
+    result_1 = min_cut_N_groups(reduction_G1, 0, layers_1)
+    assert sort_dict_values(result_1) == sort_dict_values(N1_groups_check)
 
     # Test 2
     # checking equality
-    N2_groups_check = [{2}, {4}]
-    assert min_cut_N_groups(reduction_G2, 0) == N2_groups_check
+    N2_groups_check = {1: [2], 2: [4]}
+    result_2 = min_cut_N_groups(reduction_G2, 0, layers_2)
+    assert sort_dict_values(result_2) == sort_dict_values(N2_groups_check)
 
     # Test 3
     # checking equality
-    N3_groups_check = [{1}, set(), {7}]
-    assert min_cut_N_groups(reduction_G3, 0) == N3_groups_check
+    N3_groups_check = {1: [1], 2: [], 3: [7]}
+    result_3 = min_cut_N_groups(reduction_G3, 0, layers_3)
+    assert sort_dict_values(result_3) == sort_dict_values(N3_groups_check)
 
     # Test 4
     # checking equality
-    N4_groups_check = [set(), {4}, {5}, set(), set()]
-    assert min_cut_N_groups(reduction_G4, 0) == N4_groups_check
+    N4_groups_check = {1: [], 2: [4], 3: [5], 4: [], 5: []}
+    result_4 = min_cut_N_groups(reduction_G4, 0, layers_4)
+    assert sort_dict_values(result_4) == sort_dict_values(N4_groups_check)
     
 def test_calculate_vaccine_matrix(): 
     """
