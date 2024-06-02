@@ -175,37 +175,31 @@ def test_create_st_graph() :
     """
     #Test1
     #edges check
-    assert set(graph_1.__contains__("t")) == True
+    assert "t" in graph_1
     assert set(graph_1.has_edge(1,"t")) == True
     assert set(graph_1.has_edge(2,"t")) == True
     assert set(graph_1.has_edge(3,"t")) == True
 
     #Test2
     #edges check
-    assert set(graph_2.__contains__("t")) == True
+    assert "t" in graph_2
     assert set(graph_2.has_edge(2,"t")) == True
     assert set(graph_2.has_edge(4,"t")) == True
 
     #Test3
     #edges check
-    assert set(graph_3.__contains__("t")) == True
+    assert "t" in graph_3
     assert set(graph_3.has_edge(1,"t")) == True
     assert set(graph_3.has_edge(5,"t")) == True
     assert set(graph_3.has_edge(7,"t")) == True
 
     #Test4
     #edges check
-    assert set(graph_4.__contains__("t")) == True
+    assert "t" in graph_4
     assert set(graph_4.has_edge(4,"t")) == True
     assert set(graph_4.has_edge(5,"t")) == True
     assert set(graph_4.has_edge(6,"t")) == True
     assert set(graph_4.has_edge(8,"t")) == True
-
-def test_graph_flow_reduction():  #TBD
-    """
-    This test validates if the redcution is correct.
-    """
-    pass
 
 def test_min_cut_N_groups(): 
     """
@@ -214,22 +208,22 @@ def test_min_cut_N_groups():
     #Test 1 
     #checking equality
     N1_groups_check = [{1, 2}, set(), set(), set()]
-    assert set(min_cut_N_groups(reduction_G1)) == N1_groups_check
+    assert set(min_cut_N_groups(reduction_G1,0)) == N1_groups_check
 
     #Test 2
     #checking equality
     N2_groups_check = [{2},{4}]
-    assert set(min_cut_N_groups(reduction_G2)) == N2_groups_check
+    assert set(min_cut_N_groups(reduction_G2,0)) == N2_groups_check
 
     #Test 3
     #checking equality
     N3_groups_check = [{1},set(),{7}]
-    assert set(min_cut_N_groups(reduction_G3)) == N3_groups_check
+    assert set(min_cut_N_groups(reduction_G3,0)) == N3_groups_check
 
     #Test 3
     #checking equality
     N4_groups_check = [set(), {4}, {5}, set(), set()]
-    assert set(min_cut_N_groups(reduction_G4)) == N4_groups_check
+    assert set(min_cut_N_groups(reduction_G4,0)) == N4_groups_check
     
 def test_calculate_vaccine_matrix(): 
     """

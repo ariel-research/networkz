@@ -323,19 +323,77 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes:list)->np.matrix:
     #print(matrix)
     return matrix
     
-def matrix_to_integers_values(matrix:np.matrix) -> np.matrix: #TODO: THIS 
+import numpy as np
+import networkx as nx
+
+import numpy as np
+import networkx as nx
+
+def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     """
     Convert matrix values to integers.
-
+    
     Parameters:
-    - matrix (np.matrix): Input matrix.
-
+    - matrix (np.matrix): Input fractional matrix.
+    
     Returns:
-    - np.matrix: Matrix with integer values.
+    - np.matrix: Integral matrix satisfying the row-sum and column-sum constraints.
     """
-    return
+    num_rows, num_cols = matrix.shape
+    floor_matrix = np.floor(matrix)
+    ceil_matrix = np.ceil(matrix)
+    integral_matrix = np.copy(floor_matrix)
 
-def min_budget_calculation(matrix:np.matrix) -> int :
+    # Calculate row sums and column sums for the original matrix
+    row_sums = np.sum(matrix, axis=1)
+    col_sums = np.sum(matrix, axis=0)
+    
+    # Calculate required row and column sums for the integral matrix
+    required_row_sums = np.round(row_sums).astype(int)
+    required_col_sums = np.round(col_sums).astype(int)
+    
+    # Construct flow network
+    G = nx.DiGraph()
+    
+    # Add source and sink nodes
+    source = 'source'
+    sink = 'sink'
+    G.add_node(source)
+    G.add_node(sink)
+    
+    # Add nodes for rows and columns
+    for i in range(num_rows):
+        G.add_node(f"row_{i}")
+    for j in range(num_cols):
+        G.add_node(f"col_{j}")
+    
+    # Add edges from source to row nodes with capacities as required row sums
+    for i in range(num_rows):
+        G.add_edge(source, f"row_{i}", capacity=required_row_sums[i])
+    
+    # Add edges from column nodes to sink with capacities as required column sums
+    for j in range(num_cols):
+        G.add_edge(f"col_{j}", sink, capacity=required_col_sums[j])
+    
+    # Add edges between row and column nodes with capacities based on the floor and ceiling values
+    for i in range(num_rows):
+        for j in range(num_cols):
+            capacity = ceil_matrix[i, j] - floor_matrix[i, j]
+            if capacity > 0:
+                G.add_edge(f"row_{i}", f"col_{j}", capacity=capacity)
+    
+    # Compute the maximum flow
+    flow_value, flow_dict = nx.maximum_flow(G, source, sink)
+    
+    # Adjust the integral matrix based on the flow
+    for i in range(num_rows):
+        for j in range(num_cols):
+            if flow_dict.get((f"row_{i}", f"col_{j}"), 0) > 0:
+                integral_matrix[i, j] += 1
+    print("MATRIX!!!!!!______>>>>", integral_matrix)
+    return integral_matrix
+
+def min_budget_calculation(matrix: np.matrix) -> int:
     """
     Calculate the minimum budget from the matrix.
 
@@ -345,16 +403,12 @@ def min_budget_calculation(matrix:np.matrix) -> int :
     Returns:
     - int: Minimum budget.
     """
-    # integral_matrix = matrix_to_integers_values(matrix) TODO : make this work.
-    i = j = 0
-    matrix_size = len(matrix[i])
-    row_sum = [0]*matrix_size
-    for i in range(matrix_size):
-        for j in range(matrix_size):
-            #print(matrix[i][j])
-            row_sum[i] += matrix[i][j]
-    #print(row_sum)
-    return int(max(row_sum))
+    integral_matrix = matrix_to_integers_values(matrix)
+    row_sums = integral_matrix.sum(axis=1)
+    min_budget = int(row_sums.max())
+    return min_budget
+
+
 
 "Heuristic approach:"
 
