@@ -140,6 +140,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
         if(graph.nodes[option[0]]['status'] == 'target'):
             nodes_list = direct_vaccinations.get(option)
             common_elements = set(nodes_list) & set(targets)
+            print("the direct vaccination " + str(option) + " is saving the nodes " + str(common_elements))
             if len(common_elements) > max_number:
                 best_vaccination = option
                 nodes_saved = common_elements
@@ -148,8 +149,8 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
     if nodes_saved is not None:
         targets[:] = [element for element in targets if element not in nodes_saved]
     
-    #if best_vaccination != ():
-       # print("The best direct vaccination is: " + str(best_vaccination) + " and it's saves nodes: " + str(nodes_saved))
+    if best_vaccination != ():
+        print("The best direct vaccination is: " + str(best_vaccination) + " and it's saves nodes: " + str(nodes_saved))
     return best_vaccination
 
 def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
@@ -169,6 +170,7 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
             if graph.nodes[neighbor]['status'] == 'target':
                 graph.nodes[neighbor]['status'] = 'infected'
                 new_infected_nodes.append(neighbor)
+                print("node " + f'{neighbor}' + " has been infected from node " + f'{node}')
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
@@ -189,6 +191,7 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
             if graph.nodes[neighbor]['status'] == 'target':
                 graph.nodes[neighbor]['status'] = 'vaccinated'
                 new_vaccinated_nodes.append(neighbor)
+                print("node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node) 
@@ -204,6 +207,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     - node (int): Node to be vaccinated.
     """
     graph.nodes[node]['status'] = 'directly vaccinated'
+    print("node " + f'{node}' + " has been directly vaccinated")
     #display_graph(graph)
     return
 
@@ -381,10 +385,16 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
 
     for node in optional_nodes:
         if graph.nodes[node]['status'] == 'target':
-            nodes_list = list(graph.neighbors(node))
+            # for each node that is target, we will add only his nighbors that are target as well
+            neighbors_list = list(graph.neighbors(node))
+            target_neighbors = set()
+            for neighbor in neighbors_list:
+                if graph.nodes[neighbor]['status'] == 'target':
+                    target_neighbors.add(neighbor)
             if node in targets:
-                nodes_list.append(node)
-            common_elements = set(nodes_list) & set(targets)
+                target_neighbors.add(node)
+            common_elements = set(target_neighbors) & set(targets)
+            print("node " + f'{node}' + " is saving the nodes " + str(common_elements))
             if len(common_elements) > max_number:
                 best_node = node
                 nodes_saved = common_elements
@@ -393,8 +403,8 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
     if nodes_saved is not None:
         targets[:] = [element for element in targets if element not in nodes_saved]
 
-    #if best_node != None:
-    # print("The best node is: " + node + " and it's saves nodes: " + str(nodes_saved))
+    if best_node != None:
+     print("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
     return best_node
 
 "Usefull Utils:"
