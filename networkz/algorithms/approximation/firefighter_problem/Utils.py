@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import copy
+import logging
 
 node_colors = {
     'target': 'gray',
@@ -12,6 +13,8 @@ node_colors = {
     'directly vaccinated': 'green',
     'default' : "#00FFD0"
 }
+
+logger = logging.getLogger(__name__)
 
 def validate_parameters(graph:nx.DiGraph, source:int, targets:list)->None:
     """
@@ -29,15 +32,17 @@ def validate_parameters(graph:nx.DiGraph, source:int, targets:list)->None:
     """
     graph_nodes = list(graph.nodes())
     if source not in graph_nodes:
+        logger.critical("Error: The source node isn't on the graph")
         raise ValueError("Error: The source node isn't on the graph")
-        exit()
+        
     if source in targets:
+        logger.critical("Error: The source node can't be a part of the targets list, since the virus is spreading from the source")
         raise ValueError("Error: The source node can't be a part of the targets list, since the virus is spreading from the source")
-        exit()
+        
     if not all(node in graph_nodes for node in targets):
+        logger.critical("Error: Not all nodes in the targets list are on the graph.")
         raise ValueError("Error: Not all nodes in the targets list are on the graph.")
-        exit()
-
+    
 "Spreading:"
 def calculate_gamma(graph:nx.DiGraph, source:int, targets:list)-> dict:
     """
@@ -72,20 +77,18 @@ def calculate_gamma(graph:nx.DiGraph, source:int, targets:list)-> dict:
                             if key in targets:
                                 direct_vaccination[option].append(key)
 
-        # if the virus can't reach to the node - it's automatically saved 
         if not vaccination_options:
             unreachable_nodes.append(key)
         if key != source:                       
             gamma[key] = vaccination_options
 
-    # add all the unreachable nodes to the vaccination strategy - every strategy can save them 
     for strategy in direct_vaccination:
         for node in unreachable_nodes:
             if node in targets:
                 direct_vaccination[strategy].append(node)
     
-    #print("Gamma is: " + str(gamma))
-    #print("S(u,t) is: " + str(direct_vaccination))
+    logger.info("Gamma is: " + str(gamma))
+    logger.info("S(u,t) is: " + str(direct_vaccination))
     return gamma, direct_vaccination
 
 def calculate_epsilon(direct_vaccinations:dict)->list:
@@ -101,7 +104,6 @@ def calculate_epsilon(direct_vaccinations:dict)->list:
     epsilon = []
     sorted_dict = dict(sorted(direct_vaccinations.items(), key=lambda item: item[0][1]))
 
-    # Iterate over the sorted dictionary and populate the result list
     current_time_step = None
     current_group = []
     for key, value in sorted_dict.items():
@@ -112,11 +114,10 @@ def calculate_epsilon(direct_vaccinations:dict)->list:
             current_group = [key]
         current_time_step = key[1]
 
-    # Append the last group
     if current_group:
         epsilon.append(current_group)
     
-    #print("Epsilon is: " + str(epsilon))
+    logger.info("Epsilon is: " + str(epsilon))
     return epsilon
 
 def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, current_time_options:list, targets:list)->tuple:
@@ -140,7 +141,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
         if(graph.nodes[option[0]]['status'] == 'target'):
             nodes_list = direct_vaccinations.get(option)
             common_elements = set(nodes_list) & set(targets)
-            print("the direct vaccination " + str(option) + " is saving the nodes " + str(common_elements))
+            logger.debug(f"Direct vaccination: {option}, Nodes saved: {common_elements} (if set(), then it's empty)")
             if len(common_elements) > max_number:
                 best_vaccination = option
                 nodes_saved = common_elements
@@ -150,7 +151,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
         targets[:] = [element for element in targets if element not in nodes_saved]
     
     if best_vaccination != ():
-        print("The best direct vaccination is: " + str(best_vaccination) + " and it's saves nodes: " + str(nodes_saved))
+        logger.info("The best direct vaccination is: " + str(best_vaccination) + " and it saves nodes: " + str(nodes_saved))
     return best_vaccination
 
 def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
@@ -170,12 +171,12 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
             if graph.nodes[neighbor]['status'] == 'target':
                 graph.nodes[neighbor]['status'] = 'infected'
                 new_infected_nodes.append(neighbor)
-                print("node " + f'{neighbor}' + " has been infected from node " + f'{node}')
+                logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
-    #display_graph(graph)
     return bool(infected_nodes)
+
 
 def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
     """
@@ -191,11 +192,11 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
             if graph.nodes[neighbor]['status'] == 'target':
                 graph.nodes[neighbor]['status'] = 'vaccinated'
                 new_vaccinated_nodes.append(neighbor)
-                print("node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
+                logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
-        vaccinated_nodes.append(node) 
-    #display_graph(graph)              
+        vaccinated_nodes.append(node)
+        logger.debug(f"Currently vaccinated nodes: {vaccinated_nodes}")
     return
 
 def vaccinate_node(graph:nx.DiGraph, node:int)->None:
@@ -207,8 +208,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     - node (int): Node to be vaccinated.
     """
     graph.nodes[node]['status'] = 'directly vaccinated'
-    print("node " + f'{node}' + " has been directly vaccinated")
-    #display_graph(graph)
+    logger.info("Node " + f'{node}' + " has been directly vaccinated")
     return
 
 def clean_graph(graph:nx.DiGraph)->None:
@@ -243,7 +243,7 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     for index in range(1,len(layers)):
         for node in layers[index]:
             graph.nodes[node]['capacity'] = 1/(index*harmonic_sum)
-    # print("Layers: ", layers)       
+    logger.info(f"Layers: {layers}")       
     return layers
 
 def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
@@ -330,23 +330,16 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
     - matrix (np.matrix): Vaccine matrix.
     """
 
-    print("Layers:", layers)
-    print("Min cut nodes grouped:", min_cut_nodes_grouped)
-    # Mij ': =  Nj j , 1≤i≤j≤l
-    # Determine the size of the matrix based on the number of groups
+    logger.info(f"Layers: {layers}")
+    logger.info(f"Min cut nodes grouped: {min_cut_nodes_grouped}")
     matrix_length = max(min_cut_nodes_grouped.keys()) 
-    matrix = np.zeros((matrix_length, matrix_length))  # Use a tuple for the shape
-
+    matrix = np.zeros((matrix_length, matrix_length))
     for j in range(matrix_length):
         for i in range(j+1):
-                # print("I = ", i,  "J = ", j)
                 N_j = len(min_cut_nodes_grouped[j+1])
                 value = N_j / (j + 1) 
                 matrix[i][j] = value
-                # print("MATRIX IS ->>>>>>>>>", matrix)
-
-
-    # print("MATRIX IS ->>>>>>>>>", matrix)
+    logger.info(f"Matrix: {matrix}")
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -367,8 +360,8 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     row_sums = np.array(matrix.sum(axis=1)).flatten()
     col_sums = np.array(matrix.sum(axis=0)).flatten()
     
-    print("Row sums:", row_sums)
-    print("Column sums:", col_sums)
+    logger.info(f"Row sums: {row_sums}")
+    logger.info(f"Column sums: {col_sums}")
     
     G = nx.DiGraph()
     
@@ -408,7 +401,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
                 integral_matrix[i, j] = np.ceil(matrix[i, j])
             else:
                 integral_matrix[i, j] = np.floor(matrix[i, j])
-    print("MATRIXXXX->>>>", integral_matrix)
+    logger.info(f"Matrix: {integral_matrix}")
     return np.matrix(integral_matrix)
 
 
@@ -462,7 +455,7 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
             if node in targets:
                 target_neighbors.add(node)
             common_elements = set(target_neighbors) & set(targets)
-            print("node " + f'{node}' + " is saving the nodes " + str(common_elements))
+            logger.info("node " + f'{node}' + " is saving the nodes " + str(common_elements))
             if len(common_elements) > max_number:
                 best_node = node
                 nodes_saved = common_elements
@@ -472,7 +465,7 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
         targets[:] = [element for element in targets if element not in nodes_saved]
 
     if best_node != None:
-     print("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
+     logger.info("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
     return best_node
 
 "Usefull Utils:"
@@ -505,24 +498,22 @@ def parse_json_to_networkx(json_data):
     - graphs (dict): Dictionary of Networkx graphs.
     """
     graphs = {}
-    
     for graph_type, graph_data in json_data.items():
         for graph_name, graph_info in graph_data.items():
-            
             graph_key = f"{graph_type}_{graph_name}"
+            
             if "vertices" not in graph_info or not isinstance(graph_info["vertices"], list) or not graph_info["vertices"]:
+                logger.critical(f"Error parsing {graph_type}_{graph_name}: 'vertices' must be a non-empty list.")
                 raise KeyError(f"Error parsing {graph_type}_{graph_name}: 'vertices' must be a non-empty list.")
-
+            
             if "edges" not in graph_info or not isinstance(graph_info["edges"], list) or not graph_info["edges"]:
+                logger.critical(f"Error parsing {graph_type}_{graph_name}: 'edges' must be a non-empty list.")
                 raise KeyError(f"Error parsing {graph_type}_{graph_name}: 'edges' must be a non-empty list.")
-
+            
             vertices = graph_info["vertices"]
             edges = [(edge["source"], edge["target"]) for edge in graph_info["edges"]]
-            
             G = nx.DiGraph()
             G.add_nodes_from(vertices, status="target")
             G.add_edges_from(edges)
-                
             graphs[graph_key] = G
-
     return graphs
