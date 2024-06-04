@@ -341,11 +341,14 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
 
     for j in range(matrix_length):
         for i in range(j+1):
+                # print("I = ", i,  "J = ", j)
                 N_j = len(min_cut_nodes_grouped[j+1])
                 value = N_j / (j + 1) 
-                matrix[j][i] = value
+                matrix[i][j] = value
+                # print("MATRIX IS ->>>>>>>>>", matrix)
 
-    print("MATRIX IS ->>>>>>>>>", matrix)
+
+    # print("MATRIX IS ->>>>>>>>>", matrix)
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
