@@ -4,6 +4,8 @@ import sys
 import os
 
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
+## TODO --> This is not implementaed for now, all the methods are being tested in their corresponding usage in other tests.py.
+## we might consider changing it later for a better coding 
 
 @pytest.fixture
 def test_graph():
