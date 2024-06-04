@@ -319,8 +319,6 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
 
 
 def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix: 
-    "TODO: Fix this to work, its not working for now with tests.."
-
     """
     Calculate the vaccine matrix based on the calculation in the article at the DirLayNet algorithm section.
 
@@ -352,10 +350,10 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
-    "TODO: keep testing this, it should be ok, but only for sure after done with the above method"
     """
     Convert a matrix with fractional entries to an integral matrix such that
     the row and column sums are either the floor or ceiling of the original sums.
+    The solution is provided with a consturction of a flow graph and then applying a max-flow algorihm on it.
 
     Parameters:
     matrix (np.matrix): The input matrix with fractional entries.
@@ -366,7 +364,6 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     # dimensions of the matrix
     rows, cols = matrix.shape
     
-    # row and column sums
     row_sums = np.array(matrix.sum(axis=1)).flatten()
     col_sums = np.array(matrix.sum(axis=0)).flatten()
     
