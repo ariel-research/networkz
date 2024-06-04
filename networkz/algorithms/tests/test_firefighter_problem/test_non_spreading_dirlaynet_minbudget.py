@@ -239,7 +239,7 @@ def test_min_cut_N_groups():
     result_4 = min_cut_N_groups(reduction_G4, 0, layers_4)
     assert sort_dict_values(result_4) == sort_dict_values(N4_groups_check)
     
-def test_calculate_vaccine_matrix(): #TODO: This tets is not working for now, need to fix its imeplemntation!
+def test_calculate_vaccine_matrix():
     """
     This test checks that the calculations made to create the triangular matrix from the min-cut nodes are correct.
     A matrix is valid if, for any column j, the column sum is exactly |Nj|.
@@ -253,16 +253,50 @@ def test_calculate_vaccine_matrix(): #TODO: This tets is not working for now, ne
     np.testing.assert_array_equal(calculate_vaccine_matrix(layers_1, N_1_groups), matrix_1_check)
 
     # Test 2
+    
+    """
+    Applying the formula: Mij ': =  Nj j , 1≤i≤j≤2 (l=2)
+    N2_groups_check = {1: [2], 2: [4]} 
+    N1 : = {2} |N1| = 1
+    N2 : = {4} |N2| = 1
+
+    1. M11 : i = 1, j = 1
+    |N1|/1 = 1/1 = 1
+    2. M12 : i = 1, j = 2
+    |N2|/2 = 1/2
+    3. M22 : i = 2, j = 2
+    |N2|/2 = 1/2 
+    """
+
     # checking equality
-    matrix_2_check = np.array([[1.5, 0.5],
-                               [1, 0.5],
+    matrix_2_check = np.array([[1, 0.5],
                                [0, 0.5]])
     np.testing.assert_array_equal(calculate_vaccine_matrix(layers_2, N_2_groups), matrix_2_check)
 
     # Test 3
+    """
+    Applying the formula: Mij ': =  Nj j , 1≤i≤j≤2 (l=2)
+    N3_groups_check = {1: [1], 2: [], 3: [7]}
+    N1 : = {1} |N1| = 1
+    N2 : = {0} |N2| = 0
+    N3 := {7} |N3| = 1
+
+    1. M11 : i = 1, j = 1
+    |N1|/1 = 1/1 = 1
+    2. M12 : i = 1, j = 2
+    |N2|/2 = 0/2 = 0
+    3. M13 : i = 1, j = 3
+    |N3|/3 = 1/3 
+    4. M22 : i = 2, j = 2
+    |N2|/2 = 0/2 = 0
+    5. M23 : i = 2 j = 3
+    |N3|/3 = 1/3 
+    5. M33 : i = 2 j = 3
+    |N3|/3 = 1/3 
+    """
     # checking equality
-    matrix_3_check = np.array([[4/3, 1/3, 1/3],
-                               [1, 0, 1/3],
+    matrix_3_check = np.array([[1, 0, 1/3],
+                               [0, 0, 1/3],
                                [0, 0, 1/3]])
     np.testing.assert_array_equal(calculate_vaccine_matrix(layers_3, N_3_groups), matrix_3_check)
 
@@ -279,13 +313,61 @@ def test_matrix_to_integers_values():
     """
     Test the matrix to integers values function.
     """
-    matrix = np.matrix([[1.5, 0.5], [1, 0.5], [0, 0.5]])
-    expected_matrix = np.matrix([[2, 0], [1, 1], [0, 1]])
-    np.testing.assert_array_equal(matrix_to_integers_values(matrix), expected_matrix)
+    # Test 1
+    # checking equality
+    matrix_1_check = np.array([[2, 0, 0, 0],
+                               [0, 0, 0, 0],
+                               [0, 0, 0, 0],
+                               [0, 0, 0, 0]])
+    
+    expected_matrix_1 = np.array([[2, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0],
+                                [0, 0, 0, 0]])
+    np.testing.assert_array_equal(matrix_to_integers_values(matrix_1_check), expected_matrix_1)
+
+    # Test 2
+    # checking equality
+    matrix_2_check = np.array([[1, 0.5],
+                               [0, 0.5]])
+    
+    expected_matrix_2 = np.array([[1, 1],
+                               [0, 0]])
+    np.testing.assert_array_equal(matrix_to_integers_values(matrix_2_check), expected_matrix_2)
+
+    # Test 3
+    # checking equality
+    matrix_3_check = np.array([[1, 0, 1/3],
+                               [0, 0, 1/3],
+                               [0, 0, 1/3]])
+    
+    expected_matrix_3 = np.array([[1, 0, 1],
+                               [0, 0, 0],
+                               [0, 0, 0]])
+    np.testing.assert_array_equal(matrix_to_integers_values(matrix_3_check), expected_matrix_3)
+
 
 def test_min_budget_calculation():
     """
     This test validates that the minimum budget is accurate.
     """
-    matrix = np.matrix([[2, 0], [1, 1], [0, 1]])
-    assert min_budget_calculation(matrix) == 2
+    # Test 1
+    # checking equality
+    matrix_1_check = np.array([[2, 0, 0, 0],
+                               [0, 0, 0, 0],
+                               [0, 0, 0, 0],
+                               [0, 0, 0, 0]])
+    assert min_budget_calculation(matrix_1_check) == 2
+
+    # Test 2
+    # checking equality
+    matrix_2_check = np.array([[1, 1], #on time i = 1, vaccinate M11(1) nodes from layer 1. , on time i = 2, vaccinante M12(1) nodes from layer 2
+                               [0, 0]])
+    assert min_budget_calculation(matrix_2_check) == 1
+
+    # Test 3
+    # checking equality
+    matrix_3_check = np.array([[1, 0, 1],
+                               [0, 0, 0],
+                               [0, 0, 0]])
+    assert min_budget_calculation(matrix_3_check) == 1

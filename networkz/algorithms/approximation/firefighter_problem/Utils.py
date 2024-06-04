@@ -341,11 +341,14 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
 
     for j in range(matrix_length):
         for i in range(j+1):
+                # print("I = ", i,  "J = ", j)
                 N_j = len(min_cut_nodes_grouped[j+1])
                 value = N_j / (j + 1) 
-                matrix[j][i] = value
+                matrix[i][j] = value
+                # print("MATRIX IS ->>>>>>>>>", matrix)
 
-    print("MATRIX IS ->>>>>>>>>", matrix)
+
+    # print("MATRIX IS ->>>>>>>>>", matrix)
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -423,8 +426,8 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     - int: Minimum budget.
     """
     integral_matrix = matrix_to_integers_values(matrix)
-    row_sums = integral_matrix.sum(axis=1)
-    min_budget = int(row_sums.max())
+    columns_sum = integral_matrix.sum(axis=0) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
+    min_budget = int(columns_sum.max())
     return min_budget
 
 
