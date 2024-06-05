@@ -1,3 +1,24 @@
+"""
+
+The Paper - 
+Approximability of the Firefighter Problem Computing Cuts over Time
+
+Paper Link -
+https://github.com/The-Firefighters/networkz/blob/master/networkz/algorithms/approximation/firefighter_problem/Approximability_of_the_Firefighter_Problem.pdf
+
+Authors - 
+Elliot Anshelevich
+Deeparnab Chakrabarty
+Ameya Hate 
+Chaitanya Swamy
+
+Developers - 
+Yuval Bubnovsky
+Almog David
+Shaked Levi
+
+"""
+
 import networkx as nx
 import pytest
 import sys

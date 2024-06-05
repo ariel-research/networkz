@@ -1,3 +1,24 @@
+"""
+
+The Paper - 
+Approximability of the Firefighter Problem Computing Cuts over Time
+
+Paper Link -
+https://github.com/The-Firefighters/networkz/blob/master/networkz/algorithms/approximation/firefighter_problem/Approximability_of_the_Firefighter_Problem.pdf
+
+Authors - 
+Elliot Anshelevich
+Deeparnab Chakrabarty
+Ameya Hate 
+Chaitanya Swamy
+
+Developers - 
+Yuval Bubnovsky
+Almog David
+Shaked Levi
+
+"""
+
 import pytest
 import networkx as nx
 import json
@@ -15,7 +36,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_t
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
 def get_graphs(): 
-    with open("networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
+    with open("/networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data=json_data)
     return graphs
