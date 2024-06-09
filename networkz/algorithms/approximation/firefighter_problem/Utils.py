@@ -23,9 +23,16 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import matplotlib.pyplot as plt
 import numpy as np
-import math
+from enum import Enum
 import copy
 import logging
+
+class Status(Enum):
+    VULNERABLE = "vulnerable"
+    INFECTED = "infected"
+    VACCINATED = "vaccinated"
+    DIRECTLY_VACCINATED = "directly vaccinated"
+
 
 node_colors = {
     'target': 'gray',
@@ -63,7 +70,8 @@ def validate_parameters(graph:nx.DiGraph, source:int, targets:list)->None:
     if not all(node in graph_nodes for node in targets):
         logger.critical("Error: Not all nodes in the targets list are on the graph.")
         raise ValueError("Error: Not all nodes in the targets list are on the graph.")
-    
+
+
 "Spreading:"
 def calculate_gamma(graph:nx.DiGraph, source:int, targets:list)-> dict:
     """
@@ -159,7 +167,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
     common_elements = None
     max_number = -1
     for option in current_time_options:
-        if(graph.nodes[option[0]]['status'] == 'target'):
+        if(graph.nodes[option[0]]['status'] == Status.VULNERABLE.value):
             nodes_list = direct_vaccinations.get(option)
             common_elements = set(nodes_list) & set(targets)
             logger.debug(f"Direct vaccination: {option}, Nodes saved: {common_elements} (if set(), then it's empty)")
@@ -189,8 +197,8 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
     new_infected_nodes = []
     for node in infected_nodes:
         for neighbor in graph.neighbors(node):
-            if graph.nodes[neighbor]['status'] == 'target':
-                graph.nodes[neighbor]['status'] = 'infected'
+            if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
+                graph.nodes[neighbor]['status'] = Status.INFECTED.value
                 new_infected_nodes.append(neighbor)
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
     infected_nodes.clear()
@@ -210,8 +218,8 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
     new_vaccinated_nodes = []
     for node in vaccinated_nodes:
         for neighbor in graph.neighbors(node):
-            if graph.nodes[neighbor]['status'] == 'target':
-                graph.nodes[neighbor]['status'] = 'vaccinated'
+            if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
+                graph.nodes[neighbor]['status'] = Status.VACCINATED.value
                 new_vaccinated_nodes.append(neighbor)
                 logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
     vaccinated_nodes.clear()
@@ -228,7 +236,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     - graph (nx.DiGraph): Directed graph.
     - node (int): Node to be vaccinated.
     """
-    graph.nodes[node]['status'] = 'directly vaccinated'
+    graph.nodes[node]['status'] = Status.DIRECTLY_VACCINATED.value
     logger.info("Node " + f'{node}' + " has been directly vaccinated")
     return
 
@@ -240,7 +248,7 @@ def clean_graph(graph:nx.DiGraph)->None:
     - graph (nx.DiGraph): Directed graph.
     """
     for node in graph.nodes:
-        graph.nodes[node]['status'] = 'target'
+        graph.nodes[node]['status'] = Status.VULNERABLE.value
     return
 
 "Non-Spreading:"
@@ -279,7 +287,7 @@ def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
     - G (nx.DiGraph): s-t graph.
     """
     G = copy.deepcopy(graph)
-    G.add_node('t', status = 'target')
+    G.add_node('t', status = Status.VULNERABLE.value)
     for node in targets:
         G.add_edge(node,'t')
     #display_graph(G)
@@ -466,12 +474,12 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
         optional_nodes.update(graph.neighbors(node))
 
     for node in optional_nodes:
-        if graph.nodes[node]['status'] == 'target':
+        if graph.nodes[node]['status'] == Status.VULNERABLE.value:
             # for each node that is target, we will add only his nighbors that are target as well
             neighbors_list = list(graph.neighbors(node))
             target_neighbors = set()
             for neighbor in neighbors_list:
-                if graph.nodes[neighbor]['status'] == 'target':
+                if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
                     target_neighbors.add(neighbor)
             if node in targets:
                 target_neighbors.add(node)
@@ -534,7 +542,7 @@ def parse_json_to_networkx(json_data):
             vertices = graph_info["vertices"]
             edges = [(edge["source"], edge["target"]) for edge in graph_info["edges"]]
             G = nx.DiGraph()
-            G.add_nodes_from(vertices, status="target")
+            G.add_nodes_from(vertices, status= Status.VULNERABLE.value)
             G.add_edges_from(edges)
             graphs[graph_key] = G
     return graphs
