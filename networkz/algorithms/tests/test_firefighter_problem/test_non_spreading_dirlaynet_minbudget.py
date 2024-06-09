@@ -36,7 +36,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_t
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
 def get_graphs(): 
-    with open("/networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
+    with open("graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data=json_data)
     return graphs
