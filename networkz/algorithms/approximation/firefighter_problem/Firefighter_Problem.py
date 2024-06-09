@@ -78,6 +78,8 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
         
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the spreading_maxsave function with source node {source}, budget {budget}, and targets: {targets}")
+    
+    clean_graph(Graph)
 
     infected_nodes = []
     vaccinated_nodes = []
@@ -119,7 +121,6 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
 
         time_step += 1
 
-    clean_graph(Graph)
     logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
     return vaccination_strategy
 
