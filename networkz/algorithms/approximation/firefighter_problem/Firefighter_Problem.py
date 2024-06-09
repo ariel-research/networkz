@@ -31,18 +31,6 @@ try:
 except ImportError:
     from Utils import *
 
-def setup_global_logger(level: int = logging.DEBUG):
-    log_format = "|| %(levelname)s || %(message)s"
-    formatter = logging.Formatter(log_format)
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    
-    root_logger = logging.getLogger()
-    root_logger.setLevel(level)
-    root_logger.addHandler(handler)
-
-setup_global_logger()
-
 logger = logging.getLogger(__name__)
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, flag=None) -> list:
@@ -58,28 +46,28 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
     
     Example 1:
     >>> G = nx.DiGraph()
-    >>> G.add_nodes_from([0,1,2], status="target")
+    >>> G.add_nodes_from([0,1,2], status="vulnerable")
     >>> G.add_edges_from([(0,1),(0,2),(1,2)])
     >>> spreading_maxsave(G,1,0,[1,2])
     [(1, 1)]
 
     Example 2:
     >>> G1 = nx.DiGraph()
-    >>> G1.add_nodes_from([0,1,2,3], status="target")
+    >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_maxsave(G1,1,0,[1,2,3])
     [(1, 1)]
 
     Example 3:
     >>> G2 = nx.DiGraph()
-    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="target")
+    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> spreading_maxsave(G2,1,0,[1,2,3,4,5,6])
     [(2, 1), (4, 2)]
 
     Example 4:
     >>> G3 = nx.DiGraph() 
-    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
+    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> spreading_maxsave(G3,2,0,[1,2,3,4,5,6,7,8])
     [(5, 1), (2, 1), (8, 2)]
@@ -90,6 +78,8 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
         
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the spreading_maxsave function with source node {source}, budget {budget}, and targets: {targets}")
+    
+    clean_graph(Graph)
 
     infected_nodes = []
     vaccinated_nodes = []
@@ -131,7 +121,6 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
 
         time_step += 1
 
-    clean_graph(Graph)
     logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
     return vaccination_strategy
 
@@ -149,28 +138,28 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
 
      Example 1: 
     >>> G1 = nx.DiGraph()
-    >>> G1.add_nodes_from([0,1,2,3], status="target")
+    >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_minbudget(G1,0,[1,2,3])
     2
 
     Example 2: 
     >>> G1 = nx.DiGraph()
-    >>> G1.add_nodes_from([0,1,2,3], status="target")
+    >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_minbudget(G1,0,[1,3])
     1
 
     Example 3:
     >>> G2 = nx.DiGraph()
-    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="target")
+    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> spreading_minbudget(G2,0,[1,2,3,4,5,6])
     2
 
     Example 4:
     >>> G3 = nx.DiGraph() 
-    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
+    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> spreading_minbudget(G3,0,[1,2,3,4,5,6,7,8])
     3
@@ -224,28 +213,28 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     
     Example1: 
     >>> G1 = nx.DiGraph()
-    >>> G1.add_nodes_from([0,1,2,3], status="target")
+    >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> non_spreading_minbudget(G1,0,[1,3])
     2
 
     Example 2: 
     >>> G1 = nx.DiGraph()
-    >>> G1.add_nodes_from([0,1,2,3], status="target")
+    >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> non_spreading_minbudget(G1,0,[1,2,3])
     2
 
     Example 3:
     >>> G2 = nx.DiGraph()
-    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="target")
+    >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> non_spreading_minbudget(G2,0,[1,2,3,4,5,6])
     2
 
     Example 4:
     >>> G3 = nx.DiGraph() 
-    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
+    >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> non_spreading_minbudget(G3,0,[2,6,1,8])
     3
@@ -272,7 +261,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     
     Example1:
     >>> G4 = nx.DiGraph()
-    >>> G4.add_nodes_from([0,1,2,3,4,5], status="target")
+    >>> G4.add_nodes_from([0,1,2,3,4,5], status="vulnerable")
     >>> G4.add_edges_from([(0,1),(0,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,5),(4,5)])
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
     2
@@ -283,7 +272,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     layers = adjust_nodes_capacity(Graph, source)
     G = create_st_graph(Graph, targets)
     G_reduction = graph_flow_reduction(G, source)
-    N_groups = min_cut_N_groups(G_reduction, source)
+    N_groups = min_cut_N_groups(G_reduction, source,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     min_budget = min_budget_calculation(vacc_matrix)
 
@@ -311,7 +300,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     
     Example:
     >>> G = nx.DiGraph()
-    >>> G.add_nodes_from([0, 1, 2, 3], status="target")
+    >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
     >>> heuristic_maxsave(G, 1, 0, [1, 2, 3], True)
     [(1, 1), (2, 2), (3, 3)]
@@ -369,7 +358,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     
     Example:
     >>> G = nx.DiGraph()
-    >>> G.add_nodes_from([0, 1, 2, 3], status="target")
+    >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
     >>> heuristic_minbudget(G, 0, [1, 2, 3], True)
     1
@@ -404,15 +393,3 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     logger.info(f"Returning minimum budget: {middle}")
     return middle
     
-
-# if __name__ == "__main__":
-#     import doctest
-#     doctest.testmod(verbose=True)
-
-#     # G3 = nx.DiGraph() 
-#     # G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
-#     # G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
-#     # logger.info("=" * 150)
-#     # logger.info(spreading_minbudget(G3,0,[2,6,1,8]))
-#     # logger.info("=" * 150)
-#     # logger.info(heuristic_minbudget(G3,0,[2,6,1,8], True))

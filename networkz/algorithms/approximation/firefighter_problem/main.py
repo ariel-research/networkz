@@ -30,19 +30,19 @@ except ImportError:
     from Firefighter_Problem import *
     import Firefighter_Problem as firefighter_problem # to run the doctest on the firefighter_problem files
 
-# def setup_global_logger(level: int = logging.DEBUG):
-#     log_format = "|| %(levelname)s || %(message)s"
-#     formatter = logging.Formatter(log_format)
-#     handler = logging.StreamHandler()
-#     handler.setFormatter(formatter)
+def setup_global_logger(level: int = logging.DEBUG):
+    log_format = "|| %(levelname)s || %(message)s"
+    formatter = logging.Formatter(log_format)
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
     
-#     root_logger = logging.getLogger()
-#     root_logger.setLevel(level)
-#     root_logger.addHandler(handler)
+    root_logger = logging.getLogger()
+    root_logger.setLevel(level)
+    root_logger.addHandler(handler)
 
-# setup_global_logger()
+setup_global_logger()
 
-# logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 if __name__ == "__main__":
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     print(f"Doctest results: {result}")
 
     # G3 = nx.DiGraph() 
-    # G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="target")
+    # G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     # G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     # logger.info("=" * 150)
     # logger.info(spreading_minbudget(G3,0,[2,6,1,8]))

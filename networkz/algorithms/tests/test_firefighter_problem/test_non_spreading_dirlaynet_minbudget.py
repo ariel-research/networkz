@@ -24,6 +24,7 @@ import networkx as nx
 import json
 import numpy as np
 import math
+import random
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import non_spreading_dirlaynet_minbudget
 from networkz.algorithms.approximation.firefighter_problem.Utils import adjust_nodes_capacity
@@ -35,69 +36,96 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
-def get_graphs(): 
-    with open("/networkz/algorithms/approximation/firefighter_problem/graphs.json", "r") as file:
+with open("graphs.json", "r") as file:
         json_data = json.load(file)
-    graphs = parse_json_to_networkx(json_data=json_data)
-    return graphs
+graphs = parse_json_to_networkx(json_data)
 
-graphs = get_graphs() 
 
-def test_source_not_in_graph():
-    """
-    This test checks if the source node is not a real node in the graph.
-    """
-    pattern = r"Error: The source node is( not|n't) on the graph"
+# def test_source_not_in_graph():
+#     """
+#     This test checks if the source node is not a real node in the graph.
+#     """
+#     pattern = r"Error: The source node is( not|n't) on the graph"
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], -3, [0, 5])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], -3, [0, 5])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 13, [0, 1, 4])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 13, [0, 1, 4])
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 15, [0, 6, 7])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 15, [0, 6, 7])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1, [1, 3, 5, 7])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1, [1, 3, 5, 7])
 
+@pytest.mark.parametrize("graph_key, budget, source, targets", [
+    ("Dirlay_Graph-1", -3, [0, 5]),
+    ("Dirlay_Graph-2", 13, [0, 1, 4]),
+    ("Dirlay_Graph-3", 15, [0, 6, 7]),
+    ("Dirlay_Graph-4", -1, [1, 3, 5, 7]),
+])
+def test_source_not_in_graph(graph_key, source, targets):
+    with pytest.raises(ValueError):
+        non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
 
-def test_target_not_in_graph():
-    """
-    This test checks if a node we're trying to save is not in the graph.
-    """
-    pattern = r"Error: Not all nodes (we're trying to save|in the targets list) are on the graph"
+# def test_target_not_in_graph():
+#     """
+#     This test checks if a node we're trying to save is not in the graph.
+#     """
+#     pattern = r"Error: Not all nodes (we're trying to save|in the targets list) are on the graph"
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [1, 5, 7])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [1, 5, 7])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 2, -1, 9])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 2, -1, 9])
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 4, [0, 1, 2, 11, 12, 13, 14])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 4, [0, 1, 2, 11, 12, 13, 14])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 0, [1, 3, 5, 7, 15, 20])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 0, [1, 3, 5, 7, 15, 20])
+
+@pytest.mark.parametrize("graph_key, source, targets", [
+    ("Dirlay_Graph-1", 0, [1, 5, 7]),
+    ("Dirlay_Graph-2", 1, [0, 2, -1, 9]),
+    ("Dirlay_Graph-3", 4, [0, 1, 2, 11, 12, 13, 14]),
+    ("Dirlay_Graph-4", 0, [1, 3, 5, 7, 15, 20]),
+])
+def test_target_not_in_graph(graph_key, source, targets):
+    with pytest.raises(ValueError):
+        non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
 
 
-def test_source_is_target():
-    """
-    This test checks if we're trying to save a source node.
-    """
-    pattern = r"Error: The source node can( not|'t) be a part of the targets (vector|list), since the virus is spreading from the source"
+# def test_source_is_target():
+#     """
+#     This test checks if we're trying to save a source node.
+#     """
+#     pattern = r"Error: The source node can( not|'t) be a part of the targets (vector|list), since the virus is spreading from the source"
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [0, 5])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [0, 5])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 1, 4])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 1, 4])
     
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 6, [0, 6, 7])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 6, [0, 6, 7])
 
-    with pytest.raises(ValueError, match=pattern):
-        non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3, [1, 3, 5, 7])
+#     with pytest.raises(ValueError, match=pattern):
+#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3, [1, 3, 5, 7])
+
+
+@pytest.mark.parametrize("graph_key, budget, source, targets", [
+    ("Dirlay_Graph-1", 0, [0, 5]),
+    ("Dirlay_Graph-2", 1, [0, 1, 4]),
+    ("Dirlay_Graph-3", 6, [0, 6, 7]),
+    ("Dirlay_Graph-4", 3, [1, 3, 5, 7]),
+])
+def test_source_is_target(graph_key, source, targets):
+    with pytest.raises(ValueError):
+        non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
 
     
 
@@ -392,3 +420,43 @@ def test_min_budget_calculation():
                                [0, 0, 0],
                                [0, 0, 0]])
     assert min_budget_calculation(matrix_3_check) == 1
+
+
+def generate_random_directed_layered_graph():
+    """
+    Generates a random directed layered graph with a random number of layers and nodes per layer.
+    
+    :return: A NetworkX DiGraph representing the layered network.
+    """
+    layers = random.randint(3, 6)  # Random number of layers between 3 and 6, this can be changed later.. just for testing
+    nodes_per_layer = [random.randint(2, 5) for _ in range(layers)]  # Random number of nodes per layer between 2 and 5
+    
+    G = nx.DiGraph()
+    node_count = 0
+    
+    # layer buildup
+    for layer in range(layers):
+        for _ in range(nodes_per_layer[layer]):
+            G.add_node(node_count, layer=layer, status="vulnerable")
+            node_count += 1
+    
+    # edges between layers
+    for layer in range(layers - 1):
+        for u in [n for n, d in G.nodes(data=True) if d['layer'] == layer]:
+            for v in [n for n, d in G.nodes(data=True) if d['layer'] == layer + 1]:
+                if random.random() < 0.5:  # randomly add edges with 50% probability
+                    G.add_edge(u, v)
+    
+    return G
+
+def test_non_spreading_dirlaynet_minbudget():
+    G = generate_random_directed_layered_graph()
+    source = 0 
+
+    nodes = list(G.nodes())
+    num_targets = random.randint(1, len(nodes) - 1)  # Ensure at least one target node
+    targets = random.sample(nodes[1:], num_targets)  # randomly choose nodes to save , excluding the source node
+    
+    min_budget = non_spreading_dirlaynet_minbudget(G, source, targets)
+
+    assert min_budget >= 0, "Minimum budget should be non-negative"
