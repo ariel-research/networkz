@@ -215,7 +215,7 @@ def test_find_best_direct_vaccination(graph_key, direct_vaccinations, current_ep
 ])
 def test_strategy_length(graph_key, budget, source, targets, expected_length):
     graph = graphs[graph_key]
-    calculated_strategy = spreading_maxsave(graph, budget, source, targets)
+    calculated_strategy = spreading_maxsave(graph, budget, source, targets)[0]
     
     assert len(calculated_strategy) == expected_length
 
@@ -226,7 +226,7 @@ def test_strategy_length(graph_key, budget, source, targets, expected_length):
 ])
 def test_save_all_vertices(graph_key, budget, source, targets, expected_strategy):
     graph = graphs[graph_key]
-    calculated_strategy = spreading_maxsave(graph, budget, source, targets)
+    calculated_strategy = spreading_maxsave(graph, budget, source, targets)[0]
     
     assert calculated_strategy == expected_strategy
 
@@ -236,9 +236,30 @@ def test_save_all_vertices(graph_key, budget, source, targets, expected_strategy
 ])
 def test_save_subgroup_vertices(graph_key, budget, source, targets, expected_strategy):
     graph = graphs[graph_key]
-    calculated_strategy = spreading_maxsave(graph, budget, source, targets)
+    calculated_strategy = spreading_maxsave(graph, budget, source, targets)[0]
     
     assert calculated_strategy == expected_strategy
+
+@pytest.mark.parametrize("graph_key, budget, source, targets, expected_nodes_saved_list", [
+    ("RegularGraph_Graph-1", 1, 0, [1, 2, 3, 4, 5, 6], {1, 3, 4, 5, 6}),
+    ("Dirlay_Graph-5", 2, 0, [1, 2, 3, 4, 5, 6, 7, 8], {1, 2, 3, 5, 6, 7, 8}),
+])
+def test_save_all_vertices_nodes_list(graph_key, budget, source, targets, expected_nodes_saved_list):
+    graph = graphs[graph_key]
+    calculated_nodes_saved_list = spreading_maxsave(graph, budget, source, targets)[1]
+    print(calculated_nodes_saved_list)
+    
+    assert calculated_nodes_saved_list == expected_nodes_saved_list
+
+@pytest.mark.parametrize("graph_key, budget, source, targets, expected_nodes_saved_list", [
+    ("RegularGraph_Graph-6", 2, 1, [3, 9, 0, 5, 6], {0, 3, 5, 6, 9}),
+    ("RegularGraph_Graph-4", 1, 0, [2, 6, 4], {2, 4}),
+])
+def test_save_subgroup_vertices_nodes_list(graph_key, budget, source, targets, expected_nodes_saved_list):
+    graph = graphs[graph_key]
+    calculated_nodes_saved_list = spreading_maxsave(graph, budget, source, targets)[1]
+    
+    assert calculated_nodes_saved_list == expected_nodes_saved_list
 
 def random_graph_test():
     for i in range(10):
@@ -260,7 +281,7 @@ def random_graph_test():
             if probability < 0.75 and node!=0:
                 targets.append(node)
         
-        ans = spreading_maxsave(G,1,0,targets)
+        ans = spreading_maxsave(G,1,0,targets)[0]
         print(len(ans))
         print(len(G.nodes))
        

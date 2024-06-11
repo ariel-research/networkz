@@ -49,28 +49,28 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
     >>> G.add_nodes_from([0,1,2], status="vulnerable")
     >>> G.add_edges_from([(0,1),(0,2),(1,2)])
     >>> spreading_maxsave(G,1,0,[1,2])
-    [(1, 1)]
+    ([(1, 1)], {1})
 
     Example 2:
     >>> G1 = nx.DiGraph()
     >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_maxsave(G1,1,0,[1,2,3])
-    [(1, 1)]
+    ([(1, 1)], {1, 3})
 
     Example 3:
     >>> G2 = nx.DiGraph()
     >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> spreading_maxsave(G2,1,0,[1,2,3,4,5,6])
-    [(2, 1), (4, 2)]
+    ([(2, 1), (4, 2)], {2, 3, 4, 5, 6})
 
     Example 4:
     >>> G3 = nx.DiGraph() 
     >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> spreading_maxsave(G3,2,0,[1,2,3,4,5,6,7,8])
-    [(5, 1), (2, 1), (8, 2)]
+    ([(5, 1), (2, 1), (8, 2)], {1, 2, 3, 5, 6, 7, 8})
     """
     if budget < 1:
         logger.critical("Error: The budget must be at least 1")
@@ -84,8 +84,9 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
+    saved_target_nodes = set()
     can_spread = True
-    Graph.nodes[source]['status'] = 'infected'
+    Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
     
     logger.info("Calculating all possible direct vaccinations in each timestamp")
@@ -112,6 +113,7 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
                 logger.info(f"Updated list of currently vaccinated nodes: {vaccinated_nodes}")
 
                 if nodes_saved is not None:
+                    saved_target_nodes.update(nodes_saved)
                     targets[:] = [element for element in targets if element not in nodes_saved]
                     logger.info(f"Updated list of targets: {targets}")
 
@@ -123,13 +125,13 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
         if flag is not None:
             if len(targets) == 0 or any(node in infected_nodes for node in targets):
                 clean_graph(Graph)
-                logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
-                return vaccination_strategy
+                logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
+                return vaccination_strategy, saved_target_nodes
 
         time_step += 1
 
-    logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
-    return vaccination_strategy
+    logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
+    return vaccination_strategy, saved_target_nodes
 
 
 def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
@@ -148,54 +150,49 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
     >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_minbudget(G1,0,[1,2,3])
-    2
+    (2, [(1, 1), (2, 1)])
 
     Example 2: 
     >>> G1 = nx.DiGraph()
     >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> spreading_minbudget(G1,0,[1,3])
-    1
+    (1, [(1, 1)])
 
     Example 3:
     >>> G2 = nx.DiGraph()
     >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> spreading_minbudget(G2,0,[1,2,3,4,5,6])
-    2
+    (2, [(2, 1), (1, 1)])
 
     Example 4:
     >>> G3 = nx.DiGraph() 
     >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> spreading_minbudget(G3,0,[1,2,3,4,5,6,7,8])
-    3
+    (3, [(5, 1), (2, 1), (4, 1)])
     """
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the spreading_minbudget function with source node {source} and targets: {targets}")
 
     original_targets = list(targets)
+    best_strategy = []
     
-    logger.info("Calculating all possible direct vaccinations in each timestamp")
-    direct_vaccinations = calculate_gamma(Graph, source, targets)[1] # TODO: check if this can be removed for optimization
     min_value = 1
     max_value = len(targets)
     middle = math.floor((min_value + max_value) / 2)
 
     while min_value < max_value:
         logger.info(f"Calling maxsave with parameters - Source: {source}, Targets: {targets}, Budget: {middle}")
-        strategy = spreading_maxsave(Graph, middle, source, targets, True)
-        nodes_saved = set()
-
-        for option in strategy:
-            list_of_nodes = direct_vaccinations.get(option)
-            nodes_saved.update(list_of_nodes)
-
+        strategy, nodes_saved = spreading_maxsave(Graph, middle, source, targets, True)
+        
         common_elements = set(nodes_saved) & set(original_targets)
 
         if len(common_elements) == len(original_targets):
             logger.info(f"The current budget {middle} has saved all the targets!")
             max_value = middle
+            best_strategy = strategy
         else:
             logger.warning(f"The current budget {middle} didn't save all the targets!")
             min_value = middle + 1
@@ -203,8 +200,8 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
         middle = math.floor((min_value + max_value) / 2)
         targets = list(original_targets)
 
-    logger.info(f"Returning minimum budget: {middle}")
-    return middle
+    logger.info(f"Returning minimum budget: {middle} and the vaccination strategy: {best_strategy}")
+    return middle, best_strategy
 
     
 def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
@@ -310,7 +307,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
     >>> heuristic_maxsave(G, 1, 0, [1, 2, 3], True)
-    [(1, 1), (2, 2), (3, 3)]
+    [(1, 1)]
     """
     if budget < 1:
         logger.critical("Error: The budget must be at least 1")
@@ -324,7 +321,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     vaccinated_nodes = []
     vaccination_strategy = []
     can_spread = True
-    Graph.nodes[source]['status'] = 'infected'
+    Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
     time_step = 1
 
@@ -380,11 +377,12 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
     >>> heuristic_minbudget(G, 0, [1, 2, 3], True)
-    1
+    (2, [(1, 1), (2, 1)])
     """
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the heuristic_minbudget function with source node {source}, targets: {targets}, and spreading: {spreading}")
 
+    best_strategy= []
     original_targets = list(targets)
     min_value = 1
     max_value = len(targets)
@@ -392,16 +390,17 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     saved_everyone = True
 
     while min_value < max_value:
-        heuristic_maxsave(Graph, middle, source, targets, spreading, True)
+        strategy = heuristic_maxsave(Graph, middle, source, targets, spreading, True)
 
         for node in original_targets:
-            if Graph.nodes[node]['status'] == 'infected':
+            if Graph.nodes[node]['status'] == Status.INFECTED.value:
                 saved_everyone = False
                 break
 
         if saved_everyone:
             logger.info(f"The current budget {middle} has saved all the targets!")
             max_value = middle
+            best_strategy = strategy
         else:
             logger.warning(f"The current budget {middle} didn't save all the targets!")
             min_value = middle + 1
@@ -409,6 +408,6 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
         middle = math.floor((min_value + max_value) / 2)
         targets = list(original_targets)
 
-    logger.info(f"Returning minimum budget: {middle}")
-    return middle
+    logger.info(f"Returning minimum budget: {middle} and the vaccination strategy: {best_strategy}")
+    return middle, best_strategy
     
