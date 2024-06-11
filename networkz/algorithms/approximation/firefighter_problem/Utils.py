@@ -251,6 +251,8 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     Returns:
     - layers (list): List of nodes grouped by layers.
     """
+    logger.debug(f"Starting to adjust node capacity for dirlay graph nodes...") 
+
     layers = (list(nx.bfs_layers(graph,source)))
     harmonic_sum = 0.0
     for i in range(1,len(layers)):
@@ -272,6 +274,7 @@ def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
     Returns:
     - G (nx.DiGraph): s-t graph.
     """
+    logger.info(f"Creating an s-t graph to connect nodes to save") 
     G = copy.deepcopy(graph)
     G.add_node('t', status = Status.VULNERABLE.value)
     for node in targets:
@@ -290,6 +293,7 @@ def graph_flow_reduction(graph:nx.DiGraph, source:int)->nx.DiGraph:
     Returns:
     - H (nx.DiGraph): Graph after flow reduction.
     """
+    logger.info(f"Applying Reduction on the graph") 
     H = nx.DiGraph()
     for node in graph.nodes:
         in_node, out_node = f'{node}_in', f'{node}_out'
@@ -301,6 +305,7 @@ def graph_flow_reduction(graph:nx.DiGraph, source:int)->nx.DiGraph:
     for edge in graph.edges:
         H.add_edge(f'{edge[0]}_out', f'{edge[1]}_in', weight=float('inf'))
     # display_graph(H)
+    logger.info(f"Reduction is finished") 
     return H
 
 def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
@@ -316,10 +321,12 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     - groups (dict): Dictionary with layers as keys and lists of nodes in the minimum cut as values.
     """
     # Compute the minimum cut
+    logger.info(f"Finding the minimum cut on the graph after reduction") 
     flow_graph = algo.minimum_st_node_cut(graph, f'{source}_out', 't_in')
     
     # Initialize the groups dictionary with empty lists for each layer index
     groups = {i+1: [] for i in range(len(layers)-1)}
+    logger.info(f"Finding the nodes from each layer") 
     
     # Populate the groups dictionary
     for item in flow_graph:
@@ -330,6 +337,7 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
                 groups[i].append(node)
                 break
 
+    logger.info(f"Ni groups: {groups}") 
     return groups
 
 
@@ -344,9 +352,9 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
     Returns:
     - matrix (np.matrix): Vaccine matrix.
     """
-
-    logger.info(f"Layers: {layers}")
+    logger.info(f"Calcualting the Vaccine Matrix for dirlay...")
     logger.info(f"Min cut nodes grouped: {min_cut_nodes_grouped}")
+
     matrix_length = max(min_cut_nodes_grouped.keys()) 
     matrix = np.zeros((matrix_length, matrix_length))
     for j in range(matrix_length):
@@ -354,7 +362,8 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
                 N_j = len(min_cut_nodes_grouped[j+1])
                 value = N_j / (j + 1) 
                 matrix[i][j] = value
-    logger.info(f"Matrix: {matrix}")
+
+    logger.info(f"Vaccination Matrix Before Conversion: {matrix}")
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -370,6 +379,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     np.matrix: The converted integral matrix.
     """
     # dimensions of the matrix
+    logger.info(f"Converting the the Vaccine Matrix for integers...")
     rows, cols = matrix.shape
     
     row_sums = np.array(matrix.sum(axis=1)).flatten()
@@ -416,7 +426,8 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
                 integral_matrix[i, j] = np.ceil(matrix[i, j])
             else:
                 integral_matrix[i, j] = np.floor(matrix[i, j])
-    logger.info(f"Matrix: {integral_matrix}")
+
+    logger.info(f"Integral and final Matrix: {integral_matrix}")
     return np.matrix(integral_matrix)
 
 
@@ -433,6 +444,7 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     integral_matrix = matrix_to_integers_values(matrix)
     columns_sum = integral_matrix.sum(axis=0) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
     min_budget = int(columns_sum.max())
+    logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
 
