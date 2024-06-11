@@ -35,7 +35,7 @@ class Status(Enum):
 
 
 node_colors = {
-    'target': 'gray',
+    'vulnerable': 'gray',
     'infected': 'red',
     'vaccinated': 'blue',
     'directly vaccinated': 'green',

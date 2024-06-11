@@ -117,7 +117,7 @@ def test_target_not_in_graph(graph_key, source, targets):
 #         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3, [1, 3, 5, 7])
 
 
-@pytest.mark.parametrize("graph_key, budget, source, targets", [
+@pytest.mark.parametrize("graph_key, source, targets", [
     ("Dirlay_Graph-1", 0, [0, 5]),
     ("Dirlay_Graph-2", 1, [0, 1, 4]),
     ("Dirlay_Graph-3", 6, [0, 6, 7]),
@@ -422,41 +422,63 @@ def test_min_budget_calculation():
     assert min_budget_calculation(matrix_3_check) == 1
 
 
-def generate_random_directed_layered_graph():
+def generate_layered_network():
     """
-    Generates a random directed layered graph with a random number of layers and nodes per layer.
+    Generates a directed layered network with a random number of layers and random nodes per layer.
     
-    :return: A NetworkX DiGraph representing the layered network.
+    Returns:
+        G (networkx.DiGraph): Directed graph representing the layered network.
     """
-    layers = random.randint(3, 6)  # Random number of layers between 3 and 6, this can be changed later.. just for testing
-    nodes_per_layer = [random.randint(2, 5) for _ in range(layers)]  # Random number of nodes per layer between 2 and 5
+    # Randomly decide the number of layers (between 2 and 3 for this example)
+    num_layers = random.randint(2, 3)
+    
+    # Randomly decide the number of nodes per layer (between 1 and 4 for this example)
+    nodes_per_layer = [random.randint(1, 4) for _ in range(num_layers)]
     
     G = nx.DiGraph()
-    node_count = 0
+    node_id = 1  # Start node_id from 1 because 0 is the source
     
-    # layer buildup
-    for layer in range(layers):
-        for _ in range(nodes_per_layer[layer]):
-            G.add_node(node_count, layer=layer, status="vulnerable")
-            node_count += 1
+    # Initialize layer 0 with the source node
+    layers = [[0]]
+    G.add_node(0)
     
-    # edges between layers
-    for layer in range(layers - 1):
-        for u in [n for n, d in G.nodes(data=True) if d['layer'] == layer]:
-            for v in [n for n, d in G.nodes(data=True) if d['layer'] == layer + 1]:
-                if random.random() < 0.5:  # randomly add edges with 50% probability
-                    G.add_edge(u, v)
+    # Create nodes layer by layer
+    for i in range(num_layers):
+        layer = [node_id + j for j in range(nodes_per_layer[i])]
+        layers.append(layer)
+        G.add_nodes_from(layer)
+        node_id += nodes_per_layer[i]
+
+    print("LAYERS->", layers)
+    
+    # Connect source node (0) to all nodes in layer 1
+    for node in layers[1]:
+        G.add_edge(0, node)
+    
+    # Create edges ensuring connectivity between consecutive layers
+    for i in range(1, num_layers):
+        for node in layers[i]:
+            # Connect each node in this layer to at least one node in the next layer
+            connected_nodes = random.sample(layers[i + 1], k=random.randint(1, len(layers[i + 1])))
+            for target in connected_nodes:
+                G.add_edge(node, target)
+        
+        for target in layers[i + 1]:
+            # Ensure each node in the next layer is connected to from at least one node in this layer
+            if not any(G.has_edge(source, target) for source in layers[i]):
+                G.add_edge(random.choice(layers[i]), target)
     
     return G
 
+
 def test_non_spreading_dirlaynet_minbudget():
-    G = generate_random_directed_layered_graph()
+    G = generate_layered_network()
     source = 0 
 
     nodes = list(G.nodes())
     num_targets = random.randint(1, len(nodes) - 1)  # Ensure at least one target node
-    targets = random.sample(nodes[1:], num_targets)  # randomly choose nodes to save , excluding the source node
+    targets = random.sample(nodes[1:], num_targets)  # Randomly choose nodes to save, excluding the source node
     
     min_budget = non_spreading_dirlaynet_minbudget(G, source, targets)
-
-    assert min_budget >= 0, "Minimum budget should be non-negative"
+    print("BUDGET----------",min_budget)
+    assert min_budget > 0, "Minimum budget should be non-negative"
