@@ -130,21 +130,11 @@ def calculate_epsilon(direct_vaccinations:dict)->list:
     Returns:
     - epsilon (list): List of direct vaccination groups by time step.
     """
-    epsilon = []
-    sorted_dict = dict(sorted(direct_vaccinations.items(), key=lambda item: item[0][1]))
+    from itertools import groupby
+    from operator import itemgetter
 
-    current_time_step = None
-    current_group = []
-    for key, value in sorted_dict.items():
-        if current_time_step is None or key[1] == current_time_step:
-            current_group.append(key)
-        else:
-            epsilon.append(current_group)
-            current_group = [key]
-        current_time_step = key[1]
-
-    if current_group:
-        epsilon.append(current_group)
+    sorted_dict = sorted(direct_vaccinations, key=itemgetter(1))
+    epsilon = [list(group) for _, group in groupby(sorted_dict, key=itemgetter(1))]
     
     logger.info("Epsilon is: " + str(epsilon))
     return epsilon
