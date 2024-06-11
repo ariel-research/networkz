@@ -271,10 +271,16 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     2
     """
     validate_parameters(Graph, source, targets)
+    if not is_dag(Graph):
+       logger.error("Problem with graph, its not a DAG, thus cannot run algorithm")
+       return
+    
+    display_graph(Graph)
     logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
 
     layers = adjust_nodes_capacity(Graph, source)
     G = create_st_graph(Graph, targets)
+    display_graph(G)
     G_reduction = graph_flow_reduction(G, source)
     N_groups = min_cut_N_groups(G_reduction, source,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
