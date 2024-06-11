@@ -130,21 +130,11 @@ def calculate_epsilon(direct_vaccinations:dict)->list:
     Returns:
     - epsilon (list): List of direct vaccination groups by time step.
     """
-    epsilon = []
-    sorted_dict = dict(sorted(direct_vaccinations.items(), key=lambda item: item[0][1]))
+    from itertools import groupby
+    from operator import itemgetter
 
-    current_time_step = None
-    current_group = []
-    for key, value in sorted_dict.items():
-        if current_time_step is None or key[1] == current_time_step:
-            current_group.append(key)
-        else:
-            epsilon.append(current_group)
-            current_group = [key]
-        current_time_step = key[1]
-
-    if current_group:
-        epsilon.append(current_group)
+    sorted_dict = sorted(direct_vaccinations, key=itemgetter(1))
+    epsilon = [list(group) for _, group in groupby(sorted_dict, key=itemgetter(1))]
     
     logger.info("Epsilon is: " + str(epsilon))
     return epsilon
@@ -163,7 +153,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
     - best_vaccination (tuple): Best direct vaccination option.
     """
     best_vaccination = () 
-    nodes_saved = {}
+    nodes_saved = []
     common_elements = None
     max_number = -1
     for option in current_time_options:
@@ -175,13 +165,10 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
                 best_vaccination = option
                 nodes_saved = common_elements
                 max_number = len(common_elements)
-
-    if nodes_saved is not None:
-        targets[:] = [element for element in targets if element not in nodes_saved]
     
     if best_vaccination != ():
         logger.info("The best direct vaccination is: " + str(best_vaccination) + " and it saves nodes: " + str(nodes_saved))
-    return best_vaccination
+    return best_vaccination, nodes_saved
 
 def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
     """
@@ -225,7 +212,6 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
-        logger.debug(f"Currently vaccinated nodes: {vaccinated_nodes}")
     return
 
 def vaccinate_node(graph:nx.DiGraph, node:int)->None:
@@ -490,12 +476,9 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
                 nodes_saved = common_elements
                 max_number = len(common_elements)
 
-    if nodes_saved is not None:
-        targets[:] = [element for element in targets if element not in nodes_saved]
-
     if best_node != None:
      logger.info("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
-    return best_node
+    return best_node, nodes_saved
 
 "Usefull Utils:"
 
@@ -540,9 +523,9 @@ def parse_json_to_networkx(json_data):
                 raise KeyError(f"Error parsing {graph_type}_{graph_name}: 'edges' must be a non-empty list.")
             
             vertices = graph_info["vertices"]
-            edges = [(edge["source"], edge["target"]) for edge in graph_info["edges"]]
+            edges = [(edge[0], edge[1]) for edge in graph_info["edges"]]
             G = nx.DiGraph()
-            G.add_nodes_from(vertices, status= Status.VULNERABLE.value)
+            G.add_nodes_from(vertices, status=Status.VULNERABLE.value)
             G.add_edges_from(edges)
             graphs[graph_key] = G
     return graphs

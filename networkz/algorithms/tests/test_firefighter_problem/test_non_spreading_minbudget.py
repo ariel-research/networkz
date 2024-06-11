@@ -32,19 +32,19 @@ def sample_json_data():
         "Dirlay": {
             "Graph-1": {
                 "vertices": [0, 1, 2, 3, 4, 5],
-                "edges": [{"source": 0, "target": 1}, {"source": 0, "target": 2}]
+                "edges": [[0, 1], [0, 2]]
             },
         },
         "RegularGraph": {
             "Graph-1": {
                 "vertices": [0, 1, 2],
-                "edges": [{"source": 0, "target": 1}, {"source": 1, "target": 2}]
+                "edges": [[0, 1], [1, 2]]
             },
         }
     }
 
 def get_graphs():
-    with open("graphs.json", "r") as file:
+    with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data)
     return graphs

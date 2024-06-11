@@ -33,19 +33,19 @@ def sample_json_data():
         "Dirlay": {
             "Graph-1": {
                 "vertices": [0, 1, 2, 3, 4, 5],
-                "edges": [{"source": 0, "target": 1}, {"source": 0, "target": 2}]
+                "edges": [[0, 1], [0, 2]]
             },
         },
         "RegularGraph": {
             "Graph-1": {
                 "vertices": [0, 1, 2],
-                "edges": [{"source": 0, "target": 1}, {"source": 1, "target": 2}]
+                "edges": [[0, 1], [1, 2]]
             },
         }
     }
 
 def get_graphs():
-    with open("graphs.json", "r") as file:
+    with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
     graphs = parse_json_to_networkx(json_data)
     return graphs
@@ -240,28 +240,28 @@ def test_calculate_epsilon(direct_vaccinations, expected_epsilon):
 ])
     
 def test_find_best_direct_vaccination(graph_key, direct_vaccinations, current_epsilon, targets, expected_best_direct_vaccination):
-    calculated_best_direct_vaccination = find_best_direct_vaccination(graphs[graph_key],direct_vaccinations,current_epsilon,targets)
+    calculated_best_direct_vaccination = find_best_direct_vaccination(graphs[graph_key],direct_vaccinations,current_epsilon,targets)[0]
     
     assert calculated_best_direct_vaccination == expected_best_direct_vaccination
 
 def test_save_all_vertices():
-    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6]) # answer is 2
-    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,2,3,4,5,6,7]) # answer is 2
-    assert 3 != spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,2,3,4,5]) # answer is 2
-    assert spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,2,3,4,5,6,7]) >= spreading_minbudget(graphs["RegularGraph_Graph-4"], 0, [1,2,3,4,5,6,7]) # answer is 2 
-    assert spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6]) > spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,2,3,4,5,6,7,8,9]) # answer is 1
-    assert 3 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [0,2,3,4,5,6]) # answer is 3 
-    assert 2 != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14]) # answer is 4
+    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6])[0] # answer is 2
+    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,2,3,4,5,6,7])[0] # answer is 2
+    assert 3 != spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,2,3,4,5])[0] # answer is 2
+    assert spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,2,3,4,5,6,7])[0] >= spreading_minbudget(graphs["RegularGraph_Graph-4"], 0, [1,2,3,4,5,6,7])[0] # answer is 2 
+    assert spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6])[0] > spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,2,3,4,5,6,7,8,9])[0] # answer is 1
+    assert 3 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [0,2,3,4,5,6])[0] # answer is 3 
+    assert 2 != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14])[0] # answer is 4
     
 
 def test_save_subgroup_vertices():
-    assert spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6]) != spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,5,6]) # answer is 1 
-    assert 1 == spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,3,4,5,6]) #answer is 1 
-    assert spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,2,3,4,5]) > spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,3,5]) #answer is 1
-    assert 2 > spreading_minbudget(graphs["RegularGraph_Graph-4"], 0, [2,3,5,7]) # anser is 1 
-    assert 4 > spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,3,5,6,8,9]) #answer is 1 
-    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [4,2,5,6]) #answer is 2 
-    assert spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14]) != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14]) #answer is 3
+    assert spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,2,3,4,5,6])[0] != spreading_minbudget(graphs["RegularGraph_Graph-1"], 0, [1,5,6])[0] # answer is 1 
+    assert 1 == spreading_minbudget(graphs["RegularGraph_Graph-2"], 0, [1,3,4,5,6])[0] #answer is 1 
+    assert spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,2,3,4,5])[0] > spreading_minbudget(graphs["RegularGraph_Graph-3"], 0, [1,3,5])[0] #answer is 1
+    assert 2 > spreading_minbudget(graphs["RegularGraph_Graph-4"], 0, [2,3,5,7])[0] # anser is 1 
+    assert 4 > spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,3,5,6,8,9])[0] #answer is 1 
+    assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [4,2,5,6])[0] #answer is 2 
+    assert spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14])[0] != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14])[0] #answer is 3
 
 def random_graph_test():
     for i in range(10):
@@ -284,7 +284,7 @@ def random_graph_test():
                 targets.append(node)
         
         target_length = len(targets)
-        ans = spreading_minbudget(G,0,targets)
+        ans = spreading_minbudget(G,0,targets)[0]
         print(ans)
         print(target_length)
        
