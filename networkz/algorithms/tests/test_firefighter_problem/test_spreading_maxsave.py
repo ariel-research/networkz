@@ -27,7 +27,7 @@ import random
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import spreading_maxsave
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, calculate_gamma, calculate_epsilon, find_best_direct_vaccination
 
-with open("graphs.json", "r") as file:
+with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
 graphs = parse_json_to_networkx(json_data)
 
@@ -112,7 +112,7 @@ def test_source_is_target(graph_key, budget, source, targets):
     })
 ])
 def test_calculate_gamma(graph_key, source, targets, expected_gamma, expected_direct_vaccination):
-    print( calculate_gamma(graphs[graph_key], source, targets))
+    print(calculate_gamma(graphs[graph_key], source, targets))
     calculated_gamma, calculated_direct_vaccination = calculate_gamma(graphs[graph_key], source, targets)
     
     for key in expected_gamma:
@@ -205,7 +205,7 @@ def test_calculate_epsilon(direct_vaccinations, expected_epsilon):
 ])
   
 def test_find_best_direct_vaccination(graph_key, direct_vaccinations, current_epsilon, targets, expected_best_direct_vaccination):
-    calculated_best_direct_vaccination = find_best_direct_vaccination(graphs[graph_key],direct_vaccinations,current_epsilon,targets)
+    calculated_best_direct_vaccination = find_best_direct_vaccination(graphs[graph_key],direct_vaccinations,current_epsilon,targets)[0]
     
     assert calculated_best_direct_vaccination == expected_best_direct_vaccination
 

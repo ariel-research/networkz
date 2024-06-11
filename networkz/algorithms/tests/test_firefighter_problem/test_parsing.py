@@ -22,7 +22,7 @@ Shaked Levi
 import pytest
 import networkx as nx
 
-from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, Status
 
 @pytest.fixture
 def sample_json_data():
@@ -30,13 +30,13 @@ def sample_json_data():
         "Dirlay": {
             "Graph-1": {
                 "vertices": [0, 1, 2, 3, 4, 5],
-                "edges": [{"source": 0, "target": 1}, {"source": 0, "target": 2}]
+                "edges": [[0, 1], [0, 2]]
             },
         },
         "RegularGraph": {
             "Graph-1": {
                 "vertices": [0, 1, 2],
-                "edges": [{"source": 0, "target": 1}, {"source": 1, "target": 2}]
+                "edges": [[0, 1], [1, 2]]
             },
         }
     }
@@ -46,7 +46,7 @@ def missing_vertices_json():
     return {
         "InvalidGraph": {
             "Graph-1": {
-                "edges": [{"source": 0, "target": 1}, {"source": 1, "target": 2}]
+                "edges": [[0, 1], [1, 2]]
             }
         }
     }
@@ -126,11 +126,11 @@ def test_parsing_dirlay_graph_status(sample_json_data):
 
     dirlay_graph = graphs["Dirlay_Graph-1"]
     for node in dirlay_graph.nodes(data=True):
-        assert node[1]["status"] == "target"
+        assert node[1]["status"] == Status.VULNERABLE.value
 
 def test_parsing_regular_graph_status(sample_json_data):
     graphs = parse_json_to_networkx(sample_json_data)
 
     regular_graph = graphs["RegularGraph_Graph-1"]
     for node in regular_graph.nodes(data=True):
-        assert node[1]["status"] == "target"
+        assert node[1]["status"] == Status.VULNERABLE.value

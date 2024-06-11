@@ -99,7 +99,7 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
         spread_vaccination(Graph, vaccinated_nodes)
         for i in range(budget):
             logger.info(f"Calculating the best direct vaccination strategy for the current time step that saves more new node in targets (Current budget: {budget})")
-            vaccination = find_best_direct_vaccination(Graph, direct_vaccinations, epsilon[time_step], targets)
+            vaccination, nodes_saved = find_best_direct_vaccination(Graph, direct_vaccinations, epsilon[time_step], targets)
             
             if vaccination != ():
                 logger.info(f"Found {vaccination} as a solution for current timestamp, appending to vaccination strategy and vaccinating the node")
@@ -110,7 +110,14 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
                 
                 vaccinated_nodes.append(chosen_node)
                 logger.info(f"Updated list of currently vaccinated nodes: {vaccinated_nodes}")
-                
+
+                if nodes_saved is not None:
+                    targets[:] = [element for element in targets if element not in nodes_saved]
+                    logger.info(f"Updated list of targets: {targets}")
+
+            else:
+                logger.info(f"All nodes are either vaccinated or infected")
+
         can_spread = spread_virus(Graph, infected_nodes)
 
         if flag is not None:
@@ -325,11 +332,23 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         if spreading:
             spread_vaccination(Graph, vaccinated_nodes)
         for i in range(budget):
-            node_to_vaccinate = find_best_neighbor(Graph, infected_nodes, targets)
+            logger.info(f"Calculating the best direct vaccination strategy for the current time step that saves more new node in targets (Current budget: {budget})")
+            node_to_vaccinate, nodes_saved = find_best_neighbor(Graph, infected_nodes, targets)
             if node_to_vaccinate is not None:
+                logger.info(f"Found {node_to_vaccinate} as a solution for current timestamp, appending to vaccination strategy and vaccinating the node")
                 vaccination_strategy.append((node_to_vaccinate, time_step))
                 vaccinate_node(Graph, node_to_vaccinate)
                 vaccinated_nodes.append(node_to_vaccinate)
+                logger.info(f"Updated list of currently vaccinated nodes: {vaccinated_nodes}")
+
+
+                if nodes_saved is not None:
+                    targets[:] = [element for element in targets if element not in nodes_saved]
+                    logger.info(f"Updated list of targets: {targets}")
+
+            else:
+                logger.info(f"All nodes are either vaccinated or infected")
+        
         can_spread = spread_virus(Graph, infected_nodes)
 
         if flag is not None:

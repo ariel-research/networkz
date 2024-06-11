@@ -36,7 +36,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
-with open("graphs.json", "r") as file:
+with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
 graphs = parse_json_to_networkx(json_data)
 
@@ -59,7 +59,7 @@ graphs = parse_json_to_networkx(json_data)
 #     with pytest.raises(ValueError, match=pattern):
 #         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1, [1, 3, 5, 7])
 
-@pytest.mark.parametrize("graph_key, budget, source, targets", [
+@pytest.mark.parametrize("graph_key, source, targets", [
     ("Dirlay_Graph-1", -3, [0, 5]),
     ("Dirlay_Graph-2", 13, [0, 1, 4]),
     ("Dirlay_Graph-3", 15, [0, 6, 7]),

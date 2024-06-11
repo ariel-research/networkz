@@ -163,7 +163,7 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
     - best_vaccination (tuple): Best direct vaccination option.
     """
     best_vaccination = () 
-    nodes_saved = {}
+    nodes_saved = []
     common_elements = None
     max_number = -1
     for option in current_time_options:
@@ -175,13 +175,10 @@ def find_best_direct_vaccination(graph:nx.DiGraph, direct_vaccinations:dict, cur
                 best_vaccination = option
                 nodes_saved = common_elements
                 max_number = len(common_elements)
-
-    if nodes_saved is not None:
-        targets[:] = [element for element in targets if element not in nodes_saved]
     
     if best_vaccination != ():
         logger.info("The best direct vaccination is: " + str(best_vaccination) + " and it saves nodes: " + str(nodes_saved))
-    return best_vaccination
+    return best_vaccination, nodes_saved
 
 def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
     """
@@ -225,7 +222,6 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
-        logger.debug(f"Currently vaccinated nodes: {vaccinated_nodes}")
     return
 
 def vaccinate_node(graph:nx.DiGraph, node:int)->None:
@@ -490,12 +486,9 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
                 nodes_saved = common_elements
                 max_number = len(common_elements)
 
-    if nodes_saved is not None:
-        targets[:] = [element for element in targets if element not in nodes_saved]
-
     if best_node != None:
      logger.info("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
-    return best_node
+    return best_node, nodes_saved
 
 "Usefull Utils:"
 
@@ -540,9 +533,9 @@ def parse_json_to_networkx(json_data):
                 raise KeyError(f"Error parsing {graph_type}_{graph_name}: 'edges' must be a non-empty list.")
             
             vertices = graph_info["vertices"]
-            edges = [(edge["source"], edge["target"]) for edge in graph_info["edges"]]
+            edges = [(edge[0], edge[1]) for edge in graph_info["edges"]]
             G = nx.DiGraph()
-            G.add_nodes_from(vertices, status= Status.VULNERABLE.value)
+            G.add_nodes_from(vertices, status=Status.VULNERABLE.value)
             G.add_edges_from(edges)
             graphs[graph_key] = G
     return graphs
