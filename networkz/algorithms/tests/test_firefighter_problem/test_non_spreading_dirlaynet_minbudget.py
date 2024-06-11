@@ -461,7 +461,8 @@ def generate_layered_network():
             # Connect each node in this layer to at least one node in the next layer
             connected_nodes = random.sample(layers[i + 1], k=random.randint(1, len(layers[i + 1])))
             for target in connected_nodes:
-                G.add_edge(node, target)
+                if target != node:  # Ensure no self-loop
+                    G.add_edge(node, target)
         
         for target in layers[i + 1]:
             # Ensure each node in the next layer is connected to from at least one node in this layer

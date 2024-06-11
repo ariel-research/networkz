@@ -271,6 +271,10 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     2
     """
     validate_parameters(Graph, source, targets)
+    if not is_dag(Graph):
+       logger.error("Problem with graph, its not a DAG, thus cannot run algorithm")
+       return
+    
     display_graph(Graph)
     logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
 

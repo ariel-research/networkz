@@ -71,6 +71,14 @@ def validate_parameters(graph:nx.DiGraph, source:int, targets:list)->None:
         logger.critical("Error: Not all nodes in the targets list are on the graph.")
         raise ValueError("Error: Not all nodes in the targets list are on the graph.")
 
+def is_dag(graph):
+    """
+    Validates if a given graph is a Directed Acyclic Graph (DAG) using NetworkX.
+
+    :param graph: A NetworkX DiGraph object.
+    :return: True if the graph is a DAG, False otherwise.
+    """
+    return nx.is_directed_acyclic_graph(graph)
 
 "Spreading:"
 def calculate_gamma(graph:nx.DiGraph, source:int, targets:list)-> dict:
