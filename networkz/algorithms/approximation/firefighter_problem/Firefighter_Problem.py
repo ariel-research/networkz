@@ -23,7 +23,10 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
-from graph_flow_reduction import *
+try:
+    from networkz.algorithms.approximation.firefighter_problem.graph_flow_reduction import graph_flow_reduction
+except: 
+    from graph_flow_reduction import *
 
 # This is a fix for an issue where the top one has to be exclusive for pytest to work
 # and the bottom one needs to be exclusive for running this from terminal to work

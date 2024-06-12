@@ -30,7 +30,7 @@ from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem i
 from networkz.algorithms.approximation.firefighter_problem.Utils import adjust_nodes_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import create_st_graph
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
-from networkz.algorithms.approximation.firefighter_problem.Utils import graph_flow_reduction
+from networkz.algorithms.approximation.firefighter_problem.graph_flow_reduction import graph_flow_reduction
 from networkz.algorithms.approximation.firefighter_problem.Utils import calculate_vaccine_matrix
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_N_groups
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
