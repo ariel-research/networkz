@@ -31,8 +31,9 @@ except ImportError:
     import Firefighter_Problem as firefighter_problem # to run the doctest on the firefighter_problem files
 
 def setup_global_logger(level: int = logging.DEBUG):
-    log_format = "|| %(levelname)s || %(message)s"
-    formatter = logging.Formatter(log_format)
+    log_format = "|| %(asctime)s || %(levelname)s || %(message)s"
+    date_format = '%H:%M:%S'
+    formatter = logging.Formatter(log_format, datefmt=date_format)
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     
@@ -48,7 +49,7 @@ logger = logging.getLogger(__name__)
 if __name__ == "__main__":
     import doctest
     result = doctest.testmod(firefighter_problem, verbose=True)
-    print(f"Doctest results: {result}")
+    logger.info(f"Doctest results: {result}")
 
     #G3 = nx.DiGraph() 
     #G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")

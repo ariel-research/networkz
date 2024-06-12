@@ -23,6 +23,10 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
+try:
+    from networkz.algorithms.approximation.firefighter_problem.graph_flow_reduction import graph_flow_reduction
+except: 
+    from graph_flow_reduction import *
 
 # This is a fix for an issue where the top one has to be exclusive for pytest to work
 # and the bottom one needs to be exclusive for running this from terminal to work
@@ -39,7 +43,7 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
     https://link.springer.com/article/10.1007/s00453-010-9469-y
     
-    Programmers: Shaked Levi, Almog David, Yuval Bobnovsky
+    Programmers: Shaked Levi, Almog David, Yuval Bubnovsky
 
     spreading_maxsave: Gets a directed graph, budget, source node, and list of targeted nodes that we need to save
     and return the best vaccination strategy that saves the most nodes from the targeted nodes list.
@@ -140,7 +144,7 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
     https://link.springer.com/article/10.1007/s00453-010-9469-y
     
-    Programmers: Shaked Levi, Almog David, Yuval Bobnovsky
+    Programmers: Shaked Levi, Almog David, Yuval Bubnovsky
 
     spreading_minbudget: Gets a directed graph, source node, and list of targeted nodes that we need to save
     and returns the minimum budget that saves all the nodes from the targeted nodes list.
@@ -210,7 +214,7 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
     https://link.springer.com/article/10.1007/s00453-010-9469-y
     
-    Programmers: Shaked Levi, Almog David, Yuval Bobnovsky
+    Programmers: Shaked Levi, Almog David, Yuval Bubnovsky
 
     non_spreading_minbudget: Gets a directed graph, source node, and list of targeted nodes that we need to save
     and returns the minimum budget that saves all the nodes from the targeted nodes list.
@@ -252,13 +256,13 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     logger.info(f"Returning minimum budget: {min_budget}")
     return min_budget
 
-def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
+def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->int:
     """
     "Approximability of the Firefighter Problem - Computing Cuts over Time",
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
     https://link.springer.com/article/10.1007/s00453-010-9469-y
     
-    Programmers: Shaked Levi, Almog David, Yuval Bobnovsky
+    Programmers: Shaked Levi, Almog David, Yuval Bubnovsky
 
     non_spreading_dirlaynet_minbudget: Gets a directed graph, source node, and list of targeted nodes that we need to save
     and returns the minimum budget that saves all the nodes from the targeted nodes list.
@@ -270,19 +274,19 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
     2
     """
-    validate_parameters(Graph, source, targets)
+    validate_parameters(Graph, src, targets)
     if not is_dag(Graph):
        logger.error("Problem with graph, its not a DAG, thus cannot run algorithm")
        return
     
     display_graph(Graph)
-    logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
+    logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {src} and targets: {targets}")
 
-    layers = adjust_nodes_capacity(Graph, source)
+    layers = adjust_nodes_capacity(Graph, src)
     G = create_st_graph(Graph, targets)
     display_graph(G)
-    G_reduction = graph_flow_reduction(G, source)
-    N_groups = min_cut_N_groups(G_reduction, source,layers)
+    G_reduction = graph_flow_reduction(G, source=src, target='t')
+    N_groups = min_cut_N_groups(G_reduction, src,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     min_budget = min_budget_calculation(vacc_matrix)
 
@@ -416,4 +420,9 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
 
     logger.info(f"Returning minimum budget: {middle} and the vaccination strategy: {best_strategy}")
     return middle, best_strategy
+
+if __name__ == "__main__":
+    import doctest
+    result = doctest.testmod(verbose=True)
+    logger.info(f"Doctest results: {result}")
     
