@@ -4,13 +4,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def graph_flow_reduction(graph: nx.DiGraph, source: int = None, target: int = None) -> nx.DiGraph:
+def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: int = None) -> nx.DiGraph:
     """
-    This function transforms a given directed graph into a new graph where each node
-    is split into two nodes (an "in" node and an "out" node) connected by an edge 
-    with a capacity (weight). The transformation is used for flow problems where 
-    nodes have capacities instead of edges - allowing to run algorithms which
-    were originally designed to be used for edge-flow problems.
+    Computes a maximum flow in the given graph, where each node has a capacity
 
     Parameters:
     ----------
@@ -30,6 +26,11 @@ def graph_flow_reduction(graph: nx.DiGraph, source: int = None, target: int = No
 
     Notes:
     -----
+    This function transforms a given directed graph into a new graph where each node
+    is split into two nodes (an "in" node and an "out" node) connected by an edge 
+    with a capacity (weight). The transformation is used for flow problems where 
+    nodes have capacities instead of edges - allowing to run algorithms which
+    were originally designed to be used for edge-flow problems.
     - If a node does not have a 'capacity' attribute, a default capacity of 1 
       is used.
     - There is infinite capacity between two different edge_out & edge_in
@@ -43,12 +44,12 @@ def graph_flow_reduction(graph: nx.DiGraph, source: int = None, target: int = No
     >>> G.add_edge(1, 2)
     >>> G.add_edge(2, 3)
     >>> G.add_edge(1, 3)
-    >>> H = graph_flow_reduction(G, 1, 3)
+    >>> H = max_flow_with_node_capacity(G, 1, 3)
     >>> sorted(list(H.nodes))
     ['1_in', '1_out', '2_in', '2_out', '3_in', '3_out']
     >>> sorted(list(H.edges(data=True)))
     [('1_in', '1_out', {'weight': inf}), ('1_out', '2_in', {'weight': inf}), ('1_out', '3_in', {'weight': inf}), ('2_in', '2_out', {'weight': 15}), ('2_out', '3_in', {'weight': inf}), ('3_in', '3_out', {'weight': inf})]
-    >>> H = graph_flow_reduction(G)
+    >>> H = max_flow_with_node_capacity(G)
     >>> sorted(list(H.nodes))
     ['1_in', '1_out', '2_in', '2_out', '3_in', '3_out']
     >>> sorted(list(H.edges(data=True)))
@@ -83,5 +84,5 @@ def graph_flow_reduction(graph: nx.DiGraph, source: int = None, target: int = No
 
 if __name__ == "__main__":
     import doctest
-    result = doctest.testmod(verbose=True)
-    logger.info(f"Doctest results: {result}")
+    result = doctest.testmod(verbose=False)
+    print(f"Doctest results: {result}")

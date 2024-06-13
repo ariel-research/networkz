@@ -342,6 +342,7 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
                 new_infected_nodes.append(neighbor)
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
                 #display_graph(graph)
+
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
@@ -580,7 +581,7 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
                 value = N_j / (j + 1) 
                 matrix[i][j] = value
 
-    logger.info(f"Vaccination Matrix Before Conversion: {matrix}")
+    logger.info(f"Vaccination Matrix Before Conversion:\n{matrix}")
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -652,7 +653,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
             else:
                 integral_matrix[i, j] = np.floor(matrix[i, j])
 
-    logger.info(f"Integral and final Matrix: {integral_matrix}")
+    logger.info(f"Integral and final Matrix:\n{integral_matrix}")
     return np.matrix(integral_matrix)
 
 
@@ -677,8 +678,8 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     3
     """
     integral_matrix = matrix_to_integers_values(matrix)
-    columns_sum = integral_matrix.sum(axis=0) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
-    min_budget = int(columns_sum.max())
+    rows_sum = integral_matrix.sum(axis=1) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
+    min_budget = int(rows_sum.max())
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
