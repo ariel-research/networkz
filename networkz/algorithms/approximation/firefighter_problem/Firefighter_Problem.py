@@ -23,17 +23,8 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
-try:
-    from networkz.algorithms.approximation.firefighter_problem.graph_flow_reduction import graph_flow_reduction
-except: 
-    from graph_flow_reduction import *
-
-# This is a fix for an issue where the top one has to be exclusive for pytest to work
-# and the bottom one needs to be exclusive for running this from terminal to work
-try:
-    from networkz.algorithms.approximation.firefighter_problem.Utils import *
-except ImportError:
-    from Utils import *
+from networkz.algorithms.approximation.firefighter_problem.graph_flow_reduction import max_flow_with_node_capacity
+from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 logger = logging.getLogger(__name__)
 
@@ -198,7 +189,7 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
             max_value = middle
             best_strategy = strategy
         else:
-            logger.warning(f"The current budget {middle} didn't save all the targets!")
+            logger.info(f"The current budget {middle} didn't save all the targets!")
             min_value = middle + 1
 
         middle = math.floor((min_value + max_value) / 2)
@@ -285,7 +276,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     layers = adjust_nodes_capacity(Graph, src)
     G = create_st_graph(Graph, targets)
     display_graph(G)
-    G_reduction = graph_flow_reduction(G, source=src, target='t')
+    G_reduction = max_flow_with_node_capacity(G, source=src, target='t')
     N_groups = min_cut_N_groups(G_reduction, src,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     min_budget = min_budget_calculation(vacc_matrix)
@@ -412,7 +403,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
             max_value = middle
             best_strategy = strategy
         else:
-            logger.warning(f"The current budget {middle} didn't save all the targets!")
+            logger.info(f"The current budget {middle} didn't save all the targets!")
             min_value = middle + 1
 
         middle = math.floor((min_value + max_value) / 2)
@@ -423,6 +414,6 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
 
 if __name__ == "__main__":
     import doctest
-    result = doctest.testmod(verbose=True)
+    result = doctest.testmod(verbose=False)
     logger.info(f"Doctest results: {result}")
     

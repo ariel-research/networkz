@@ -23,12 +23,9 @@ import logging
 
 # This is a fix for an issue where the top one has to be exclusive for pytest to work
 # and the bottom one needs to be exclusive for running this from terminal to work
-try:
-    from networkz.algorithms.approximation.firefighter_problem.Utils import *
-except ImportError:
-    from Utils import *
-    from Firefighter_Problem import *
-    import Firefighter_Problem as firefighter_problem # to run the doctest on the firefighter_problem files
+from networkz.algorithms.approximation.firefighter_problem.Utils import *
+from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import *
+import networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem as firefighter_problem # to run the doctest on the firefighter_problem files
 
 def setup_global_logger(level: int = logging.DEBUG):
     log_format = "|| %(asctime)s || %(levelname)s || %(message)s"
