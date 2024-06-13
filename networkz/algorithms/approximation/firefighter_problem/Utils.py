@@ -341,6 +341,7 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
                 graph.nodes[neighbor]['status'] = Status.INFECTED.value
                 new_infected_nodes.append(neighbor)
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
+                display_graph(graph)
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
@@ -375,6 +376,7 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
                 graph.nodes[neighbor]['status'] = Status.VACCINATED.value
                 new_vaccinated_nodes.append(neighbor)
                 logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
+                display_graph(graph)
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
@@ -401,6 +403,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     """
     graph.nodes[node]['status'] = Status.DIRECTLY_VACCINATED.value
     logger.info("Node " + f'{node}' + " has been directly vaccinated")
+    display_graph(graph)
     return
 
 def clean_graph(graph:nx.DiGraph)->None:
@@ -577,7 +580,7 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
                 value = N_j / (j + 1) 
                 matrix[i][j] = value
 
-    logger.info(f"Vaccination Matrix Before Conversion: {matrix}")
+    logger.info(f"Vaccination Matrix Before Conversion:\n{matrix}")
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -649,7 +652,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
             else:
                 integral_matrix[i, j] = np.floor(matrix[i, j])
 
-    logger.info(f"Integral and final Matrix: {integral_matrix}")
+    logger.info(f"Integral and final Matrix:\n{integral_matrix}")
     return np.matrix(integral_matrix)
 
 

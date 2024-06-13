@@ -20,6 +20,9 @@ Shaked Levi
 """
 
 import logging
+import json
+logger = logging.getLogger(__name__)
+
 
 # This is a fix for an issue where the top one has to be exclusive for pytest to work
 # and the bottom one needs to be exclusive for running this from terminal to work
@@ -38,22 +41,28 @@ def setup_global_logger(level: int = logging.DEBUG):
     root_logger.setLevel(level)
     root_logger.addHandler(handler)
 
-setup_global_logger()
-
-logger = logging.getLogger(__name__)
-
 
 if __name__ == "__main__":
     import doctest
-    result = doctest.testmod(firefighter_problem, verbose=True)
-    logger.info(f"Doctest results: {result}")
+    setup_global_logger(level=logging.DEBUG)
 
-    #G3 = nx.DiGraph() 
-    #G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
-    #G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
-    #logger.info("=" * 150)
-    #logger.info(spreading_minbudget(G3,0,[2,6,1,8]))
-    #print(spreading_maxsave(G3,1, 0,[2,6,1,8])[1])
+    # result = doctest.testmod(firefighter_problem, verbose=True)
+    # logger.info(f"Doctest results: {result}")
+
+    G3 = nx.DiGraph() 
+    G3.add_nodes_from([0,1,2,3,4,5,6,7,8])
+    G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
+    logger.info("=" * 150)
+    #print(spreading_maxsave(G3,source=0,targets=[2,6,1,8],budget=1))
+    #print(spreading_minbudget(G3,source=0,targets=[2,6,1,8]))
+
+    # with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
+    #     json_data = json.load(file)
+    # graphs = parse_json_to_networkx(json_data)
+
+    # G2 = graphs["Dirlay_Graph-2"]
+    # print(non_spreading_dirlaynet_minbudget(G2,src=0,targets=[2,4]))
+    print(spreading_maxsave(G3,1, 0,[2,6,1,8])[1])
     # logger.info("=" * 150)
-    # logger.info(heuristic_minbudget(G3,0,[2,6,1,8], True))
+    #logger.info(heuristic_minbudget(G3,0,[2,6,1,8], True))
 

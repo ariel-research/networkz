@@ -318,12 +318,14 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     logger.info(f"Starting the heuristic_maxsave function with source node {source}, budget {budget}, targets: {targets}, and spreading: {spreading}")
 
     clean_graph(Graph)
+    display_graph(Graph)
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
     can_spread = True
     Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
+    display_graph(Graph)
     time_step = 1
 
     while can_spread:
