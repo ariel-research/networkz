@@ -28,7 +28,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 logger = logging.getLogger(__name__)
 
-def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, flag=None) -> list:
+def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> list:
     """
     "Approximability of the Firefighter Problem - Computing Cuts over Time",
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
@@ -117,7 +117,7 @@ def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, fl
 
         can_spread = spread_virus(Graph, infected_nodes)
 
-        if flag is not None:
+        if stop_condition is not None:
             if len(targets) == 0 or any(node in infected_nodes for node in targets):
                 clean_graph(Graph)
                 logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
@@ -284,7 +284,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     logger.info(f"Returning minimum budget: {min_budget}")
     return min_budget
 
-def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading:bool,  flag=None) -> list:
+def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading=True,  stop_condition=None) -> list:
     """
     This heuristic approach is based on the local search problem. 
     We will select the best neighbor that saves the most nodes from targets.
@@ -307,7 +307,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     >>> G = nx.DiGraph()
     >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
-    >>> heuristic_maxsave(G, 1, 0, [1, 2, 3], True)
+    >>> heuristic_maxsave(G, 1, 0, [1, 2, 3])
     [(1, 1)]
     """
     if budget < 1:
@@ -322,6 +322,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
+    saved_target_nodes = set()
     can_spread = True
     Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
@@ -343,6 +344,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
 
 
                 if nodes_saved is not None:
+                    saved_target_nodes.update(nodes_saved)
                     targets[:] = [element for element in targets if element not in nodes_saved]
                     logger.info(f"Updated list of targets: {targets}")
 
@@ -351,15 +353,19 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         
         can_spread = spread_virus(Graph, infected_nodes)
 
-        if flag is not None:
+        if stop_condition is not None:
             if len(targets) == 0 or any(node in infected_nodes for node in targets):
-                logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
+                logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
                 return vaccination_strategy
 
         time_step += 1
+    
+    for node in targets:
+        if Graph.nodes[node]['status'] != Status.INFECTED.value:
+            saved_target_nodes.add(node)
 
-    logger.info(f"Returning vaccination strategy: {vaccination_strategy}")
-    return vaccination_strategy
+    logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
+    return vaccination_strategy, saved_target_nodes
 
 def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bool)-> int:
     """
