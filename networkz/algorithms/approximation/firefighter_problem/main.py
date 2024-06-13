@@ -56,13 +56,14 @@ if __name__ == "__main__":
     #print(spreading_maxsave(G3,source=0,targets=[2,6,1,8],budget=1))
     #print(spreading_minbudget(G3,source=0,targets=[2,6,1,8]))
 
-    # with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
-    #     json_data = json.load(file)
-    # graphs = parse_json_to_networkx(json_data)
+    with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
+        json_data = json.load(file)
+    graphs = parse_json_to_networkx(json_data)
 
-    # G2 = graphs["Dirlay_Graph-2"]
-    # print(non_spreading_dirlaynet_minbudget(G2,src=0,targets=[2,4]))
-    print(spreading_maxsave(G3,1, 0,[2,6,1,8])[1])
+    G2 = graphs["RegularGraph_Graph-2"]
+    print(heuristic_minbudget(G2,source=0, targets=[1,3,4,5,6],spreading=True))
+    #print(spreading_maxsave(G3,1, 0,[2,6,1,8])[1])
+    print(spreading_minbudget(G2,source=0, targets=[1,3,4,5,6]))
     # logger.info("=" * 150)
     #logger.info(heuristic_minbudget(G3,0,[2,6,1,8], True))
 

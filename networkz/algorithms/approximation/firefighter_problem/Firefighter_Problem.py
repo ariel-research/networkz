@@ -270,12 +270,12 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
        logger.error("Problem with graph, its not a DAG, thus cannot run algorithm")
        return
     
-    display_graph(Graph)
+    #display_graph(Graph)
     logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {src} and targets: {targets}")
 
     layers = adjust_nodes_capacity(Graph, src)
     G = create_st_graph(Graph, targets)
-    display_graph(G)
+    #display_graph(G)
     G_reduction = max_flow_with_node_capacity(G, source=src, target='t')
     N_groups = min_cut_N_groups(G_reduction, src,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
@@ -284,7 +284,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     logger.info(f"Returning minimum budget: {min_budget}")
     return min_budget
 
-def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading=True,  stop_condition=None) -> list:
+def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading=True,  stop_condition=None) -> tuple:
     """
     This heuristic approach is based on the local search problem. 
     We will select the best neighbor that saves the most nodes from targets.
@@ -318,7 +318,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     logger.info(f"Starting the heuristic_maxsave function with source node {source}, budget {budget}, targets: {targets}, and spreading: {spreading}")
 
     clean_graph(Graph)
-    display_graph(Graph)
+    #display_graph(Graph)
     infected_nodes = []
     vaccinated_nodes = []
     vaccination_strategy = []
@@ -326,7 +326,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     can_spread = True
     Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
-    display_graph(Graph)
+    #display_graph(Graph)
     time_step = 1
 
     while can_spread:
@@ -367,7 +367,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
     return vaccination_strategy, saved_target_nodes
 
-def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bool)-> int:
+def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bool)-> tuple:
     """
     This function calculates the minimum budget required to save all target nodes 
     using the heuristic approach based on local search problem.

@@ -263,7 +263,7 @@ def test_save_subgroup_vertices():
     assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [4,2,5,6])[0] #answer is 2 
     assert spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14])[0] != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14])[0] #answer is 3
 
-def random_graph_test():
+def test_random_graph():
     for i in range(10):
         num_nodes = random.randint(2,100)
         nodes = list(range(num_nodes+1))
