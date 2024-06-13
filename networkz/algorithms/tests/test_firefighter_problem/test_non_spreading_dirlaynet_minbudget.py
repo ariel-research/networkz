@@ -412,14 +412,14 @@ def test_min_budget_calculation():
     # checking equality
     matrix_2_check = np.array([[1, 1], #on time i = 1, vaccinate M11(1) nodes from layer 1. , on time i = 2, vaccinante M12(1) nodes from layer 2
                                [0, 0]])
-    assert min_budget_calculation(matrix_2_check) == 1
+    assert min_budget_calculation(matrix_2_check) == 2
 
     # Test 3
     # checking equality
     matrix_3_check = np.array([[1, 0, 1],
                                [0, 0, 0],
                                [0, 0, 0]])
-    assert min_budget_calculation(matrix_3_check) == 1
+    assert min_budget_calculation(matrix_3_check) == 2
 
 
 def generate_layered_network():

@@ -674,8 +674,8 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     3
     """
     integral_matrix = matrix_to_integers_values(matrix)
-    columns_sum = integral_matrix.sum(axis=0) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
-    min_budget = int(columns_sum.max())
+    rows_sum = integral_matrix.sum(axis=1) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
+    min_budget = int(rows_sum.max())
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
