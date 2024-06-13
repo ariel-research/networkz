@@ -261,7 +261,7 @@ def test_save_subgroup_vertices_nodes_list(graph_key, budget, source, targets, e
     
     assert calculated_nodes_saved_list == expected_nodes_saved_list
 
-def random_graph_test():
+def test_random_graph():
     for i in range(10):
         num_nodes = random.randint(2,100)
         nodes = list(range(num_nodes+1))

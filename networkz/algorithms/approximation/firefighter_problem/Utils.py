@@ -341,6 +341,7 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
                 graph.nodes[neighbor]['status'] = Status.INFECTED.value
                 new_infected_nodes.append(neighbor)
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
+                #display_graph(graph)
     infected_nodes.clear()
     for node in new_infected_nodes:
         infected_nodes.append(node)  
@@ -375,6 +376,7 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
                 graph.nodes[neighbor]['status'] = Status.VACCINATED.value
                 new_vaccinated_nodes.append(neighbor)
                 logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
+                #display_graph(graph)
     vaccinated_nodes.clear()
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
@@ -401,6 +403,7 @@ def vaccinate_node(graph:nx.DiGraph, node:int)->None:
     """
     graph.nodes[node]['status'] = Status.DIRECTLY_VACCINATED.value
     logger.info("Node " + f'{node}' + " has been directly vaccinated")
+    #display_graph(graph)
     return
 
 def clean_graph(graph:nx.DiGraph)->None:
@@ -707,13 +710,13 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
         if graph.nodes[node]['status'] == Status.VULNERABLE.value:
             # for each node that is target, we will add only his nighbors that are target as well
             neighbors_list = list(graph.neighbors(node))
-            target_neighbors = set()
+            vulnerable_neighbors = set()
             for neighbor in neighbors_list:
                 if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
-                    target_neighbors.add(neighbor)
+                    vulnerable_neighbors.add(neighbor)
             if node in targets:
-                target_neighbors.add(node)
-            common_elements = set(target_neighbors) & set(targets)
+                vulnerable_neighbors.add(node)
+            common_elements = set(vulnerable_neighbors) & set(targets)
             logger.info("node " + f'{node}' + " is saving the nodes " + str(common_elements))
             if len(common_elements) > max_number:
                 best_node = node
