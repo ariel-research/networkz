@@ -430,7 +430,7 @@ def clean_graph(graph:nx.DiGraph)->None:
 
 # ============================ End Spreading Max-Save ============================
 
-# ===========================  Non-Spreading Max-Save ============================
+# ===========================  Non-Spreading Min-Budget-Dirlay ============================
 def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     """
     Adjust the capacity of nodes based on the layer they belong to.
@@ -467,7 +467,10 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     for index in range(1,len(layers)):
         for node in layers[index]:
             graph.nodes[node]['capacity'] = 1/(index*harmonic_sum)
-    logger.info(f"Layers: {layers}")       
+            logger.info(f"Added Capacity {1/(index*harmonic_sum)} for node: {node}") 
+
+    logger.info(f"Done with adding capacity for nodes, with Layers: {layers}")       
+
     return layers
 
 def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
@@ -499,12 +502,15 @@ def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
     >>> list(G_st.successors(3))
     [4, 't']
     """
-    logger.info(f"Creating an s-t graph to connect nodes to save") 
+    logger.info(f"Creating a s-t graph to connect nodes to save") 
+
     G = copy.deepcopy(graph)
     G.add_node('t', status = Status.VULNERABLE.value)
     for node in targets:
         G.add_edge(node,'t')
     #display_graph(G)
+
+    logger.info(f"Done creating a s-t graph") 
     return G
 
 def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
@@ -531,14 +537,16 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     """
     # Compute the minimum cut
     logger.info(f"Finding the minimum cut on the graph after reduction") 
-    flow_graph = algo.minimum_st_node_cut(graph, f'{source}_out', 't_in')
+    min_cut_nodes = algo.minimum_st_node_cut(graph, f'{source}_out', 't_in')
     
+    logger.info(f"Minimum Cut is: {min_cut_nodes}")  
+
     # Initialize the groups dictionary with empty lists for each layer index
     groups = {i+1: [] for i in range(len(layers)-1)}
-    logger.info(f"Finding the nodes from each layer") 
+    logger.info(f"Finding the correct nodes from each layer according to the min-cut nodes") 
     
     # Populate the groups dictionary
-    for item in flow_graph:
+    for item in min_cut_nodes:
         node , suffix = item.split('_')
         node = int(node)
         for i, layer_nodes in enumerate(layers):
@@ -570,8 +578,7 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
     --------
     
     """
-    logger.info(f"Calculating the Vaccine Matrix for dirlay...")
-    logger.info(f"Min cut nodes grouped: {min_cut_nodes_grouped}")
+    logger.info(f"Calculating the Vaccine Matrix...")
 
     matrix_length = max(min_cut_nodes_grouped.keys()) 
     matrix = np.zeros((matrix_length, matrix_length))
@@ -581,7 +588,7 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict)->np.matrix
                 value = N_j / (j + 1) 
                 matrix[i][j] = value
 
-    logger.info(f"Vaccination Matrix Before Conversion:\n{matrix}")
+    logger.info(f"Vaccination Matrix Before roundups:\n{matrix}")
     return matrix
 
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
@@ -605,14 +612,14 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     
     """
     # dimensions of the matrix
-    logger.info(f"Converting the the Vaccine Matrix for integers...")
+    logger.info(f"Applying max-flow to transfer the Vaccine Matrix for integers...")
     rows, cols = matrix.shape
     
     row_sums = np.array(matrix.sum(axis=1)).flatten()
     col_sums = np.array(matrix.sum(axis=0)).flatten()
     
-    logger.info(f"Row sums: {row_sums}")
-    logger.info(f"Column sums: {col_sums}")
+    # logger.info(f"Row sums: {row_sums}")
+    # logger.info(f"Column sums: {col_sums}")
     
     G = nx.DiGraph()
     
@@ -654,6 +661,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
                 integral_matrix[i, j] = np.floor(matrix[i, j])
 
     logger.info(f"Integral and final Matrix:\n{integral_matrix}")
+    
     return np.matrix(integral_matrix)
 
 
