@@ -1,4 +1,24 @@
-# graph_flow_transformations.py
+"""
+
+The Paper - 
+Approximability of the Firefighter Problem Computing Cuts over Time
+
+Paper Link -
+https://www.math.uwaterloo.ca/~cswamy/papers/firefighter-journ.pdf
+
+Authors - 
+Elliot Anshelevich
+Deeparnab Chakrabarty
+Ameya Hate 
+Chaitanya Swamy
+
+Developers - 
+Yuval Bubnovsky
+Almog David
+Shaked Levi
+
+"""
+
 import networkx as nx
 import logging
 

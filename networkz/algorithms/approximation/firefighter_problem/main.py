@@ -4,7 +4,7 @@ The Paper -
 Approximability of the Firefighter Problem Computing Cuts over Time
 
 Paper Link -
-https://github.com/The-Firefighters/networkz/blob/master/networkz/algorithms/approximation/firefighter_problem/Approximability_of_the_Firefighter_Problem.pdf
+https://www.math.uwaterloo.ca/~cswamy/papers/firefighter-journ.pdf
 
 Authors - 
 Elliot Anshelevich
