@@ -4,7 +4,7 @@ The Paper -
 Approximability of the Firefighter Problem Computing Cuts over Time
 
 Paper Link -
-https://github.com/The-Firefighters/networkz/blob/master/networkz/algorithms/approximation/firefighter_problem/Approximability_of_the_Firefighter_Problem.pdf
+https://www.math.uwaterloo.ca/~cswamy/papers/firefighter-journ.pdf
 
 Authors - 
 Elliot Anshelevich
@@ -702,10 +702,8 @@ def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict
     vacc_matrix: np.matrix
         A matrix where rows represent time steps and columns represent layers, 
         with each element indicating the number of nodes to vaccinate.
-    min_budget: int
-        The minimum budget required to save all target nodes.
-    layers: list
-        A list of layers, where each layer contains nodes to be considered.
+    ni_groups: dict
+        A dict of layers, where each layer contains nodes to be saved.
 
     Returns:
     ----------
