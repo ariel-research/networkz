@@ -278,9 +278,11 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     G_reduction = max_flow_with_node_capacity(G, source=src, target='t')
     N_groups = min_cut_N_groups(G_reduction, src,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
+    integer_matrix = matrix_to_integers_values(vacc_matrix)
     min_budget = min_budget_calculation(vacc_matrix)
+    stategy = dirlay_vaccination_startegy(integer_matrix, N_groups)
 
-    logger.info(f"Returning minimum budget: {min_budget}")
+    logger.info(f"Returning algorithm stategy: {stategy} with budget: {min_budget}")
     return min_budget
 
 def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, spreading=True,  stop_condition=None) -> tuple:
