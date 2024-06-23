@@ -26,6 +26,7 @@ import numpy as np
 from enum import Enum
 import copy
 import logging
+import heapq
 
 class Status(Enum):
     VULNERABLE = "vulnerable"
@@ -341,9 +342,9 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list)->bool:
                 graph.nodes[neighbor]['status'] = Status.INFECTED.value
                 new_infected_nodes.append(neighbor)
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
-                #display_graph(graph)
 
     infected_nodes.clear()
+    #display_graph(graph)
     for node in new_infected_nodes:
         infected_nodes.append(node)  
     return bool(infected_nodes)
@@ -377,8 +378,9 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list)->None:
                 graph.nodes[neighbor]['status'] = Status.VACCINATED.value
                 new_vaccinated_nodes.append(neighbor)
                 logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
-                #display_graph(graph)
+
     vaccinated_nodes.clear()
+    #display_graph(graph)
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
     return
@@ -698,10 +700,8 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
     Returns:
     - best_node (int): Best node option.
     """
-    best_node = None
-    nodes_saved = []
-    max_number = -1
     optional_nodes = set()
+    priority_queue = []
 
     # Go through the infected_nodes list and collect all their neighbors
     for node in infected_nodes:
@@ -719,14 +719,18 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
                 vulnerable_neighbors.add(node)
             common_elements = set(vulnerable_neighbors) & set(targets)
             logger.info("node " + f'{node}' + " is saving the nodes " + str(common_elements))
-            if len(common_elements) > max_number:
-                best_node = node
-                nodes_saved = common_elements
-                max_number = len(common_elements)
 
-    if best_node != None:
-     logger.info("The best node is: " + f'{best_node}' + " and it's saves nodes: " + str(nodes_saved))
-    return best_node, nodes_saved
+            heapq.heappush(priority_queue, (-len(common_elements), node not in targets, node, common_elements))
+
+    if priority_queue:
+        best_node_info = heapq.heappop(priority_queue)
+        best_node = best_node_info[2]
+        nodes_saved = best_node_info[3]
+        logger.info("The best node is: " + f'{best_node}' + " and it's saving nodes: " + str(nodes_saved))
+        return best_node, nodes_saved
+    
+    return None, []
+
 # ===========================  End Heuristic Utilities ================================
 
 # ===========================  General Utilities ======================================
