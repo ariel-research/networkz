@@ -20,11 +20,14 @@ Shaked Levi
 """
 
 import networkx as nx
+import networkx.algorithms.connectivity as algo 
+from networkz.algorithms.approximation.firefighter_problem.Utils import *
 import logging
+
 
 logger = logging.getLogger(__name__)
 
-def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: int = None) -> nx.DiGraph:
+def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: int = None) -> set:
     """
     Computes a maximum flow in the given graph, where each node has a capacity
 
@@ -41,8 +44,8 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
 
     Returns:
     -------
-    nx.DiGraph
-        The transformed graph after flow reduction.
+    set
+       The minimum cut nodes 
 
     Notes:
     -----
@@ -58,22 +61,17 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
     Examples:
     --------
     >>> G = nx.DiGraph()
-    >>> G.add_node(1, capacity=10)
-    >>> G.add_node(2, capacity=15)
-    >>> G.add_node(3, capacity=20)
-    >>> G.add_edge(1, 2)
+    >>> G.add_node(1, capacity=0.6)
+    >>> G.add_node(2, capacity=0.6)
+    >>> G.add_node(3, capacity=0.3)
+    >>> G.add_node(4, capacity=0.3)
+    >>> G.add_edge(0, 1)
+    >>> G.add_edge(0, 2)
     >>> G.add_edge(2, 3)
-    >>> G.add_edge(1, 3)
-    >>> H = max_flow_with_node_capacity(G, 1, 3)
-    >>> sorted(list(H.nodes))
-    ['1_in', '1_out', '2_in', '2_out', '3_in', '3_out']
-    >>> sorted(list(H.edges(data=True)))
-    [('1_in', '1_out', {'weight': inf}), ('1_out', '2_in', {'weight': inf}), ('1_out', '3_in', {'weight': inf}), ('2_in', '2_out', {'weight': 15}), ('2_out', '3_in', {'weight': inf}), ('3_in', '3_out', {'weight': inf})]
-    >>> H = max_flow_with_node_capacity(G)
-    >>> sorted(list(H.nodes))
-    ['1_in', '1_out', '2_in', '2_out', '3_in', '3_out']
-    >>> sorted(list(H.edges(data=True)))
-    [('1_in', '1_out', {'weight': 10}), ('1_out', '2_in', {'weight': inf}), ('1_out', '3_in', {'weight': inf}), ('2_in', '2_out', {'weight': 15}), ('2_out', '3_in', {'weight': inf}), ('3_in', '3_out', {'weight': 20})]
+    >>> G.add_edge(1, 4)
+    >>> s_t_G = create_st_graph(G, [2,4])
+    >>> min_cut_nodes = max_flow_with_node_capacity(s_t_G, 0, 4)
+    {'2_out', '4_out'}
     """
     logger.info("Starting graph flow reduction")
     H = nx.DiGraph()
@@ -100,7 +98,16 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
         logger.debug(f"Added infinite capacity edge from {u_out} to {v_in}")
     
     logger.info("Graph flow reduction finished")
-    return H
+
+    # Compute the minimum cut
+    logger.info(f"Finding the minimum cut on the graph after reduction") 
+    min_cut_nodes = algo.minimum_st_node_cut(H, f'{source}_out', 't_in')
+    
+    logger.info(f"Minimum Cut is: {min_cut_nodes}")  
+    
+    print(set(sorted(min_cut_nodes)))
+
+    return min_cut_nodes
 
 if __name__ == "__main__":
     import doctest

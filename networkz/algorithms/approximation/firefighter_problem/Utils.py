@@ -515,9 +515,9 @@ def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
     logger.info(f"Done creating a s-t graph") 
     return G
 
-def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
+def min_cut_N_groups(min_cut_nodes: set, layers: list) -> dict:
     """
-    Find the minimum cut and group nodes accordingly.
+    Using the minimum cut group nodes accordingly.
 
     Parameters:
     ----------
@@ -537,15 +537,12 @@ def min_cut_N_groups(graph: nx.DiGraph, source: int, layers: list) -> dict:
     --------
 
     """
-    # Compute the minimum cut
-    logger.info(f"Finding the minimum cut on the graph after reduction") 
-    min_cut_nodes = algo.minimum_st_node_cut(graph, f'{source}_out', 't_in')
     
-    logger.info(f"Minimum Cut is: {min_cut_nodes}")  
+    logger.info(f"Finding the correct nodes from each layer according to the min-cut nodes") 
 
     # Initialize the groups dictionary with empty lists for each layer index
     groups = {i+1: [] for i in range(len(layers)-1)}
-    logger.info(f"Finding the correct nodes from each layer according to the min-cut nodes") 
+    
     
     # Populate the groups dictionary
     for item in min_cut_nodes:
