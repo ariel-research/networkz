@@ -476,7 +476,7 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
 
     return layers
 
-def adjust_nodes_capacity_parallel(graph: nx.DiGraph, source: int) -> list:
+def adjust_nodes_capacity_parallel(graph: nx.DiGraph, source: int) -> list: #TODO
     """
     This is a tryout to improve the adjust_nodes_capacity by using threadpool to calcualte each layer and its nodes capacity in parallel
     """
