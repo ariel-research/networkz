@@ -720,7 +720,7 @@ def min_budget_calculation(matrix: np.matrix) -> int:
 
 def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict:
     """
-    Determines a feasible vaccination strategy given the vaccine matrix, minimum budget, and layers.
+    Determines a feasible vaccination strategy given the vaccine matrix and the nodes from each layer.
 
     Parameters:
     ----------
