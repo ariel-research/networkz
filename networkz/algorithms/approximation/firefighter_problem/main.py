@@ -72,7 +72,7 @@ def compare_functions(graph: nx.DiGraph, source: int):
     plt.show()
 
 
-def compare_algorithms(graph: nx.DiGraph, source: int, targets:list):
+def compare_spreading_algorithms(graph: nx.DiGraph, source: int, targets:list):
     """
     This method is used to compare the algoritmhs we created and show thier running time.
     """
@@ -80,40 +80,67 @@ def compare_algorithms(graph: nx.DiGraph, source: int, targets:list):
     graph2 = graph.copy()
     graph3 = graph.copy()
     graph4 = graph.copy()
-    graph5 = graph.copy()
+   
+
+    start_time1 = time.time()
+    heuristic_maxsave(graph1, 1,source, targets)
+    end_time1 = time.time() - start_time1
+
+    start_time2 = time.time()
+    heuristic_minbudget(graph2,source, targets, True) #spreading 
+    end_time2 = time.time() - start_time2
+
+    start_time3 = time.time()
+    spreading_minbudget(graph3,source, targets)
+    end_time3 = time.time() - start_time3
+
+    start_time4 = time.time()
+    spreading_maxsave(graph4, 1,source, targets)
+    end_time4 = time.time() - start_time4
+
+    # Plot the execution times
+    plt.figure(figsize=(10, 5))
+    
+    times = [end_time1, end_time2, end_time3 ,end_time4]
+    labels = ['heuristic_maxsave','heuristic_minbudget', 'minbudget', 'maxsave']
+    
+    plt.bar(labels, times, color=['b', 'b', 'g', 'g'], alpha=0.6)
+    plt.title('Algorithm Running time comparison')
+    plt.xlabel('Execution Type')
+    plt.ylabel('Time (seconds)')
+    plt.show()
+
+def compare_non_spreading_algorithm(graph: nx.DiGraph, source: int, targets:list):
+    """
+    This method is used to compare the algoritmhs we created and show thier running time.
+    """
+    graph1 = graph.copy()
+    graph2 = graph.copy()
+    graph3 = graph.copy()
 
     start_time1 = time.time()
     non_spreading_dirlaynet_minbudget(graph1, source,targets)
     end_time1= time.time() - start_time1
 
     start_time2 = time.time()
-    heuristic_maxsave(graph2, 1,source, targets)
+    heuristic_minbudget(graph2,source, targets, False) #no spreading
     end_time2 = time.time() - start_time2
 
     start_time3 = time.time()
-    heuristic_minbudget(graph3,source, targets, False) #no spreading
+    non_spreading_minbudget(graph3,source, targets)
     end_time3 = time.time() - start_time3
 
-    start_time4 = time.time()
-    spreading_minbudget(graph4,source, targets)
-    end_time4 = time.time() - start_time4
-
-    start_time5 = time.time()
-    spreading_maxsave(graph5, 1,source, targets)
-    end_time5 = time.time() - start_time5
-
     # Plot the execution times
-    plt.figure(figsize=(15, 8))
+    plt.figure(figsize=(10, 5))
     
-    times = [end_time1, end_time2, end_time3 ,end_time4, end_time5]
-    labels = ['non_spreading\ndirlaynet_minbudget', 'spreading\nheuristic_maxsave', 'non_spreading\nheuristic_min_budget', 'spreading\nminbudget', 'spreading\nmaxsave']
+    times = [end_time1, end_time2, end_time3]
+    labels = ['dirlaynet_minbudget', 'heuristic_minbudget', 'mincut_minbudget']
     
-    plt.bar(labels, times, color=['b', 'g'], alpha=0.6)
-    plt.title('Algorithm Running time comparison')
+    plt.bar(labels, times, color=['b', 'g', 'y'], alpha=0.6)
+    plt.title('Non spreading algorithms Running time comparison')
     plt.xlabel('Execution Type')
     plt.ylabel('Time (seconds)')
     plt.show()
-    
 
 if __name__ == "__main__":
     import doctest
@@ -149,7 +176,8 @@ if __name__ == "__main__":
 
     "Compare Graph Algorithms:"
     # compare_algorithms(G_dirlay_random,0, [2,4]) # more complex random graph comparison
-    # compare_algorithms(G2, 0, [2,4]) # simple graph example comparison
+    compare_non_spreading_algorithm(G_dirlay_random, 0, [2,4]) # simple graph example comparison
+    compare_spreading_algorithms(G_dirlay_random, 0, [2,4]) 
 
 
 
