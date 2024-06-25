@@ -40,25 +40,6 @@ with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r")
         json_data = json.load(file)
 graphs = parse_json_to_networkx(json_data)
 
-
-# def test_source_not_in_graph():
-#     """
-#     This test checks if the source node is not a real node in the graph.
-#     """
-#     pattern = r"Error: The source node is( not|n't) on the graph"
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], -3, [0, 5])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 13, [0, 1, 4])
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 15, [0, 6, 7])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], -1, [1, 3, 5, 7])
-
 @pytest.mark.parametrize("graph_key, source, targets", [
     ("Dirlay_Graph-1", -3, [0, 5]),
     ("Dirlay_Graph-2", 13, [0, 1, 4]),
@@ -69,24 +50,6 @@ def test_source_not_in_graph(graph_key, source, targets):
     with pytest.raises(ValueError):
         non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
 
-# def test_target_not_in_graph():
-#     """
-#     This test checks if a node we're trying to save is not in the graph.
-#     """
-#     pattern = r"Error: Not all nodes (we're trying to save|in the targets list) are on the graph"
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [1, 5, 7])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 2, -1, 9])
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 4, [0, 1, 2, 11, 12, 13, 14])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 0, [1, 3, 5, 7, 15, 20])
-
 @pytest.mark.parametrize("graph_key, source, targets", [
     ("Dirlay_Graph-1", 0, [1, 5, 7]),
     ("Dirlay_Graph-2", 1, [0, 2, -1, 9]),
@@ -96,26 +59,6 @@ def test_source_not_in_graph(graph_key, source, targets):
 def test_target_not_in_graph(graph_key, source, targets):
     with pytest.raises(ValueError):
         non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
-
-
-# def test_source_is_target():
-#     """
-#     This test checks if we're trying to save a source node.
-#     """
-#     pattern = r"Error: The source node can( not|'t) be a part of the targets (vector|list), since the virus is spreading from the source"
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-1"], 0, [0, 5])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-2"], 1, [0, 1, 4])
-    
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-3"], 6, [0, 6, 7])
-
-#     with pytest.raises(ValueError, match=pattern):
-#         non_spreading_dirlaynet_minbudget(graphs["Dirlay_Graph-4"], 3, [1, 3, 5, 7])
-
 
 @pytest.mark.parametrize("graph_key, source, targets", [
     ("Dirlay_Graph-1", 0, [0, 5]),
@@ -128,7 +71,6 @@ def test_source_is_target(graph_key, source, targets):
         non_spreading_dirlaynet_minbudget(graphs[graph_key], source, targets)
 
     
-
 # Test 1
 # graph building
 graph_1 = graphs["Dirlay_Graph-1"]
