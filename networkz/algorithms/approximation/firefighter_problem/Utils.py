@@ -27,6 +27,7 @@ from enum import Enum
 import copy
 import logging
 import heapq
+import concurrent.futures # this is used for improving the dirlay function - adjust_nodes_capacity
 
 class Status(Enum):
     VULNERABLE = "vulnerable"
@@ -474,6 +475,33 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int)->list:
     logger.info(f"Done with adding capacity for nodes, with Layers: {layers}")       
 
     return layers
+
+def adjust_nodes_capacity_parallel(graph: nx.DiGraph, source: int) -> list: #TODO
+    """
+    This is a tryout to improve the adjust_nodes_capacity by using threadpool to calcualte each layer and its nodes capacity in parallel
+    """
+    logger.debug("Starting to adjust node capacity for dirlay graph nodes in parallel...")
+
+    layers = list(nx.bfs_layers(graph, source))
+    harmonic_sums = np.cumsum([1 / i for i in range(1, len(layers))])
+
+    def set_node_capacity(index, nodes_chunk):
+        for node in nodes_chunk:
+            graph.nodes[node]['capacity'] = 1 / (index * harmonic_sums[index - 1])
+            logger.info(f"Added Capacity {1 / (index * harmonic_sums[index - 1])} for node: {node}") 
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
+        for index in range(1, len(layers)):
+            chunk_size = max(1, len(layers[index]) // executor._max_workers)
+            for i in range(0, len(layers[index]), chunk_size):
+                chunk = layers[index][i:i + chunk_size]
+                futures.append(executor.submit(set_node_capacity, index, chunk))
+        concurrent.futures.wait(futures)
+
+    logger.info(f"Done with adding capacity for nodes, with Layers: {layers}")       
+    return layers
+
 
 def create_st_graph(graph:nx.DiGraph, targets:list)->nx.DiGraph:
     """
