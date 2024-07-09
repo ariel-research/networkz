@@ -23,7 +23,7 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
-from networkz.algorithms.approximation.firefighter_problem.max_flow_with_node_capacity import max_flow_with_node_capacity
+from networkz.algorithms.approximation.firefighter_problem.max_flow_with_node_capacity import min_cut_with_node_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 logger = logging.getLogger(__name__)
@@ -275,7 +275,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     layers = adjust_nodes_capacity(Graph, src)
     G = create_st_graph(Graph, targets)
     #display_graph(G)
-    G_reduction_min_cut = max_flow_with_node_capacity(G, source=src, target='t')
+    G_reduction_min_cut = min_cut_with_node_capacity(G, source=src, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     integer_matrix = matrix_to_integers_values(vacc_matrix)

@@ -27,9 +27,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: int = None) -> set:
+def min_cut_with_node_capacity(graph: nx.DiGraph, source: int = None, target: int = None) -> set:
     """
-    Computes a maximum flow in the given graph, where each node has a capacity
+    Computes a minimum cut in the given graph, where each node has a capacity
 
     Parameters:
     ----------
@@ -70,7 +70,8 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
     >>> G.add_edge(2, 3)
     >>> G.add_edge(1, 4)
     >>> s_t_G = create_st_graph(G, [2,4])
-    >>> min_cut_nodes = max_flow_with_node_capacity(s_t_G, 0, 4)
+    >>> min_cut_nodes = min_cut_with_node_capacity
+    (s_t_G, 0, 4)
     >>> sorted(min_cut_nodes)
     ['2_out', '4_out']
     """
@@ -105,7 +106,6 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
     min_cut_nodes = algo.minimum_st_node_cut(H, f'{source}_out', 't_in')
     
     logger.info(f"Minimum Cut is: {min_cut_nodes}")  
-   
     return min_cut_nodes
 
 if __name__ == "__main__":
