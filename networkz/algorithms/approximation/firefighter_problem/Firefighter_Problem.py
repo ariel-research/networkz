@@ -23,7 +23,7 @@ import networkx as nx
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
-from networkz.algorithms.approximation.firefighter_problem.max_flow_with_node_capacity import min_cut_with_node_capacity
+from networkz.algorithms.max_flow_with_node_capacity import min_cut_with_node_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 logger = logging.getLogger(__name__)
