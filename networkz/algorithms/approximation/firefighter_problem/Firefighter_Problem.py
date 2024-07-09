@@ -309,7 +309,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     >>> G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
     >>> G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
     >>> heuristic_maxsave(G, 1, 0, [1, 2, 3])
-    [(1, 1)]
+    ([(1, 1)], {1, 2, 3})
     """
     if budget < 1:
         logger.critical("Error: The budget must be at least 1")
@@ -423,5 +423,5 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
 if __name__ == "__main__":
     import doctest
     result = doctest.testmod(verbose=False)
-    logger.info(f"Doctest results: {result}")
+    print(f"Doctest results: {result}")
     

@@ -70,8 +70,7 @@ def min_cut_with_node_capacity(graph: nx.DiGraph, source: int = None, target: in
     >>> G.add_edge(2, 3)
     >>> G.add_edge(1, 4)
     >>> s_t_G = create_st_graph(G, [2,4])
-    >>> min_cut_nodes = min_cut_with_node_capacity
-    (s_t_G, 0, 4)
+    >>> min_cut_nodes = min_cut_with_node_capacity(s_t_G, 0, 4)
     >>> sorted(min_cut_nodes)
     ['2_out', '4_out']
     """

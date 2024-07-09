@@ -180,4 +180,3 @@ if __name__ == "__main__":
     compare_spreading_algorithms(G_dirlay_random, 0, [2,4]) 
 
 
-
