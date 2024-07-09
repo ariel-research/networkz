@@ -71,7 +71,8 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
     >>> G.add_edge(1, 4)
     >>> s_t_G = create_st_graph(G, [2,4])
     >>> min_cut_nodes = max_flow_with_node_capacity(s_t_G, 0, 4)
-    {'2_out', '4_out'}
+    >>> sorted(min_cut_nodes)
+    ['2_out', '4_out']
     """
     logger.info("Starting graph flow reduction")
     H = nx.DiGraph()
@@ -104,9 +105,7 @@ def max_flow_with_node_capacity(graph: nx.DiGraph, source: int = None, target: i
     min_cut_nodes = algo.minimum_st_node_cut(H, f'{source}_out', 't_in')
     
     logger.info(f"Minimum Cut is: {min_cut_nodes}")  
-    
-    print(set(sorted(min_cut_nodes)))
-
+   
     return min_cut_nodes
 
 if __name__ == "__main__":
