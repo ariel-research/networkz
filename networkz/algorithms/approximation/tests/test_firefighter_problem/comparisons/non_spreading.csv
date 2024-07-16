@@ -1,0 +1,4 @@
+algorithm,Budget
+non_spreading_dirlaynet_minbudget,6
+non_spreading_minbudget,6
+heuristic_minbudget,"(4, ([(2, 1), (4, 1), (6, 1), (7, 1), (11, 2), (10, 2), (12, 2), (13, 2)], {2, 4, 20, 6, 7, 8, 9, 15}))"

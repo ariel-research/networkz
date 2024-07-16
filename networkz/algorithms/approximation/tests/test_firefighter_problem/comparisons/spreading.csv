@@ -1,0 +1,5 @@
+algorithm,Budget
+spreading_minbudget,"(4, [(2, 1), (4, 1), (6, 1), (7, 1)])"
+spreading_maxsave,"([(2, 1), (14, 2)], {2, 20, 8, 9, 15})"
+heuristic_minbudget,"(4, ([(2, 1), (4, 1), (6, 1), (7, 1)], {2, 4, 20, 6, 7, 8, 9, 15}))"
+heuristic_maxsave,"([(2, 1)], {2, 8, 9, 15, 20})"
