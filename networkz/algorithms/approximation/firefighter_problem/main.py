@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 # and the bottom one needs to be exclusive for running this from terminal to work
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import *
-from networkz.algorithms.tests.test_firefighter_problem.test_non_spreading_dirlaynet_minbudget import generate_layered_network
+from networkz.algorithms.approximation.tests.test_firefighter_problem.test_non_spreading_dirlaynet_minbudget import generate_layered_network
 import networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem as firefighter_problem # to run the doctest on the firefighter_problem files
 
 def setup_global_logger(level: int = logging.DEBUG):
