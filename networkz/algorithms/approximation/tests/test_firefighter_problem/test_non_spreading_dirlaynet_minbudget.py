@@ -25,6 +25,7 @@ import json
 import numpy as np
 import math
 import random
+import os
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import non_spreading_dirlaynet_minbudget
 from networkz.algorithms.approximation.firefighter_problem.Utils import adjust_nodes_capacity
@@ -36,8 +37,12 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
-with open("networkz/algorithms/approximation/tests/test_firefighter_problem/graphs.json", "r") as file:
+path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
+if path_to_graphs:
+    with open(path_to_graphs, "r") as file:
         json_data = json.load(file)
+else:
+    raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
 graphs = parse_json_to_networkx(json_data)
 
 @pytest.mark.parametrize("graph_key, source, targets", [
