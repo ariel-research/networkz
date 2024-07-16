@@ -22,6 +22,7 @@ Shaked Levi
 import logging
 import json
 import time
+import os
 logger = logging.getLogger(__name__)
 
 
@@ -146,8 +147,12 @@ if __name__ == "__main__":
     import doctest
     setup_global_logger(level=logging.DEBUG)
 
-    with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
-        json_data = json.load(file)
+    path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
+    if path_to_graphs:
+        with open(path_to_graphs, "r") as file:
+            json_data = json.load(file)
+    else:
+        raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
     graphs = parse_json_to_networkx(json_data)
 
     G_dirlay_random = generate_layered_network() #random graph generator for dirlay testings/ can also fit other algorithms but dirlay

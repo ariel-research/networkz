@@ -23,12 +23,17 @@ import pytest
 import networkx as nx
 import json
 import random
+import os
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import spreading_maxsave
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, calculate_gamma, calculate_epsilon, find_best_direct_vaccination
 
-with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
+path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
+if path_to_graphs:
+    with open(path_to_graphs, "r") as file:
         json_data = json.load(file)
+else:
+    raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
 graphs = parse_json_to_networkx(json_data)
 
 @pytest.mark.parametrize("graph_key, budget, source, targets", [

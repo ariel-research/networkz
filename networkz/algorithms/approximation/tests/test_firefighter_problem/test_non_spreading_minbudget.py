@@ -22,6 +22,7 @@ Shaked Levi
 import pytest
 import networkx as nx
 import json
+import os
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import non_spreading_minbudget
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
@@ -44,8 +45,12 @@ def sample_json_data():
     }
 
 def get_graphs():
-    with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
-        json_data = json.load(file)
+    path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
+    if path_to_graphs:
+        with open(path_to_graphs, "r") as file:
+            json_data = json.load(file)
+    else:
+        raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
     graphs = parse_json_to_networkx(json_data)
     return graphs
 

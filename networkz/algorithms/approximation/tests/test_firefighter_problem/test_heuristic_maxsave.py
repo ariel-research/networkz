@@ -32,24 +32,24 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import find_bes
 def setup_logger():
     logger = logging.getLogger('firefighter_problem_tests')
     logger.setLevel(logging.INFO)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_dir = 'networkz/algorithms/tests/test_firefighter_problem/comparisons'
-    os.makedirs(log_dir, exist_ok=True)
-    log_file_path = os.path.join(log_dir, f'test_heuristic_maxsave_comparison_{timestamp}.txt')
-
-    file_handler = logging.FileHandler(log_file_path, mode='w')
-    file_handler.setLevel(logging.INFO)
+    
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
+    console_handler.setFormatter(formatter)
+    
+    logger.addHandler(console_handler)
     return logger
 
 logger = setup_logger()
 
-with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
-    json_data = json.load(file)
+path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
+if path_to_graphs:
+    with open(path_to_graphs, "r") as file:
+        json_data = json.load(file)
+else:
+    raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
 graphs = parse_json_to_networkx(json_data)
 
 @pytest.mark.parametrize("graph_key, budget, source, targets", [
