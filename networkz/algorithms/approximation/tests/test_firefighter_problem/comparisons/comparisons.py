@@ -20,6 +20,7 @@ Shaked Levi
 """
 
 import experiments_csv
+from experiments_csv import *
 import logging
 logger = logging.getLogger(__name__)
 
@@ -27,6 +28,7 @@ logger = logging.getLogger(__name__)
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import *
 from networkz.algorithms.approximation.tests.test_firefighter_problem.test_non_spreading_dirlaynet_minbudget import generate_layered_network
+from matplotlib import pyplot as plt
 
 def setup_global_logger(level: int = logging.DEBUG):
     log_format = "|| %(asctime)s || %(levelname)s || %(message)s"
@@ -83,7 +85,7 @@ if __name__ == "__main__":
     input_ranges = {
         "algorithm":[non_spreading_dirlaynet_minbudget,non_spreading_minbudget,heuristic_minbudget],
     }
-    ex1.run(runner_no_spreading,input_ranges)
+    ex1.run_with_time_limit(runner_no_spreading,input_ranges, time_limit=0.9)
 
     """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -93,9 +95,26 @@ if __name__ == "__main__":
     input_ranges = {
         "algorithm":[spreading_minbudget,spreading_maxsave,heuristic_minbudget,heuristic_maxsave],
     }
-    ex2.run(runner_spreading,input_ranges)
+    ex2.run_with_time_limit(runner_spreading,input_ranges, time_limit=0.9)
 
 
+    #Plotting:
+
+    single_plot_results("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading.csv", 
+                        filter = {}, 
+                        x_field="algorithm", 
+                        y_field="runtime", 
+                        z_field="Budget", 
+                        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading.png")
+    
     print("\n DataFrame-NonSpread: \n", ex1.dataFrame)
+
+
+    single_plot_results("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.csv", 
+                        filter = {}, 
+                        x_field="algorithm", 
+                        y_field="runtime", 
+                        z_field="Budget", 
+                        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.png")
 
     print("\n DataFrame-Spreading: \n", ex2.dataFrame)
