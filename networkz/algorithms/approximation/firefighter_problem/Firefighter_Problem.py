@@ -246,7 +246,7 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     logger.info(f"Returning minimum budget: {min_budget}")
     return min_budget
 
-def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->int:
+def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     """
     "Approximability of the Firefighter Problem - Computing Cuts over Time",
     by Elliot Anshelevich, Deeparnab Chakrabarty, Ameya Hate, Chaitanya Swamy (2010)
@@ -264,18 +264,18 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, src:int, targets:list)->
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
     2
     """
-    validate_parameters(Graph, src, targets)
+    validate_parameters(Graph, source, targets)
     if not is_dag(Graph):
        logger.error("Problem with graph, its not a DAG, thus cannot run algorithm")
        return
     
     #display_graph(Graph)
-    logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {src} and targets: {targets}")
+    logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
 
-    layers = adjust_nodes_capacity(Graph, src)
+    layers = adjust_nodes_capacity(Graph, source)
     G = create_st_graph(Graph, targets)
     #display_graph(G)
-    G_reduction_min_cut = min_cut_with_node_capacity(G, source=src, target='t')
+    G_reduction_min_cut = min_cut_with_node_capacity(G, source=source, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     integer_matrix = matrix_to_integers_values(vacc_matrix)

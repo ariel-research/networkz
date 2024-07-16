@@ -36,7 +36,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
-with open("networkz/algorithms/tests/test_firefighter_problem/graphs.json", "r") as file:
+with open("networkz/algorithms/approximation/tests/test_firefighter_problem/graphs.json", "r") as file:
         json_data = json.load(file)
 graphs = parse_json_to_networkx(json_data)
 
