@@ -1,0 +1,4 @@
+algorithm,Budget,runtime
+non_spreading_dirlaynet_minbudget,7,0.037856300001294585
+non_spreading_minbudget,8,0.0023252999999385793
+heuristic_minbudget,"(8, [])",0.08596559999932651
