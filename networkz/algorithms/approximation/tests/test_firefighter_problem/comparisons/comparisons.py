@@ -1,10 +1,26 @@
-import experiments_csv
-# add the comparisons test from both heuristic files + add a function that will plot the graphs. 
-# TBD 
+"""
 
+The Paper - 
+Approximability of the Firefighter Problem Computing Cuts over Time
+
+Paper Link -
+https://www.math.uwaterloo.ca/~cswamy/papers/firefighter-journ.pdf
+
+Authors - 
+Elliot Anshelevich
+Deeparnab Chakrabarty
+Ameya Hate 
+Chaitanya Swamy
+
+Developers - 
+Yuval Bubnovsky
+Almog David
+Shaked Levi
+
+"""
+
+import experiments_csv
 import logging
-import json
-import time
 logger = logging.getLogger(__name__)
 
 
