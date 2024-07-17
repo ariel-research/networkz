@@ -166,3 +166,8 @@ def test_random_graph_comparison():
     finally:
         logger.info("Finished test_random_graph_comparison.")
         logger.info("-" * 100)
+
+
+if __name__ == "__main__":
+     pytest.main(["-v",__file__])
+
