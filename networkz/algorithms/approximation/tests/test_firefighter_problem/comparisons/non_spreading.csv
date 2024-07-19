@@ -1,4 +1,17 @@
-algorithm,Budget,runtime
-non_spreading_dirlaynet_minbudget,7,0.037856300001294585
-non_spreading_minbudget,8,0.0023252999999385793
-heuristic_minbudget,"(8, [])",0.08596559999932651
+algorithm,runtime,Budget
+non_spreading_dirlaynet_minbudget,0.032958900002995506,"(5, {0: [4, 3, 2, 1, 6]})"
+non_spreading_minbudget,0.0026366999954916537,5
+heuristic_minbudget,0.010915699996985495,"(3, [(3, 1), (2, 1), (4, 1)])"
+non_spreading_dirlaynet_minbudget,0.0191839000035543,"(5, {0: [4, 3, 5, 2, 1]})"
+non_spreading_minbudget,0.0015363999991677701,5
+heuristic_minbudget,0.013955700007500127,"(3, [(4, 1), (2, 1), (1, 1)])"
+non_spreading_dirlaynet_minbudget,0.017144200013717636,"(6, {0: [4, 7, 8, 2, 6, 9]})"
+non_spreading_minbudget,0.0015580999897792935,6
+heuristic_minbudget,0.01971260001300834,"(6, [])"
+non_spreading_dirlaynet_minbudget,0.026681699993787333,"(3, {0: [4, 2, 7], 1: [7]})"
+non_spreading_minbudget,0.0019831999961752445,4
+heuristic_minbudget,0.018595000001369044,"(2, [(2, 1), (4, 1), (6, 2), (7, 2)])"
+non_spreading_dirlaynet_minbudget,0.043380599992815405,"(6, {0: [4, 7, 8, 2, 6, 9]})"
+non_spreading_minbudget,0.0037419000000227243,6
+heuristic_minbudget,0.025103599997237325,"(6, [])"
+,0.29183470000862144,

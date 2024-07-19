@@ -41,23 +41,18 @@ def setup_global_logger(level: int = logging.DEBUG):
     root_logger.setLevel(level)
     root_logger.addHandler(handler)
 
-G_dirlay_random = generate_layered_network()
 
-def runner_no_spreading(algorithm):
-    graph = G_dirlay_random.copy()
-    source = 0
-    targets = [2,4,6,7,8,9,20,15]
-
+def runner_no_spreading(algorithm, graph, source, targets):
     if algorithm == heuristic_minbudget:
-         return {"Budget" : (algorithm(Graph=graph,source=source,targets=targets,spreading=False))}
-    
+        result = algorithm(Graph=graph, source=source, targets=targets, spreading=False)
+        return {"Budget": result}
     else:
-        return {"Budget" : (algorithm(Graph=graph,source=source,targets=targets))}
+        result = algorithm(Graph=graph, source=source, targets=targets)
+        return {"Budget": result}
 
         
-def runner_spreading(algorithm):
+def runner_spreading(algorithm, source):
     graph = G_dirlay_random.copy()
-    source = 0
     targets = [2,4,6,7,8,9,20,15]
 
     if algorithm == heuristic_minbudget:
@@ -73,6 +68,8 @@ def runner_spreading(algorithm):
         return {"Budget" : (algorithm(Graph=graph,source=source,targets=targets))}
 
 
+from time import perf_counter
+
 if __name__ == "__main__":
     setup_global_logger(level=logging.DEBUG)
 
@@ -84,18 +81,36 @@ if __name__ == "__main__":
 
     input_ranges = {
         "algorithm":[non_spreading_dirlaynet_minbudget,non_spreading_minbudget,heuristic_minbudget],
+
     }
-    ex1.run_with_time_limit(runner_no_spreading,input_ranges, time_limit=0.9)
+    def multiple_runs(runs=5):
+        for _ in range(runs):
+            graph = generate_layered_network()
+            source = 0
+            targets = [2, 4, 6, 7, 8, 9]
+            for algorithm in input_ranges["algorithm"]:
+                print(f"TEST LAYERS FOR ALGO {algorithm}, with graph -> {graph.nodes}")
+                start_time = perf_counter()
+                result = runner_no_spreading(algorithm, graph, source, targets)
+                runtime = perf_counter() - start_time
+                ex1.add({**{"algorithm": algorithm.__name__, "runtime": runtime}, **result})
+        return {"status": "completed"}
+
+    # Set a time limit for the entire batch run
+    ex1.run_with_time_limit(multiple_runs, input_ranges={}, time_limit=0.9)
+
+    # ex1.run_with_time_limit(runner_no_spreading,input_ranges, time_limit=0.9)
 
     """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-    ex2 = experiments_csv.Experiment("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/", "spreading.csv", backup_folder=None)
-    ex2.clear_previous_results() # to clear previous experminets..
+    # ex2 = experiments_csv.Experiment("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/", "spreading.csv", backup_folder=None)
+    # ex2.clear_previous_results() # to clear previous experminets..
 
-    input_ranges = {
-        "algorithm":[spreading_minbudget,spreading_maxsave,heuristic_minbudget,heuristic_maxsave],
-    }
-    ex2.run_with_time_limit(runner_spreading,input_ranges, time_limit=0.9)
+    # input_ranges = {
+    #     "algorithm":[spreading_minbudget,spreading_maxsave,heuristic_minbudget,heuristic_maxsave],
+    #     "source" : [0,4,6,7]
+    # }
+    # ex2.run_with_time_limit(runner_spreading,input_ranges, time_limit=0.9)
 
 
     #Plotting:
@@ -110,11 +125,11 @@ if __name__ == "__main__":
     print("\n DataFrame-NonSpread: \n", ex1.dataFrame)
 
 
-    single_plot_results("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.csv", 
-                        filter = {}, 
-                        x_field="algorithm", 
-                        y_field="runtime", 
-                        z_field="Budget", 
-                        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.png")
+    # single_plot_results("./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.csv", 
+    #                     filter = {}, 
+    #                     x_field="algorithm", 
+    #                     y_field="runtime", 
+    #                     z_field="Budget", 
+    #                     save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading.png")
 
-    print("\n DataFrame-Spreading: \n", ex2.dataFrame)
+    # print("\n DataFrame-Spreading: \n", ex2.dataFrame)
