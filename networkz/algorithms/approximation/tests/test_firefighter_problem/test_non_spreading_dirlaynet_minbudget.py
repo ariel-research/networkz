@@ -37,12 +37,12 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
 
-path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
-if path_to_graphs:
+path_to_graphs = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphs.json')
+if os.path.exists(path_to_graphs):
     with open(path_to_graphs, "r") as file:
         json_data = json.load(file)
 else:
-    raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
+    raise FileNotFoundError(f"{path_to_graphs} does not exist.")
 graphs = parse_json_to_networkx(json_data)
 
 @pytest.mark.parametrize("graph_key, source, targets", [
@@ -429,3 +429,6 @@ def test_non_spreading_dirlaynet_minbudget():
     
     min_budget = non_spreading_dirlaynet_minbudget(G, source, targets)
     assert min_budget > 0, "Minimum budget should be non-negative"
+
+if __name__ == "__main__":
+    pytest.main(["-v", __file__])

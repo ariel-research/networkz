@@ -134,3 +134,6 @@ def test_parsing_regular_graph_status(sample_json_data):
     regular_graph = graphs["RegularGraph_Graph-1"]
     for node in regular_graph.nodes(data=True):
         assert node[1]["status"] == Status.VULNERABLE.value
+
+if __name__ == "__main__":
+    pytest.main(["-v", __file__])

@@ -45,12 +45,13 @@ def sample_json_data():
     }
 
 def get_graphs():
-    path_to_graphs = os.getenv('GRAPHS_JSON_PATH')
-    if path_to_graphs:
+    path_to_graphs = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphs.json')
+    if os.path.exists(path_to_graphs):
         with open(path_to_graphs, "r") as file:
             json_data = json.load(file)
     else:
-        raise EnvironmentError("Environment variable GRAPHS_JSON_PATH is not set.")
+        raise FileNotFoundError(f"{path_to_graphs} does not exist.")
+    
     graphs = parse_json_to_networkx(json_data)
     return graphs
 
@@ -123,3 +124,7 @@ def test_save_subgroup_vertices():
     assert 4 > non_spreading_minbudget(graphs["RegularGraph_Graph-6"], 1, [0,3,5,6,8,9]) #answer is 1
     assert 2 == non_spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [0,2,5,6]) #answer is 2
     assert 3 == non_spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14]) #answer is 3
+
+
+if __name__ == "__main__":
+    pytest.main(["-v", __file__])
