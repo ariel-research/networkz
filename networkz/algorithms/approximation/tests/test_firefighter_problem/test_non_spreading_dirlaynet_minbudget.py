@@ -381,10 +381,10 @@ def generate_layered_network():
         G (networkx.DiGraph): Directed graph representing the layered network.
     """
     # Randomly decide the number of layers (between 2 and 3 for this example)
-    num_layers = random.randint(2, 6)
+    num_layers = random.randint(5, 10)
     
     # Randomly decide the number of nodes per layer (between 1 and 4 for this example)
-    nodes_per_layer = [random.randint(3, 8) for _ in range(num_layers)]
+    nodes_per_layer = [random.randint(5, 30) for _ in range(num_layers)]
     
     G = nx.DiGraph()
     node_id = 1  # Start node_id from 1 because 0 is the source
