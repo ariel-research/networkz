@@ -1,0 +1,151 @@
+algorithm,runtime,graph_nodes,Budget,Budget_numeric
+non_spreading_dirlaynet_minbudget,0.0298815999994985,21.0,"(2, {0: [6, 13]})",2.0
+non_spreading_minbudget,0.0020215999975334,21.0,"(2, [])",2.0
+heuristic_minbudget,0.0061859999841544,21.0,"(1, [(6, 1), (13, 2)])",1.0
+non_spreading_dirlaynet_minbudget,0.0399452999990899,34.0,"(2, {0: [11], 1: [11, 21]})",2.0
+non_spreading_minbudget,0.0027994000120088,34.0,"(3, [])",3.0
+heuristic_minbudget,0.0393559999938588,34.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0171230999985709,12.0,"(2, {0: [2, 4]})",2.0
+non_spreading_minbudget,0.0012171000125817,12.0,"(2, [])",2.0
+heuristic_minbudget,0.002333800017368,12.0,"(1, [(2, 1)])",1.0
+non_spreading_dirlaynet_minbudget,0.0243907999829389,22.0,"(1, {1: [15], 2: [15]})",1.0
+non_spreading_minbudget,0.001692300022114,22.0,"(2, [])",2.0
+heuristic_minbudget,0.0062463999784085,22.0,"(1, [(1, 1), (11, 2)])",1.0
+non_spreading_dirlaynet_minbudget,0.0165408999891951,15.0,"(3, {0: [1, 2, 9]})",3.0
+non_spreading_minbudget,0.0014712999982293,15.0,"(3, [])",3.0
+heuristic_minbudget,0.0073048000049311,15.0,"(2, [(1, 1), (2, 1)])",2.0
+non_spreading_dirlaynet_minbudget,0.0381439999910071,33.0,"(3, {0: [1, 8, 14], 1: [8]})",3.0
+non_spreading_minbudget,0.0027261000068392,33.0,"(4, [])",4.0
+heuristic_minbudget,0.0221407999924849,33.0,"(4, [])",4.0
+non_spreading_dirlaynet_minbudget,0.0279421999875921,22.0,"(1, {1: [7]})",1.0
+non_spreading_minbudget,0.0051034000061918,22.0,"(1, [])",1.0
+heuristic_minbudget,0.0006380999984685,22.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0186529000056907,13.0,"(2, {0: [11], 1: [7, 11]})",2.0
+non_spreading_minbudget,0.0016684000147506,13.0,"(3, [])",3.0
+heuristic_minbudget,0.0078888999996706,13.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0334970999974757,26.0,"(1, {2: [23], 3: [17]})",1.0
+non_spreading_minbudget,0.0020400000212248,26.0,"(3, [])",3.0
+heuristic_minbudget,0.0220932999800425,26.0,"(2, [(1, 1), (2, 1), (7, 2), (4, 2), (8, 3), (9, 3), (14, 4), (16, 4)])",2.0
+non_spreading_dirlaynet_minbudget,0.0141469999798573,11.0,"(2, {0: [2, 7]})",2.0
+non_spreading_minbudget,0.0017677000141702,11.0,"(2, [])",2.0
+heuristic_minbudget,0.00271130001056,11.0,"(1, [(2, 1)])",1.0
+non_spreading_dirlaynet_minbudget,0.0468065000022761,40.0,"(1, {1: [9]})",1.0
+non_spreading_minbudget,0.0035093000042252,40.0,"(1, [])",1.0
+heuristic_minbudget,0.0004685000167228,40.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.07575089999591,23.0,"(2, {0: [3, 21]})",2.0
+non_spreading_minbudget,0.0018846000020857,23.0,"(3, [])",3.0
+heuristic_minbudget,0.0120806999912019,23.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0242785000009462,21.0,"(4, {0: [2, 6, 1, 17]})",4.0
+non_spreading_minbudget,0.0020016999915242,21.0,"(5, [])",5.0
+heuristic_minbudget,0.015798900014488,21.0,"(3, [(1, 1), (2, 1), (6, 1), (9, 2), (7, 2), (8, 2)])",3.0
+non_spreading_dirlaynet_minbudget,0.0418822999927215,36.0,"(1, {3: [29]})",1.0
+non_spreading_minbudget,0.0027469999913591,36.0,"(3, [])",3.0
+heuristic_minbudget,0.0198507999884895,36.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0241881999827455,22.0,"(3, {0: [2, 3, 11]})",3.0
+non_spreading_minbudget,0.0016522999794688,22.0,"(3, [])",3.0
+heuristic_minbudget,0.0098210999858565,22.0,"(2, [(3, 1), (2, 1)])",2.0
+non_spreading_dirlaynet_minbudget,0.0107918999856337,7.0,"(1, {1: [6]})",1.0
+non_spreading_minbudget,0.0014551999920513,7.0,"(1, [])",1.0
+heuristic_minbudget,0.0005762000218965,7.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0171774000045843,17.0,"(1, {2: [10]})",1.0
+non_spreading_minbudget,0.0019194000051356,17.0,"(1, [])",1.0
+heuristic_minbudget,0.0003678000066429,17.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0367673000146169,32.0,"(4, {0: [3, 2, 24, 30]})",4.0
+non_spreading_minbudget,0.0031527999963145,32.0,"(4, [])",4.0
+heuristic_minbudget,0.0268213000090327,32.0,"(2, ([(2, 1), (3, 1), (5, 2), (7, 2), (18, 3), (13, 3)], {2, 10, 17, 24, 30}))",2.0
+non_spreading_dirlaynet_minbudget,0.0192855999921448,16.0,"(1, {2: [10]})",1.0
+non_spreading_minbudget,0.0016564999823458,16.0,"(1, [])",1.0
+heuristic_minbudget,0.0004227999888826,16.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0202053999819327,17.0,"(1, {1: [6]})",1.0
+non_spreading_minbudget,0.0017649000219535,17.0,"(1, [])",1.0
+heuristic_minbudget,0.0004249999765306,17.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0285397999978158,24.0,"(2, {0: [2, 23]})",2.0
+non_spreading_minbudget,0.0017478000081609,24.0,"(2, [])",2.0
+heuristic_minbudget,0.0091769999999087,24.0,"(1, [(2, 1), (5, 2), (8, 3), (13, 4), (18, 5)])",1.0
+non_spreading_dirlaynet_minbudget,0.0487576000159606,24.0,"(1, {0: [13], 1: [13], 2: [13]})",1.0
+non_spreading_minbudget,0.00227779999841,24.0,"(3, [])",3.0
+heuristic_minbudget,0.0182352999981958,24.0,"(2, [(1, 1), (2, 1), (10, 2), (9, 2)])",2.0
+non_spreading_dirlaynet_minbudget,0.0156105000060051,16.0,"(1, {0: [4]})",1.0
+non_spreading_minbudget,0.0012855000095441,16.0,"(1, [])",1.0
+heuristic_minbudget,0.0003241000231355,16.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0324560000153724,29.0,"(2, {0: [13, 27], 1: [13, 19]})",2.0
+non_spreading_minbudget,0.0026806999812833,29.0,"(4, [])",4.0
+heuristic_minbudget,0.0317030999867711,29.0,"(4, [])",4.0
+non_spreading_dirlaynet_minbudget,0.0293644000194035,23.0,"(3, {0: [1, 2, 6]})",3.0
+non_spreading_minbudget,0.0018336999928578,23.0,"(3, [])",3.0
+heuristic_minbudget,0.0134530999930575,23.0,"(2, ([(1, 1), (2, 1), (6, 2)], {1, 18, 19, 17}))",2.0
+non_spreading_dirlaynet_minbudget,0.0404140999889932,33.0,"(2, {0: [5, 28], 3: [17]})",2.0
+non_spreading_minbudget,0.0024822000123094,33.0,"(3, [])",3.0
+heuristic_minbudget,0.0263792999903671,33.0,"(2, [(5, 1), (1, 1), (6, 2), (7, 2), (10, 3), (11, 3), (16, 4), (17, 4)])",2.0
+non_spreading_dirlaynet_minbudget,0.0373591999814379,33.0,"(2, {0: [3, 32]})",2.0
+non_spreading_minbudget,0.0042027999879792,33.0,"(3, [])",3.0
+heuristic_minbudget,0.0166019999887794,33.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.029954199999338,24.0,"(3, {0: [1, 2, 7]})",3.0
+non_spreading_minbudget,0.0018629999831318,24.0,"(3, [])",3.0
+heuristic_minbudget,0.0181786000030115,24.0,"(2, ([(1, 1), (2, 1), (7, 2)], {10, 11, 18, 20, 21}))",2.0
+non_spreading_dirlaynet_minbudget,0.0296046999865211,26.0,"(1, {2: [8]})",1.0
+non_spreading_minbudget,0.0019776999833993,26.0,"(1, [])",1.0
+heuristic_minbudget,0.0003672000020742,26.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0223191999830305,17.0,"(2, {0: [10], 1: [8, 14]})",2.0
+non_spreading_minbudget,0.0015776999935042,17.0,"(3, [])",3.0
+heuristic_minbudget,0.0125557999999728,17.0,"(2, ([(1, 1), (2, 1), (4, 2), (6, 2)], {8, 10, 14}))",2.0
+non_spreading_dirlaynet_minbudget,0.0226627000083681,18.0,"(3, {0: [3, 11, 16], 1: [11]})",3.0
+non_spreading_minbudget,0.0019396999850869,18.0,"(4, [])",4.0
+heuristic_minbudget,0.0203242000134196,18.0,"(4, [])",4.0
+non_spreading_dirlaynet_minbudget,0.0390988999861292,33.0,"(1, {3: [19]})",1.0
+non_spreading_minbudget,0.0021317999926395,33.0,"(1, [])",1.0
+heuristic_minbudget,0.0004674000083468,33.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0187333999783732,17.0,"(1, {0: [1]})",1.0
+non_spreading_minbudget,0.0015124000201467,17.0,"(1, [])",1.0
+heuristic_minbudget,0.0005033999914303,17.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0247831000015139,19.0,"(2, {0: [9], 1: [9, 18]})",2.0
+non_spreading_minbudget,0.0021314000186976,19.0,"(3, [])",3.0
+heuristic_minbudget,0.010909000004176,19.0,"(2, [(1, 1), (2, 1), (4, 2), (5, 2)])",2.0
+non_spreading_dirlaynet_minbudget,0.0341771000239532,29.0,"(5, {0: [5, 2, 4, 3, 1]})",5.0
+non_spreading_minbudget,0.0021494000102393,29.0,"(5, [])",5.0
+heuristic_minbudget,0.0267189999867696,29.0,"(6, [])",6.0
+non_spreading_dirlaynet_minbudget,0.0172842000029049,16.0,"(2, {0: [6, 11]})",2.0
+non_spreading_minbudget,0.0017674000118859,16.0,"(2, [])",2.0
+heuristic_minbudget,0.004976500000339,16.0,"(1, [(6, 1), (9, 2)])",1.0
+non_spreading_dirlaynet_minbudget,0.0303914000105578,25.0,"(1, {2: [19]})",1.0
+non_spreading_minbudget,0.0022832000104244,25.0,"(2, [])",2.0
+heuristic_minbudget,0.0082521999720484,25.0,"(2, [])",2.0
+non_spreading_dirlaynet_minbudget,0.0205616000166628,18.0,"(1, {3: [15]})",1.0
+non_spreading_minbudget,0.0016141000087372,18.0,"(1, [])",1.0
+heuristic_minbudget,0.0003614999877754,18.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0323197999969124,28.0,"(4, {0: [1, 4, 3, 8]})",4.0
+non_spreading_minbudget,0.0021538000146392,28.0,"(4, [])",4.0
+heuristic_minbudget,0.0296876999782398,28.0,"(3, [(4, 1), (1, 1), (2, 1), (6, 2), (7, 2), (8, 2), (10, 3), (12, 3), (13, 3), (19, 4), (20, 4)])",3.0
+non_spreading_dirlaynet_minbudget,0.0399528999987524,35.0,"(1, {4: [28]})",1.0
+non_spreading_minbudget,0.0025963000080082,35.0,"(1, [])",1.0
+heuristic_minbudget,0.0003266000130679,35.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0423579000052996,37.0,"(1, {4: [29]})",1.0
+non_spreading_minbudget,0.0022821000020485,37.0,"(1, [])",1.0
+heuristic_minbudget,0.000345099979313,37.0,"(1, [])",1.0
+non_spreading_dirlaynet_minbudget,0.0339032000047154,29.0,"(1, {3: [26]})",1.0
+non_spreading_minbudget,0.002523300005123,29.0,"(3, [])",3.0
+heuristic_minbudget,0.0550475999771151,29.0,"(2, ([(1, 1), (2, 1), (5, 2), (6, 2)], {26, 12, 5}))",2.0
+non_spreading_dirlaynet_minbudget,0.0273266999865882,18.0,"(3, {0: [8, 12], 1: [8, 12, 14]})",3.0
+non_spreading_minbudget,0.0020666999917011,18.0,"(4, [])",4.0
+heuristic_minbudget,0.0173148000030778,18.0,"(4, [])",4.0
+non_spreading_dirlaynet_minbudget,0.0357609999773558,31.0,"(3, {0: [11, 10, 20], 1: [11, 27]})",3.0
+non_spreading_minbudget,0.0028994999884162,31.0,"(5, [])",5.0
+heuristic_minbudget,0.0272606000071391,31.0,"(6, [])",6.0
+non_spreading_dirlaynet_minbudget,0.0298097000049892,25.0,"(2, {0: [4, 16]})",2.0
+non_spreading_minbudget,0.0018714999896474,25.0,"(3, [])",3.0
+heuristic_minbudget,0.0112558999971952,25.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0142065999971237,12.0,"(2, {0: [4, 6]})",2.0
+non_spreading_minbudget,0.0012348999734967,12.0,"(2, [])",2.0
+heuristic_minbudget,0.0028930999978911,12.0,"(1, [(4, 1)])",1.0
+non_spreading_dirlaynet_minbudget,0.0268079999950714,23.0,"(3, {0: [1, 9, 12], 1: [9, 12]})",3.0
+non_spreading_minbudget,0.002036300022155,23.0,"(4, [])",4.0
+heuristic_minbudget,0.0083603999810293,23.0,"(2, [(5, 1), (1, 1)])",2.0
+non_spreading_dirlaynet_minbudget,0.0347274999949149,28.0,"(2, {0: [8], 1: [8, 17]})",2.0
+non_spreading_minbudget,0.0032236999832093,28.0,"(3, [])",3.0
+heuristic_minbudget,0.0104927000065799,28.0,"(3, [])",3.0
+non_spreading_dirlaynet_minbudget,0.0212419999879784,19.0,"(2, {0: [1, 2]})",2.0
+non_spreading_minbudget,0.001882199983811,19.0,"(2, [])",2.0
+heuristic_minbudget,0.0028538999904412,19.0,"(2, [])",2.0
+non_spreading_dirlaynet_minbudget,0.0475977000023704,38.0,"(4, {0: [14, 15, 18, 24], 1: [14, 15, 18], 2: [15, 18]})",4.0
+non_spreading_minbudget,0.0028656999929808,38.0,"(7, [])",7.0
+heuristic_minbudget,0.0402189999877009,38.0,"(7, [])",7.0

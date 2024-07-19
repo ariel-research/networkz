@@ -244,7 +244,7 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     min_budget = len(algo.minimum_st_node_cut(G, source, 't'))
 
     logger.info(f"Returning minimum budget: {min_budget}")
-    return min_budget
+    return min_budget, [] 
 
 def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list)->int:
     """
