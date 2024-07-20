@@ -44,7 +44,21 @@ node_colors = {
     'default' : "#00FFD0"
 }
 
-logger = logging.getLogger(__name__)
+def setup_logger():
+    logger = logging.getLogger('firefighter_problem_main')
+    logger.setLevel(logging.INFO)
+    
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    console_handler.setFormatter(formatter)
+    
+    logger.addHandler(console_handler)
+    return logger
+
+logger = setup_logger()
+#logger = logging.getLogger(__name__)
 
 def validate_parameters(graph:nx.DiGraph, source:int, targets:list)->None:
     """
@@ -785,27 +799,31 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
         optional_nodes.update(graph.neighbors(node))
 
     for node in optional_nodes:
+        is_target = False
         if graph.nodes[node]['status'] == Status.VULNERABLE.value:
-            # for each node that is target, we will add only his nighbors that are target as well
+            # For each node that is target, we will add only its neighbors that are target as well
             neighbors_list = list(graph.neighbors(node))
             vulnerable_neighbors = set()
             for neighbor in neighbors_list:
                 if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
                     vulnerable_neighbors.add(neighbor)
             if node in targets:
+                is_target = True
                 vulnerable_neighbors.add(node)
             common_elements = set(vulnerable_neighbors) & set(targets)
             logger.info("node " + f'{node}' + " is saving the nodes " + str(common_elements))
-
-            heapq.heappush(priority_queue, (-len(common_elements), node not in targets, node, common_elements))
+            
+            # Define the priority tuple
+            node_info = (-len(common_elements), not is_target, -len(vulnerable_neighbors), node, common_elements)
+            heapq.heappush(priority_queue, node_info)
 
     if priority_queue:
         best_node_info = heapq.heappop(priority_queue)
-        best_node = best_node_info[2]
-        nodes_saved = best_node_info[3]
+        best_node = best_node_info[3]
+        nodes_saved = best_node_info[4]  # Convert back to positive
         logger.info("The best node is: " + f'{best_node}' + " and it's saving nodes: " + str(nodes_saved))
         return best_node, nodes_saved
-    
+
     return None, []
 
 # ===========================  End Heuristic Utilities ================================

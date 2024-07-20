@@ -106,7 +106,7 @@ def Compare_NonSpread():
             # targets = [2, 4, 6, 7, 8, 9]
             nodes = list(graph.nodes)
             nodes.remove(0)
-            num_targets = random.randint(1, int(len(nodes)/4))
+            num_targets = random.randint(1, int(len(nodes)/4)+1)
             targets = random.sample(nodes,num_targets)
             for algorithm in input_ranges["algorithm"]:
                 start_time = perf_counter()
@@ -176,7 +176,7 @@ def Compare_SpreadingMinBudget():
             # targets = [2, 4, 6, 7, 8, 9]
             nodes = list(graph.nodes)
             nodes.remove(0)
-            num_targets = random.randint(1, int(len(nodes)/4))
+            num_targets = random.randint(1, int(len(nodes)/4)+1)
             targets = random.sample(nodes,num_targets)
             for algorithm in input_ranges["algorithm"]:
                 start_time = perf_counter()

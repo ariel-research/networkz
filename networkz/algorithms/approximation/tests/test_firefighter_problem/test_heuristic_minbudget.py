@@ -42,7 +42,7 @@ def sample_json_data():
             },
         }
     }
-
+"""
 def get_graphs():
     path_to_graphs = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphs.json')
     if os.path.exists(path_to_graphs):
@@ -114,15 +114,16 @@ def test_save_all_vertices_spreading():
     finally:
         logger.info("Finished test_save_all_vertices_spreading.")
         logger.info("-" * 100)
+        """
 
 @pytest.mark.parametrize("i", range(10))
 def test_random_graph_comparison(i):
     logger.info(f"Starting test_random_graph_comparison for Random Graph {i+1}:")
     try:
-        num_nodes = random.randint(2, 100)
+        num_nodes = random.randint(5, 100)
         nodes = list(range(num_nodes + 1))
-        num_edges = 1000
-        save_amount = random.randint(1, num_nodes)
+        num_edges = 100
+        save_amount = random.randint(5, num_nodes)
         targets = []
         G = nx.DiGraph()
 

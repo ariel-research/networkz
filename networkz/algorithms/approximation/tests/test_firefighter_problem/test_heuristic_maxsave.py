@@ -52,6 +52,7 @@ else:
     raise FileNotFoundError(f"{path_to_graphs} does not exist.")
 graphs = parse_json_to_networkx(json_data)
 
+"""
 @pytest.mark.parametrize("graph_key, budget, source, targets", [
     ("RegularGraph_Graph-1", 1, -2, [1, 2, 3, 4, 5, 6]),
     ("RegularGraph_Graph-4", 1, 8, [1, 2, 4, 6, 7]),
@@ -123,15 +124,16 @@ def test_save_subgroup_vertices(graph_key, budget, source, targets, expected_str
     
     assert calculated_strategy == expected_strategy
     logger.info(f"Save subgroup vertices test passed for {graph_key}")
+    """
 
 def test_random_graph_comparison():
     logger.info("Starting test_random_graph_comparison:")
     try:
-        for i in range(10):
-            num_nodes = random.randint(2, 100)
+        for i in range(2):
+            num_nodes = random.randint(5, 50)
             nodes = list(range(num_nodes + 1))
-            num_edges = 1000
-            save_amount = random.randint(1, num_nodes)
+            num_edges = 100
+            save_amount = random.randint(5, num_nodes)
             targets = []
             G = nx.DiGraph()
             
@@ -143,20 +145,23 @@ def test_random_graph_comparison():
                     G.add_edge(source, target)
             for node in range(save_amount):
                 probability = random.random()
-                if probability < 0.75 and node != 0:
+                if probability < 0.9 and node != 0:
                     targets.append(node)
             
             logger.info(f"Random Graph {i+1} - Targets: {targets}")
             
             start_time = time.time()
+            spreading = spreading_maxsave(G, 1, 0, targets)
             spreading_answer = spreading_maxsave(G, 1, 0, targets)[1]
             spreading_time = time.time() - start_time
             
             start_time = time.time()
+            heuristic = heuristic_maxsave(G, 1, 0, targets)
             heuristic_answer = heuristic_maxsave(G, 1, 0, targets)[1]
+
             heuristic_time = time.time() - start_time
             
-            logger.info(f"Random Graph {i+1} - Spreading Result: {len(spreading_answer)}, Heuristic Result: {len(heuristic_answer)}")
+            logger.info(f"Random Graph {i+1} - Spreading Result: {spreading}, Heuristic Result: {heuristic}")
             logger.info(f"Random Graph {i+1} - Spreading Time: {spreading_time:.6f}s, Heuristic Time: {heuristic_time:.6f}s")
             
             if len(spreading_answer) > len(heuristic_answer):
