@@ -779,7 +779,7 @@ def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict
 # ===========================  End Non-Spreading Max-Save ============================
 
 # ===========================  Heuristic Utilities ===================================
-def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int:
+def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, remaining_targets:list, overall_targets:list)->int:
     """
     Find the best node from the infected nodes successors that saves more new node in targets.
 
@@ -807,20 +807,20 @@ def find_best_neighbor(graph:nx.DiGraph, infected_nodes:list, targets:list)->int
             for neighbor in neighbors_list:
                 if graph.nodes[neighbor]['status'] == Status.VULNERABLE.value:
                     vulnerable_neighbors.add(neighbor)
-            if node in targets:
+            if node in overall_targets:
                 is_target = True
                 vulnerable_neighbors.add(node)
-            common_elements = set(vulnerable_neighbors) & set(targets)
+            common_elements = set(vulnerable_neighbors) & set(remaining_targets)
             logger.info("node " + f'{node}' + " is saving the nodes " + str(common_elements))
             
             # Define the priority tuple
-            node_info = (-len(common_elements), not is_target, -len(vulnerable_neighbors), node, common_elements)
+            node_info = (not is_target, -len(common_elements), -len(vulnerable_neighbors), node, common_elements)
             heapq.heappush(priority_queue, node_info)
 
     if priority_queue:
         best_node_info = heapq.heappop(priority_queue)
         best_node = best_node_info[3]
-        nodes_saved = best_node_info[4]  # Convert back to positive
+        nodes_saved = best_node_info[4]  
         logger.info("The best node is: " + f'{best_node}' + " and it's saving nodes: " + str(nodes_saved))
         return best_node, nodes_saved
 

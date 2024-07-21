@@ -192,7 +192,7 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
     middle = math.floor((min_value + max_value) / 2)
 
     #sanity check - the maximum budget we can get: the source neighbors. 
-    answer = len(list(Graph.successors(source)))
+    answer = len(targets)
     best_strategy = spreading_maxsave(Graph, answer, source, targets, True)[0]
 
     while min_value < max_value:
@@ -355,7 +355,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
             spread_vaccination(Graph, vaccinated_nodes)
         for i in range(budget):
             logger.info(f"Calculating the best direct vaccination strategy for the current time step that saves more new node in targets (Current budget: {budget})")
-            node_to_vaccinate, nodes_saved = find_best_neighbor(Graph, infected_nodes, local_targets)
+            node_to_vaccinate, nodes_saved = find_best_neighbor(Graph, infected_nodes, local_targets, targets)
             if node_to_vaccinate is not None:
                 logger.info(f"Found {node_to_vaccinate} as a solution for current timestamp, appending to vaccination strategy and vaccinating the node")
                 vaccination_strategy.append((node_to_vaccinate, time_step))
@@ -364,7 +364,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
                 logger.info(f"Updated list of currently vaccinated nodes: {vaccinated_nodes}")
 
                 if nodes_saved is not None:
-                    saved_target_nodes.update(nodes_saved)
+                    #saved_target_nodes.update(nodes_saved)
                     local_targets[:] = [element for element in local_targets if element not in nodes_saved]
                     logger.info(f"Updated list of targets: {local_targets}")
 
@@ -376,6 +376,10 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
 
         if stop_condition is not None:
             if len(local_targets) == 0 or any(node in infected_nodes for node in local_targets):
+                for node in targets:
+                    logger.debug(f'"node" {node} " status" {Graph.nodes[node]['status']}')
+                    if Graph.nodes[node]['status'] != Status.INFECTED.value:
+                        saved_target_nodes.add(node)
                 logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
                 return vaccination_strategy, saved_target_nodes
 
@@ -414,7 +418,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     logger.info(f"Starting the heuristic_minbudget function with source node {source}, targets: {targets}, and spreading: {spreading}")
 
     min_value = 1
-    max_value = len(targets)
+    max_value = len(list(Graph.successors(source)))
     middle = math.floor((min_value + max_value) / 2)
 
     #sanity check - the maximum budget we can get: the source neighbors.
@@ -447,26 +451,22 @@ if __name__ == "__main__":
     #result = doctest.testmod(verbose=False)
     #print(f"Doctest results: {result}") -s 
 
-    num_nodes = random.randint(5, 50)
-    nodes = list(range(num_nodes + 1))
-    num_edges = 100
-    save_amount = random.randint(5, num_nodes)
-    targets = []
     G = nx.DiGraph()
-
+    num_nodes = random.randint(3, 100)
+    nodes = list(range(num_nodes + 1))
     G.add_nodes_from(nodes, status=Status.VULNERABLE.value)
-    for _ in range(num_edges):
-        source = random.randint(0, num_nodes - 1)
-        target = random.randint(0, num_nodes - 1)
-        if source != target:  # Ensure no self-loops
-            G.add_edge(source, target)
-    for node in range(save_amount):
-        probability = random.random()
-        if probability < 0.9 and node != 0:
-            targets.append(node)
-    
+    for first in nodes:
+        for second in nodes:
+            probability = random.random()
+            if first != second and probability < 0.75:
+                G.add_edge(first,second)
+
+    num_targets = random.randint(2, int(len(nodes)/2)+1)
+    targets = random.sample(nodes,num_targets) 
+    if 0 in targets:targets.remove(0)
+
     #print(spreading_minbudget(G,0,targets))
-    #print(heuristic_minbudget(G,0,targets,True))
+    print(heuristic_minbudget(G,0,targets,True))
 
 
 
