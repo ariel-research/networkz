@@ -377,8 +377,9 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         if stop_condition is not None:
             if len(local_targets) == 0 or any(node in infected_nodes for node in local_targets):
                 for node in targets:
-                    logger.debug(f'"node" {node} " status" {Graph.nodes[node]['status']}')
-                    if Graph.nodes[node]['status'] != Status.INFECTED.value:
+                    node_status = Graph.nodes[node]['status']
+                    logger.debug(f" node {node} status {node_status}")
+                    if node_status != Status.INFECTED.value:
                         saved_target_nodes.add(node)
                 logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
                 return vaccination_strategy, saved_target_nodes
@@ -386,8 +387,9 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         time_step += 1
     
     for node in targets:
-        logger.debug(f'"node" {node} " status" {Graph.nodes[node]['status']}')
-        if Graph.nodes[node]['status'] != Status.INFECTED.value:
+        node_status = Graph.nodes[node]['status']
+        logger.debug(f" node {node} status {node_status}")
+        if node_status != Status.INFECTED.value:
             saved_target_nodes.add(node)
 
     logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
