@@ -20,7 +20,6 @@ Shaked Levi
 """
 
 import pytest
-import networkx as nx
 import json
 import numpy as np
 import math
@@ -36,7 +35,7 @@ from networkz.algorithms.approximation.firefighter_problem.Utils import calculat
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_cut_N_groups
 from networkz.algorithms.approximation.firefighter_problem.Utils import matrix_to_integers_values
 from networkz.algorithms.approximation.firefighter_problem.Utils import min_budget_calculation
-
+from networkz.algorithms.approximation.firefighter_problem.Random_Graph_Generator import generate_random_layered_network
 
 path_to_graphs = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphs.json')
 if os.path.exists(path_to_graphs):
@@ -371,58 +370,8 @@ def test_min_budget_calculation():
     assert min_budget_calculation(matrix_3_check) == 2
 
 
-def generate_layered_network():
-    """
-    Generates a directed layered network with a random number of layers and random nodes per layer.
-    
-    Returns:
-        G (networkx.DiGraph): Directed graph representing the layered network.
-    """
-    # Randomly decide the number of layers (between 2 and 3 for this example)
-    num_layers = random.randint(5, 10)
-    
-    # Randomly decide the number of nodes per layer (between 1 and 4 for this example)
-    nodes_per_layer = [random.randint(5, 30) for _ in range(num_layers)]
-    
-    G = nx.DiGraph()
-    node_id = 1  # Start node_id from 1 because 0 is the source
-    
-    # Initialize layer 0 with the source node
-    layers = [[0]]
-    G.add_node(0)
-    
-    # Create nodes layer by layer
-    for i in range(num_layers):
-        layer = [node_id + j for j in range(nodes_per_layer[i])]
-        layers.append(layer)
-        G.add_nodes_from(layer)
-        node_id += nodes_per_layer[i]
-
-    print("LAYERS->", layers)
-    
-    # Connect source node (0) to all nodes in layer 1
-    for node in layers[1]:
-        G.add_edge(0, node)
-    
-    # Create edges ensuring connectivity between consecutive layers
-    for i in range(1, num_layers):
-        for node in layers[i]:
-            # Connect each node in this layer to at least one node in the next layer
-            connected_nodes = random.sample(layers[i + 1], k=random.randint(1, len(layers[i + 1])))
-            for target in connected_nodes:
-                if target != node:  # Ensure no self-loop
-                    G.add_edge(node, target)
-        
-        for target in layers[i + 1]:
-            # Ensure each node in the next layer is connected to from at least one node in this layer
-            if not any(G.has_edge(source, target) for source in layers[i]):
-                G.add_edge(random.choice(layers[i]), target)
-    
-    return G
-
-
 def test_non_spreading_dirlaynet_minbudget():
-    G = generate_layered_network()
+    G = generate_random_layered_network()
     source = 0 
 
     nodes = list(G.nodes())
