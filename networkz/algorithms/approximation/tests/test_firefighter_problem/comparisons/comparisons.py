@@ -174,7 +174,7 @@ def Compare_SpreadingMaxSave():
     node_counts = [100, 200, 400]
     edge_probabilities = [0.1, 0.5, 0.8]
 
-    def multiple_runs(runs=20):
+    def multiple_runs(runs=1):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -287,6 +287,6 @@ def Compare_SpreadingMinBudget():
 
 if __name__ == "__main__":
     setup_global_logger(level=logging.DEBUG)
-    # Compare_NonSpread()
-    Compare_SpreadingMinBudget()
+    Compare_NonSpread()
+    #Compare_SpreadingMinBudget()
     #Compare_SpreadingMaxSave()
