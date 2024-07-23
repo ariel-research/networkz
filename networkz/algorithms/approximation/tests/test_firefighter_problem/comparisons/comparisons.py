@@ -288,5 +288,5 @@ def Compare_SpreadingMinBudget():
 if __name__ == "__main__":
     setup_global_logger(level=logging.DEBUG)
     # Compare_NonSpread()
-    # Compare_SpreadingMinBudget()
-    Compare_SpreadingMaxSave()
+    Compare_SpreadingMinBudget()
+    #Compare_SpreadingMaxSave()

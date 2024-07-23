@@ -187,16 +187,10 @@ def spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list)-> int:
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the spreading_minbudget function with source node {source} and targets: {targets}")
 
-  
     best_strategy = []
-    
     min_value = 1
     max_value = len(targets)
     middle = math.floor((min_value + max_value) / 2)
-
-    #sanity check - the maximum budget we can get: the source neighbors. 
-    answer = len(targets)
-    best_strategy = spreading_maxsave(Graph, answer, source, targets, True)[0]
 
     while min_value < max_value:
         logger.info(f"Calling maxsave with parameters - Source: {source}, Targets: {targets}, Budget: {middle}")
@@ -420,14 +414,11 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the heuristic_minbudget function with source node {source}, targets: {targets}, and spreading: {spreading}")
 
+    best_strategy = []
     min_value = 1
     max_value = len(list(Graph.successors(source)))
     middle = math.floor((min_value + max_value) / 2)
-
-    #sanity check - the maximum budget we can get: the source neighbors.
-    answer = len(list(Graph.successors(source)))
-    best_strategy = heuristic_maxsave(Graph, answer, source, targets, spreading, True)[0]
-
+    
     while min_value < max_value:
         strategy, nodes_saved = heuristic_maxsave(Graph, middle, source, targets, spreading, True)
 
@@ -436,9 +427,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
         if len(common_elements) == len(targets):
             logger.info(f"The current budget {middle} has saved all the targets!")
             max_value = middle
-            if middle < answer:
-                answer = middle
-                best_strategy = strategy
+            best_strategy = strategy
         else:
             logger.info(f"The current budget {middle} didn't save all the targets!")
             min_value = middle + 1
@@ -447,7 +436,8 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
 
     logger.info(f"Returning minimum budget: {middle} and the vaccination strategy: {best_strategy}")
     
-    return answer, best_strategy
+    #return answer, best_strategy
+    return middle, best_strategy
 
 if __name__ == "__main__":
     #import doctest
