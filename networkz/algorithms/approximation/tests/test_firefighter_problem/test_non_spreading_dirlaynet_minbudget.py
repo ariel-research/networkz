@@ -378,7 +378,7 @@ def test_non_spreading_dirlaynet_minbudget():
     num_targets = random.randint(1, len(nodes) - 1)  # Ensure at least one target node
     targets = random.sample(nodes[1:], num_targets)  # Randomly choose nodes to save, excluding the source node
     
-    min_budget = non_spreading_dirlaynet_minbudget(G, source, targets)
+    min_budget = non_spreading_dirlaynet_minbudget(G, source, targets)[0]
     assert min_budget > 0, "Minimum budget should be non-negative"
 
 if __name__ == "__main__":
