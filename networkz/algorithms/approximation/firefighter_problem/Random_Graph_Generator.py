@@ -25,18 +25,6 @@ import networkx as nx
 
 logger = logging.getLogger(__name__)
 
-def setup_global_logger(level: int = logging.DEBUG):
-    log_format = "|| %(asctime)s || %(levelname)s || %(message)s"
-    date_format = '%H:%M:%S'
-    formatter = logging.Formatter(log_format, datefmt=date_format)
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-    
-    root_logger = logging.getLogger()
-    root_logger.setLevel(level)
-    root_logger.addHandler(handler)
-
-
 def generate_random_DiGraph(
     num_nodes: int = 100,
     edge_probability: float = 0.1,

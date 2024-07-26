@@ -40,22 +40,7 @@ node_colors = {
     'directly vaccinated': 'green',
     'default' : "#00FFD0"
 }
-
-def setup_logger():
-    logger = logging.getLogger('firefighter_problem_main')
-    logger.setLevel(logging.INFO)
-    
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    
-    logger.addHandler(console_handler)
-    return logger
-
-logger = setup_logger()
-#logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # ============================ Validation Functions ============================
 

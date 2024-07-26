@@ -38,9 +38,7 @@ def setup_logger():
     logger.addHandler(console_handler)
     return logger
 
-#logger = setup_logger()
-
-#logger = logging.getLogger(__name__)
+logger = setup_logger()
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> tuple[list, set]:    
     """
@@ -296,6 +294,7 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> int:
     logger.info(f"Starting the non_spreading_minbudget function with source node {source} and targets: {targets}")
 
     G = create_st_graph(Graph, targets)
+    logger.info(f"Calculating the minimum budget using edmonds karp algorithm")
     min_budget = len(algo.minimum_st_node_cut(G, source, 't'))
 
     logger.info(f"Returning minimum budget: {min_budget}")
@@ -437,7 +436,6 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
             if len(local_targets) == 0 or any(node in infected_nodes for node in local_targets):
                 for node in targets:
                     node_status = Graph.nodes[node]['status']
-                    logger.debug(f" node {node} status {node_status}")
                     if node_status != Status.INFECTED.value:
                         saved_target_nodes.add(node)
                 logger.info(f"Returning vaccination strategy: {vaccination_strategy}. The strategy saved the nodes: {saved_target_nodes}")
@@ -447,7 +445,6 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     
     for node in targets:
         node_status = Graph.nodes[node]['status']
-        logger.debug(f" node {node} status {node_status}")
         if node_status != Status.INFECTED.value:
             saved_target_nodes.add(node)
 
@@ -497,6 +494,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     best_strategy = heuristic_maxsave(Graph, min_budget, source, targets, spreading, True)[0]
 
     while min_value < max_value:
+        logger.info(f"Calling heuristic_maxsave with parameters - Source: {source}, Targets: {targets}, Budget: {middle}")
         strategy, nodes_saved = heuristic_maxsave(Graph, middle, source, targets, spreading, True)
 
         common_elements = set(nodes_saved) & set(targets)
