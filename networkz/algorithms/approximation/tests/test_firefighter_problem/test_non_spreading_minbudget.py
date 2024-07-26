@@ -20,7 +20,6 @@ Shaked Levi
 """
 
 import pytest
-import networkx as nx
 import json
 import os
 

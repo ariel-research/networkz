@@ -24,10 +24,9 @@ import random
 import logging
 import os
 import time
-from datetime import datetime
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import heuristic_maxsave, spreading_maxsave
-from networkz.algorithms.approximation.firefighter_problem.Utils import find_best_neighbor, parse_json_to_networkx, Status
+from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, Status
 
 def setup_logger():
     logger = logging.getLogger('firefighter_problem_tests')
@@ -52,7 +51,7 @@ else:
     raise FileNotFoundError(f"{path_to_graphs} does not exist.")
 graphs = parse_json_to_networkx(json_data)
 
-"""
+
 @pytest.mark.parametrize("graph_key, budget, source, targets", [
     ("RegularGraph_Graph-1", 1, -2, [1, 2, 3, 4, 5, 6]),
     ("RegularGraph_Graph-4", 1, 8, [1, 2, 4, 6, 7]),
@@ -112,19 +111,19 @@ def test_save_all_vertices(graph_key, budget, source, targets, expected_strategy
     assert calculated_strategy == expected_strategy
     logger.info(f"Save all vertices test passed for {graph_key}")
 
-@pytest.mark.parametrize("graph_key, budget, source, targets, expected_strategy", [
-    ("RegularGraph_Graph-6", 2, 1, [3, 9, 0, 5, 6], [(2, 1)]),
-    ("RegularGraph_Graph-4", 1, 0, [2, 6, 4], [(1, 1)]),
+@pytest.mark.parametrize("graph_key, budget, source, targets, expected_save_amount", [
+    ("RegularGraph_Graph-6", 2, 1, [3, 9, 0, 5, 6], 5),
+    ("RegularGraph_Graph-4", 1, 0, [2, 6, 4], 3),
 ])
-def test_save_subgroup_vertices(graph_key, budget, source, targets, expected_strategy):
+def test_save_subgroup_vertices(graph_key, budget, source, targets, expected_save_amount):
     logger.info(f"Testing save subgroup vertices for {graph_key}")
     graph = graphs[graph_key]
-    calculated_strategy = heuristic_maxsave(graph, budget, source, targets)[0]
+    calculated_strategy = len(heuristic_maxsave(graph, budget, source, targets)[1])
     logger.info(f"Calculated strategy: {calculated_strategy}")
     
-    assert calculated_strategy == expected_strategy
+    assert calculated_strategy >= expected_save_amount
     logger.info(f"Save subgroup vertices test passed for {graph_key}")
-    """
+    
 
 def test_random_graph_comparison():
     logger.info("Starting test_random_graph_comparison:")

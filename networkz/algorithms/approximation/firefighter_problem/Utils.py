@@ -25,7 +25,6 @@ from enum import Enum
 import copy
 import logging
 import heapq
-import concurrent.futures # this is used for improving the dirlay function - adjust_nodes_capacity
 
 class Status(Enum):
     VULNERABLE = "vulnerable"

@@ -1,14 +1,34 @@
+"""
+
+The Paper - 
+Approximability of the Firefighter Problem Computing Cuts over Time
+
+Paper Link -
+https://www.math.uwaterloo.ca/~cswamy/papers/firefighter-journ.pdf
+
+Authors - 
+Elliot Anshelevich
+Deeparnab Chakrabarty
+Ameya Hate 
+Chaitanya Swamy
+
+Developers - 
+Yuval Bubnovsky
+Almog David
+Shaked Levi
+
+"""
 import pytest
-import networkx as nx
-import json
 import random
 import time
 import logging
 import os
-from datetime import datetime
+import json
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import spreading_minbudget, heuristic_minbudget
+from networkz.algorithms.approximation.firefighter_problem.Random_Graph_Generator import generate_random_DiGraph
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx
+
 
 def setup_logger():
     logger = logging.getLogger('firefighter_problem_tests')
@@ -42,7 +62,7 @@ def sample_json_data():
             },
         }
     }
-"""
+
 def get_graphs():
     path_to_graphs = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphs.json')
     if os.path.exists(path_to_graphs):
@@ -89,54 +109,17 @@ def test_source_is_target(G, source, targets, directed):
     with pytest.raises(ValueError, match="Error: The source node can't be a part of the targets list, since the virus is spreading from the source"):
         heuristic_minbudget(G, source, targets, directed)
 
-def test_save_all_vertices_spreading():
-    logger.info("Starting test_save_all_vertices_spreading:")
-    try:
-        for graph_name, G in graphs.items():
-            source = 0
-            targets = [n for n in G.nodes if n != source]
-
-            start_time = time.time()
-            spreading_result = spreading_minbudget(G, source, targets)[0]
-            spreading_time = time.time() - start_time
-
-            start_time = time.time()
-            heuristic_result = heuristic_minbudget(G, source, targets, True)[0]
-            heuristic_time = time.time() - start_time
-
-            logger.info(f"{graph_name} - Spreading Result: {spreading_result}, Heuristic Result: {heuristic_result}")
-            logger.info(f"{graph_name} - Spreading Time: {spreading_time:.6f}s, Heuristic Time: {heuristic_time:.6f}s")
-
-            if spreading_result < heuristic_result:
-                warning_message = f"Warning: Heuristic result ({heuristic_result}) is greater than spreading result ({spreading_result}) for {graph_name}"
-                logger.warning(warning_message)
-
-    finally:
-        logger.info("Finished test_save_all_vertices_spreading.")
-        logger.info("-" * 100)
-        """
 
 @pytest.mark.parametrize("i", range(10))
 def test_random_graph_comparison(i):
     logger.info(f"Starting test_random_graph_comparison for Random Graph {i+1}:")
     try:
-        num_nodes = random.randint(5, 100)
-        nodes = list(range(num_nodes + 1))
-        num_edges = 100
-        save_amount = random.randint(5, num_nodes)
-        targets = []
-        G = nx.DiGraph()
+        G =  generate_random_DiGraph(num_nodes=100, edge_probability=0.5)
 
-        G.add_nodes_from(nodes, status="target")
-        for _ in range(num_edges):
-            source = random.randint(0, num_nodes - 1)
-            target = random.randint(0, num_nodes - 1)
-            if source != target:  # Ensure no self-loops
-                G.add_edge(source, target)
-        for node in range(save_amount):
-            probability = random.random()
-            if probability < 0.75 and node != 0:
-                targets.append(node)
+        num_targets = random.randint(1, int(len(G.nodes) / 2) + 1)
+        nodes_to_sample = list(G.nodes)
+        nodes_to_sample.remove(0)
+        targets = random.sample(list(nodes_to_sample), num_targets)
 
         start_time = time.time()
         spreading_answer = spreading_minbudget(G, 0, targets)[0]
