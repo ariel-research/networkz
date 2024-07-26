@@ -20,13 +20,14 @@ Shaked Levi
 """
 
 import pytest
-import networkx as nx
 import json
 import random
 import os
 
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import spreading_minbudget
 from networkz.algorithms.approximation.firefighter_problem.Utils import parse_json_to_networkx, calculate_gamma, calculate_epsilon, find_best_direct_vaccination
+from networkz.algorithms.approximation.firefighter_problem.Random_Graph_Generator import generate_random_DiGraph
+
 
 @pytest.fixture
 def sample_json_data():
@@ -269,31 +270,19 @@ def test_save_subgroup_vertices():
     assert 2 == spreading_minbudget(graphs["RegularGraph_Graph-7"], 1, [4,2,5,6])[0] #answer is 2 
     assert spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,2,3,4,5,6,7,8,9,10,11,12,13,14])[0] != spreading_minbudget(graphs["RegularGraph_Graph-8"], 0, [1,3,4,5,6,9,10,12,14])[0] #answer is 3
 
+
 def test_random_graph():
     for i in range(10):
-        num_nodes = random.randint(2,100)
-        nodes = list(range(num_nodes+1))
-        num_edges = 1000
-        save_amount = random.randint(1,num_nodes)
-        targets = []
-        G = nx.DiGraph()
-        
-        G.add_nodes_from(nodes, status="target")
-        for _ in range(num_edges):
-            source = random.randint(0, num_nodes - 1)
-            target = random.randint(0, num_nodes - 1)
-            if source != target:  # Ensure no self-loops
-                G.add_edge(source, target)
-        for node in range(save_amount):
-            probability = random.random()
-            if probability < 0.75 and node!=0:
-                targets.append(node)
+        G =  generate_random_DiGraph(num_nodes=100, edge_probability=0.5)
+
+        num_targets = random.randint(1, int(len(G.nodes) / 2) + 1)
+        nodes_to_sample = list(G.nodes)
+        nodes_to_sample.remove(0)
+        targets = random.sample(nodes_to_sample, num_targets)
         
         target_length = len(targets)
         ans = spreading_minbudget(G,0,targets)[0]
-        print(ans)
-        print(target_length)
-       
+
         assert ans <= target_length
     
     print("All tests have passed!")
