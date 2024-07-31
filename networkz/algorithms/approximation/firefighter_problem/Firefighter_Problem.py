@@ -259,7 +259,7 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> int:
     -------
     min_budget : int
         Minimum budget required to save all target nodes.
-    
+
     Examples:
     --------
     Example 1: 
@@ -293,12 +293,13 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> int:
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the non_spreading_minbudget function with source node {source} and targets: {targets}")
 
-    G = create_st_graph(Graph, targets)
-    logger.info(f"Calculating the minimum budget using edmonds karp algorithm")
-    min_budget = len(algo.minimum_st_node_cut(G, source, 't'))
+    G = create_st_graph(Graph, targets, 't')
+    min_cut = algo.minimum_st_node_cut(G, source, 't')
+    logger.info(f"Minimum s-t node cut: {min_cut}")
+    min_budget = len(min_cut)
 
     logger.info(f"Returning minimum budget: {min_budget}")
-    return min_budget, []
+    return min_budget, []  # TODO: vaccinate all nodes in min_cut in the first step.
 
 def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> tuple[int, list]:
     """

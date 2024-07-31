@@ -500,7 +500,7 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int) -> list:
 
     return layers
 
-def create_st_graph(graph:nx.DiGraph, targets:list) -> nx.DiGraph:
+def create_st_graph(graph:nx.DiGraph, targets:list, new_target:str) -> nx.DiGraph:
     """
     Create an s-t graph from the original graph for use in connectivity algorithms.
 
@@ -532,9 +532,9 @@ def create_st_graph(graph:nx.DiGraph, targets:list) -> nx.DiGraph:
     logger.info(f"Creating a s-t graph to connect nodes to save") 
 
     G = copy.deepcopy(graph)
-    G.add_node('t', status = Status.VULNERABLE.value)
+    G.add_node(new_target, status = Status.VULNERABLE.value)
     for node in targets:
-        G.add_edge(node,'t')
+        G.add_edge(node, new_target)
     #display_graph(G)
 
     logger.info(f"Done creating a s-t graph") 
