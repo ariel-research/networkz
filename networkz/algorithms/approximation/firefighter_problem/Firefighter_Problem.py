@@ -25,8 +25,7 @@ import logging
 from networkz.algorithms.max_flow_with_node_capacity import min_cut_with_node_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
-def setup_logger():
-    logger = logging.getLogger('firefighter_problem_main')
+def setup_logger(logger):
     logger.setLevel(logging.INFO)
     
     console_handler = logging.StreamHandler()
@@ -38,7 +37,8 @@ def setup_logger():
     logger.addHandler(console_handler)
     return logger
 
-logger = setup_logger()
+logger = logging.getLogger('firefighter_problem_main')
+
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> tuple[list, set]:    
     """
@@ -516,6 +516,7 @@ def heuristic_minbudget(Graph:nx.DiGraph, source:int, targets:list, spreading:bo
     return min_budget, best_strategy
 
 if __name__ == "__main__":
+
     import doctest
     result = doctest.testmod(verbose=False)
     print(f"Doctest results: {result}")
