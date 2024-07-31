@@ -79,7 +79,7 @@ def runner_no_spreading(algorithm, graph, source, targets):
         result = algorithm(Graph=graph, source=source, targets=targets)
         return {"Budget": result}
 
-def runner_spreading(algorithm, graph, source, targets):
+def runner_spreading(algorithm, graph, budget, source, targets):
     """
     Run the specified algorithm with spreading.
 
@@ -103,10 +103,10 @@ def runner_spreading(algorithm, graph, source, targets):
         return {"Budget": (algorithm(Graph=graph, source=source, targets=targets, spreading=True))}
     
     if algorithm == heuristic_maxsave:
-        return {"Nodes_Saved": (str(len(algorithm(Graph=graph, budget=2, source=source, targets=targets, spreading=True)[1])))}
+        return {"Nodes_Saved": (str(len(algorithm(Graph=graph, budget=budget, source=source, targets=targets, spreading=True)[1])))}
     
     if algorithm == spreading_maxsave:
-        return {"Nodes_Saved": (str(len(algorithm(Graph=graph, budget=2, source=source, targets=targets)[1])))}
+        return {"Nodes_Saved": (str(len(algorithm(Graph=graph, budget=budget, source=source, targets=targets)[1])))}
     
     else:
         return {"Budget": (algorithm(Graph=graph, source=source, targets=targets))}
@@ -144,7 +144,7 @@ def Compare_NonSpread():
     ex1.run_with_time_limit(multiple_runs, input_ranges={}, time_limit=0.9)
 
     # Preprocess the DataFrame to extract numeric budget values
-    results_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading.csv"
+    results_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading_minbudget.csv"
     results = pd.read_csv(results_csv_file)
 
     # Extract the numeric budget from the 'Budget' column
@@ -164,7 +164,7 @@ def Compare_NonSpread():
     results = results.dropna(subset=['Budget_numeric'])
 
     # Save the preprocessed DataFrame to a temporary CSV file
-    preprocessed_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading_preprocessed.csv"
+    preprocessed_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/non_spreading_minbudget_preprocessed.csv"
     results.to_csv(preprocessed_csv_file, index=False)
 
     print("\n DataFrame-NonSpread: \n", results)
@@ -198,8 +198,9 @@ def Compare_SpreadingMaxSave():
     
     node_counts = [100, 200, 400]
     edge_probabilities = [0.1, 0.5, 0.8]
+    budget_range = [1,2,3,5,7,10]
 
-    def multiple_runs(runs=1):
+    def multiple_runs(runs=10):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -209,12 +210,13 @@ def Compare_SpreadingMaxSave():
                     nodes.remove(0)
                     num_targets = random.randint(1, int(len(nodes) / 2) + 1)
                     targets = random.sample(nodes, num_targets)
-                    for algorithm in input_ranges["algorithm"]:
-                        start_time = perf_counter()
-                        result = runner_spreading(algorithm, graph, source, targets)
-                        runtime = perf_counter() - start_time
-                        
-                        ex2.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "graph_nodes": len(graph.nodes)}, **result})
+                    for budget in budget_range:
+                        for algorithm in input_ranges["algorithm"]:
+                            start_time = perf_counter()
+                            result = runner_spreading(algorithm, graph, budget, source, targets)
+                            runtime = perf_counter() - start_time
+                            
+                            ex2.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "Budget": budget, "graph_nodes": num_nodes, "edge_probability": edge_prob}, **result})
         return {"status": "completed"}
 
     # Set a time limit for the entire batch run
@@ -228,6 +230,13 @@ def Compare_SpreadingMaxSave():
     # Ensure 'algorithm' column is of type string
     results['algorithm'] = results['algorithm'].astype(str)
 
+    # Ensure 'Budget' column is numeric and drop rows with NaNs
+    results['Budget'] = pd.to_numeric(results['Budget'], errors='coerce')
+    results = results.dropna(subset=['Budget'])
+
+    # Ensure 'Budget' is an integer
+    results['Budget'] = results['Budget'].astype(int)
+
     # Ensure 'Nodes_Saved' column is numeric and drop rows with NaNs
     results['Nodes_Saved'] = pd.to_numeric(results['Nodes_Saved'], errors='coerce')
     results = results.dropna(subset=['Nodes_Saved'])
@@ -236,20 +245,42 @@ def Compare_SpreadingMaxSave():
     results['Nodes_Saved'] = results['Nodes_Saved'].astype(int)
 
     # Save the cleaned DataFrame to a new CSV file (optional, for debugging)
-    cleaned_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_cleaned.csv"
+    cleaned_csv_file = "./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_preprocessed.csv"
     results.to_csv(cleaned_csv_file, index=False)
 
     # Plot the results using the cleaned DataFrame
-    single_plot_results(
+    """
+    multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={}, 
+        subplot_rows=1,
+        subplot_cols=3,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_edge_prob.png"
+    )"""
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={}, 
+        subplot_rows=2,
+        subplot_cols=3,
         x_field="graph_nodes", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
+        subplot_field="Budget",
+        sharex=True,
+        sharey=True,
         mean=True,
-        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave.png"
+        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_budget.png"
     )
-    
+
+
     print("\n DataFrame-NonSpread: \n", ex2.dataFrame)
 
 def Compare_SpreadingMinBudget():
@@ -269,7 +300,7 @@ def Compare_SpreadingMinBudget():
     node_counts = [100, 200, 400]
     edge_probabilities = [0.1, 0.5, 0.8]
 
-    def multiple_runs(runs=1):
+    def multiple_runs(runs=30):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -333,6 +364,6 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
-    Compare_NonSpread()
+    #Compare_NonSpread()
     # Compare_SpreadingMinBudget()
-    # Compare_SpreadingMaxSave()
+    Compare_SpreadingMaxSave()
