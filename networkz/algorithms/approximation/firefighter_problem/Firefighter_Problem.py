@@ -267,28 +267,28 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> int:
     >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> non_spreading_minbudget(G1,0,[1,3])
-    2
+    (2, [(1, 1), (3, 1)])
 
     Example 2: 
     >>> G1 = nx.DiGraph()
     >>> G1.add_nodes_from([0,1,2,3], status="vulnerable")
     >>> G1.add_edges_from([(0,1),(0,2),(1,2),(1,3),(2,3)])
     >>> non_spreading_minbudget(G1,0,[1,2,3])
-    2
+    (2, [(1, 1), (2, 1)])
 
     Example 3:
     >>> G2 = nx.DiGraph()
     >>> G2.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
     >>> G2.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
     >>> non_spreading_minbudget(G2,0,[1,2,3,4,5,6])
-    2
+    (2, [(1, 1), (2, 1)])
 
     Example 4:
     >>> G3 = nx.DiGraph() 
     >>> G3.add_nodes_from([0,1,2,3,4,5,6,7,8], status="vulnerable")
     >>> G3.add_edges_from([(0,2),(0,4),(0,5),(2,1),(2,3),(4,1),(4,6),(5,3),(5,6),(5,7),(6,7),(6,8),(7,8)])
     >>> non_spreading_minbudget(G3,0,[2,6,1,8])
-    3
+    (3, [(2, 1), (4, 1), (5, 1)])
     """
     validate_parameters(Graph, source, targets)
     logger.info(f"Starting the non_spreading_minbudget function with source node {source} and targets: {targets}")
@@ -297,9 +297,10 @@ def non_spreading_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> int:
     min_cut = algo.minimum_st_node_cut(G, source, 't')
     logger.info(f"Minimum s-t node cut: {min_cut}")
     min_budget = len(min_cut)
+    strategy = [(item, 1) for item in min_cut]
 
     logger.info(f"Returning minimum budget: {min_budget}")
-    return min_budget, []  # TODO: vaccinate all nodes in min_cut in the first step.
+    return min_budget, strategy
 
 def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list) -> tuple[int, list]:
     """
@@ -329,7 +330,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     >>> G4.add_nodes_from([0,1,2,3,4,5], status="vulnerable")
     >>> G4.add_edges_from([(0,1),(0,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,5),(4,5)])
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
-    (2, {0: [1, 2]})
+    (2, {0: [2, 1]})
     """
 
     validate_parameters(Graph, source, targets)
@@ -341,7 +342,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
 
     layers = adjust_nodes_capacity(Graph, source)
-    G = create_st_graph(Graph, targets)
+    G = create_st_graph(Graph, targets, 't')
     #display_graph(G)
     G_reduction_min_cut = min_cut_with_node_capacity(G, source=source, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
