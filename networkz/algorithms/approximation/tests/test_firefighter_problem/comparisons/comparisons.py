@@ -249,22 +249,6 @@ def Compare_SpreadingMaxSave():
     results.to_csv(cleaned_csv_file, index=False)
 
     # Plot the results using the cleaned DataFrame
-    """
-    multi_plot_results(
-        results_csv_file=cleaned_csv_file,
-        filter={}, 
-        subplot_rows=1,
-        subplot_cols=3,
-        x_field="Budget", 
-        y_field="Nodes_Saved", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_edge_prob.png"
-    )"""
-
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={}, 
@@ -280,6 +264,50 @@ def Compare_SpreadingMaxSave():
         save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_budget.png"
     )
 
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":100}, 
+        subplot_rows=3,
+        subplot_cols=1,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_100_edge_prob.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":200}, 
+        subplot_rows=3,
+        subplot_cols=1,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_200_edge_prob.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":400}, 
+        subplot_rows=3,
+        subplot_cols=1,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./networkz/algorithms/approximation/tests/test_firefighter_problem/comparisons/spreading_maxsave_400_edge_prob.png"
+    )
 
     print("\n DataFrame-NonSpread: \n", ex2.dataFrame)
 
