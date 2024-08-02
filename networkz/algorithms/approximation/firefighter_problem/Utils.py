@@ -714,7 +714,7 @@ def min_budget_calculation(matrix: np.matrix) -> int:
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
-def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict:
+def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list:
     """
     Determines a feasible vaccination strategy given the vaccine matrix and the nodes from each layer.
 
@@ -728,19 +728,18 @@ def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict
 
     Returns:
     ----------
-    strategy : dict
-        A dictionary where keys are time steps and values are lists of nodes to vaccinate at each time step.
+    strategy : list
+        A list of tuples where each tuple represents a node to vaccinate and the corresponding time step index.
     """
-    logger.info("Calculating the stategy")
+    logger.info("Calculating the strategy")
 
     num_steps, num_layers = vacc_matrix.shape
-    strategy = {}
+    strategy = []
     for i in range(num_steps):
-        nodes_to_vaccinate = []
-        for j in range(0, num_layers):
+        for j in range(num_layers):
             num_nodes_to_vaccinate = int(vacc_matrix[i, j])
 
-            logger.debug(f"On time step {i} needs to vaccinate: {num_nodes_to_vaccinate} nodes" )
+            logger.debug(f"On time step {i+1} needs to vaccinate: {num_nodes_to_vaccinate} nodes")
 
             if num_nodes_to_vaccinate > 0:
                 # Extract the nodes to vaccinate
@@ -748,11 +747,11 @@ def dirlay_vaccination_startegy(vacc_matrix: np.matrix, ni_groups: dict) -> dict
                 
                 logger.debug(f"The selected nodes to vaccinate {selected_nodes}")
 
-                nodes_to_vaccinate.extend(selected_nodes)
-        
-        if nodes_to_vaccinate:
-            strategy[i] = nodes_to_vaccinate
-
+                # Create tuples (node, i) and add them directly to strategy
+                strategy.extend((node, i+1) for node in selected_nodes)
+    
+    # sort the strategy by time stamp. 
+    strategy.sort(key=lambda x: (x[1], x[0]))
     return strategy
 
 # ===========================  End Non-Spreading Max-Save ============================

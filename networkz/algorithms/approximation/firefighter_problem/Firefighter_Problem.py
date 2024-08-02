@@ -330,7 +330,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     >>> G4.add_nodes_from([0,1,2,3,4,5], status="vulnerable")
     >>> G4.add_edges_from([(0,1),(0,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,5),(4,5)])
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
-    (2, {0: [2, 1]})
+    (2, [(1, 1), (2, 1)])
     """
 
     validate_parameters(Graph, source, targets)
@@ -349,7 +349,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
     integer_matrix = matrix_to_integers_values(vacc_matrix)
     min_budget = min_budget_calculation(vacc_matrix)
-    strategy = dirlay_vaccination_startegy(integer_matrix, N_groups)
+    strategy = dirlay_vaccination_strategy(integer_matrix, N_groups)
 
     logger.info(f"Returning minimum budget: {min_budget} and the vaccination strategy: {strategy}")
     return min_budget, strategy
