@@ -521,7 +521,7 @@ def create_st_graph(graph:nx.DiGraph, targets:list, new_target:str) -> nx.DiGrap
     >>> G = nx.DiGraph()
     >>> G.add_edges_from([(1, 2), (2, 3), (3, 4)])
     >>> targets = [2, 3]
-    >>> G_st = create_st_graph(G, targets)
+    >>> G_st = create_st_graph(G, targets, 't')
     >>> 't' in G_st.nodes
     True
     >>> list(G_st.successors(2))
