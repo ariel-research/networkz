@@ -3,7 +3,10 @@
 NetworkZ is a library of graph algorithms in Python. It is an extension of the [NetworkX](https://github.com/networkx/networkx). It contains (by import) everything that is in NetworkX, plus some additional algorithms that were submitted into NetworkX but not merged yet. Currently, NetworkZ contains the following additional algorithms:
 
 * [Rank-maximal matching](networkz/algorithms/bipartite/rank_maximal_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
+* [Maximum-weight fractional matching](networkz/algorithms/max_weight_fractional_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
 * [Social-aware coalition formation](networkz/algorithms/approximation/coalition_formation.py) - by Victor Kushnir.
+* [Minimum cut on a graph with node capacity](networkz/algorithms/max_flow_with_node_capacity.py): by Yuval Bubnovsky, Almog David and Shaked Levi.
+* [Several approximate solutions to the Firefighter problem](networkz/algorithms/approximation/firefighter_problem): by Yuval Bubnovsky, Almog David and Shaked Levi.
 
 ## Installation
 

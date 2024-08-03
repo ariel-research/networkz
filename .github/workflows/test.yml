@@ -53,13 +53,13 @@ jobs:
 
       - name: Test NetworkZ
         run: |
-          pytest --doctest-modules --durations=10
+          pytest
 
       - name: Test Dispatching
         # Limit this to only a single combination from the matrix
         if: ${{ (matrix.os == 'ubuntu') && (matrix.python-version == '3.11') }}
         run: |
-          NetworkZ_GRAPH_CONVERT=nx-loopback pytest --doctest-modules --durations=10
+          NetworkZ_GRAPH_CONVERT=nx-loopback pytest
 
   extra:
     runs-on: ${{ matrix.os }}
@@ -123,7 +123,7 @@ jobs:
 
       - name: Test NetworkZ
         run: |
-          pytest --doctest-modules --durations=10
+          pytest
 
   prerelease:
     runs-on: ${{ matrix.os }}-latest
@@ -147,4 +147,4 @@ jobs:
 
       - name: Test NetworkZ
         run: |
-          pytest --doctest-modules --durations=10
+          pytest
