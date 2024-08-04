@@ -118,7 +118,7 @@ def Compare_NonSpread():
     This function runs multiple experiments on randomly generated layered networks
     and plots the results comparing the budget used by different algorithms.
     """
-    ex1 = experiments_csv.Experiment("./experiments/", "non_spreading.csv", backup_folder=None)
+    ex1 = experiments_csv.Experiment("./experiments/firefighter_problem/", "non_spreading.csv", backup_folder=None)
     ex1.clear_previous_results()  # to clear previous experiments
 
     input_ranges = {
@@ -144,7 +144,7 @@ def Compare_NonSpread():
     ex1.run_with_time_limit(multiple_runs, input_ranges={}, time_limit=0.9)
 
     # Preprocess the DataFrame to extract numeric budget values
-    results_csv_file = "./experiments/non_spreading_minbudget.csv"
+    results_csv_file = "./experiments/firefighter_problem/non_spreading_minbudget.csv"
     results = pd.read_csv(results_csv_file)
 
     # Extract the numeric budget from the 'Budget' column
@@ -164,7 +164,7 @@ def Compare_NonSpread():
     results = results.dropna(subset=['Budget_numeric'])
 
     # Save the preprocessed DataFrame to a temporary CSV file
-    preprocessed_csv_file = "./experiments/non_spreading_minbudget_preprocessed.csv"
+    preprocessed_csv_file = "./experiments/firefighter_problem/non_spreading_minbudget_preprocessed.csv"
     results.to_csv(preprocessed_csv_file, index=False)
 
     print("\n DataFrame-NonSpread: \n", results)
@@ -177,7 +177,7 @@ def Compare_NonSpread():
         y_field="Budget_numeric", 
         z_field="algorithm", 
         mean=True,
-        save_to_file="./experiments/non_spreading.png"
+        save_to_file="./experiments/firefighter_problem/non_spreading.png"
     )
     
     print("\n DataFrame-NonSpread: \n", ex1.dataFrame)
@@ -189,7 +189,7 @@ def Compare_SpreadingMaxSave():
     This function runs multiple experiments on randomly generated directed graphs
     and plots the results comparing the number of nodes saved by different algorithms.
     """
-    ex2 = experiments_csv.Experiment("./experiments/", "spreading_maxsave.csv", backup_folder=None)
+    ex2 = experiments_csv.Experiment("./experiments/firefighter_problem/", "spreading_maxsave.csv", backup_folder=None)
     ex2.clear_previous_results()  # to clear previous experiments
 
     input_ranges = {
@@ -224,7 +224,7 @@ def Compare_SpreadingMaxSave():
 
     ## DATA ISSUE WE HAD SO THIS IS A FIX ##
     # Load the results
-    results_csv_file = "./experiments/spreading_maxsave.csv"
+    results_csv_file = "./experiments/firefighter_problem/spreading_maxsave.csv"
     results = pd.read_csv(results_csv_file)
 
     # Ensure 'algorithm' column is of type string
@@ -245,7 +245,7 @@ def Compare_SpreadingMaxSave():
     results['Nodes_Saved'] = results['Nodes_Saved'].astype(int)
 
     # Save the cleaned DataFrame to a new CSV file (optional, for debugging)
-    cleaned_csv_file = "./experiments/spreading_maxsave_preprocessed.csv"
+    cleaned_csv_file = "./experiments/firefighter_problem/spreading_maxsave_preprocessed.csv"
     results.to_csv(cleaned_csv_file, index=False)
 
     # Plot the results using the cleaned DataFrame
@@ -261,7 +261,7 @@ def Compare_SpreadingMaxSave():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/spreading_maxsave_budget.png"
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_budget.png"
     )
 
     multi_plot_results(
@@ -276,7 +276,7 @@ def Compare_SpreadingMaxSave():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/spreading_maxsave_100_edge_prob.png"
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_100_edge_prob.png"
     )
 
     multi_plot_results(
@@ -291,7 +291,7 @@ def Compare_SpreadingMaxSave():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/spreading_maxsave_200_edge_prob.png"
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_200_edge_prob.png"
     )
 
     multi_plot_results(
@@ -306,7 +306,7 @@ def Compare_SpreadingMaxSave():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/spreading_maxsave_400_edge_prob.png"
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_400_edge_prob.png"
     )
 
     print("\n DataFrame-NonSpread: \n", ex2.dataFrame)
@@ -318,7 +318,7 @@ def Compare_SpreadingMinBudget():
     This function runs multiple experiments on randomly generated directed graphs
     and plots the results comparing the budget used by different algorithms.
     """
-    ex3 = experiments_csv.Experiment("./experiments/", "spreading_minbudget.csv", backup_folder=None)
+    ex3 = experiments_csv.Experiment("./experiments/firefighter_problem/", "spreading_minbudget.csv", backup_folder=None)
     ex3.clear_previous_results()  # to clear previous experiments
 
     input_ranges = {
@@ -349,7 +349,7 @@ def Compare_SpreadingMinBudget():
     ex3.run_with_time_limit(multiple_runs, input_ranges={}, time_limit=0.9)
 
     # Preprocess the DataFrame to extract numeric budget values
-    results_csv_file = "./experiments/spreading_minbudget.csv"
+    results_csv_file = "./experiments/firefighter_problem/spreading_minbudget.csv"
     results = pd.read_csv(results_csv_file)
 
     # Extract the numeric budget from the 'Budget' column
@@ -369,7 +369,7 @@ def Compare_SpreadingMinBudget():
     results = results.dropna(subset=['Budget_numeric'])
 
     # Save the preprocessed DataFrame to a temporary CSV file
-    preprocessed_csv_file = "./experiments/spreading_minbudget_preprocessed.csv"
+    preprocessed_csv_file = "./experiments/firefighter_problem/spreading_minbudget_preprocessed.csv"
     results.to_csv(preprocessed_csv_file, index=False)
 
     print("\n DataFrame-NonSpread: \n", results)
@@ -382,17 +382,17 @@ def Compare_SpreadingMinBudget():
         y_field="Budget_numeric", 
         z_field="algorithm", 
         mean=True,
-        save_to_file="./experiments/spreading_minbudget.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget.png"
     )
 
     single_plot_results(
         results_csv_file=preprocessed_csv_file,
-        filter={"edge_probability":0.1}, 
-        x_field="graph_nodes", 
+        filter={"graph_nodes":400}, 
+        x_field="edge_probability", 
         y_field="Budget_numeric", 
         z_field="algorithm", 
         mean=True,
-        save_to_file="./experiments/spreading_minbudget_edge.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_400_edge.png"
     )
     
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
