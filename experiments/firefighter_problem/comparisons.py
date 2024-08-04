@@ -328,7 +328,7 @@ def Compare_SpreadingMinBudget():
     node_counts = [100, 200, 400]
     edge_probabilities = [0.1, 0.5, 0.8]
 
-    def multiple_runs(runs=1):
+    def multiple_runs(runs=15):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -384,18 +384,6 @@ def Compare_SpreadingMinBudget():
         mean=True,
         save_to_file="./experiments/firefighter_problem/spreading_minbudget.png"
     )
-
-    # ex3.clear_previous_results()  # to clear previous experiments
-    
-    # single_plot_results(
-    #     results_csv_file=preprocessed_csv_file,
-    #     filter={"graph_nodes":400}, 
-    #     x_field="edge_probability", 
-    #     y_field="Budget_numeric", 
-    #     z_field="algorithm", 
-    #     mean=True,
-    #     save_to_file="./experiments/firefighter_problem/spreading_minbudget_400_edge.png"
-    # )
 
     multi_plot_results(
         results_csv_file=preprocessed_csv_file,
