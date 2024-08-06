@@ -19,7 +19,6 @@ Shaked Levi
 
 import networkx as nx
 import networkx.algorithms.connectivity as algo 
-import matplotlib.pyplot as plt
 import numpy as np
 from enum import Enum
 import copy
@@ -835,6 +834,7 @@ def display_graph(graph:nx.DiGraph) -> None:
     graph : nx.DiGraph
         Directed graph.
     """
+    import matplotlib.pyplot as plt
     pos = nx.shell_layout(graph)
     colors = [node_colors.get(data.get('status', 'default'), 'default') for node, data in graph.nodes(data=True)]
     nx.draw(graph, pos, node_color=colors, with_labels=True, font_weight='bold')
