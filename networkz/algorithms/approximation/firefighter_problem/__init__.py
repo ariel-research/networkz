@@ -1,0 +1,1 @@
+from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import *
