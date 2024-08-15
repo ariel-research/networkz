@@ -1,2 +1,3 @@
 from networkz.algorithms.approximation.coalition_formation import *
+from networkz.algorithms.approximation import firefighter_problem
 from networkz.algorithms.approximation.firefighter_problem.Firefighter_Problem import *
