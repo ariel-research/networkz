@@ -1,5 +1,6 @@
 from networkx.algorithms import *
 from networkz.algorithms import max_weight_fractional_matching
+from networkz.algorithms import max_flow_with_node_capacity
 from networkx.algorithms import bipartite
 from networkz.algorithms.bipartite import rank_maximal_matching
 from networkx.algorithms import approximation
