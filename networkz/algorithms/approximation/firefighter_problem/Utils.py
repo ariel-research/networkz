@@ -581,7 +581,7 @@ def min_cut_N_groups(min_cut_nodes: set, layers: list) -> dict:
     return groups
 
 
-def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict) -> np.matrix: 
+def calculate_vaccine_matrix(layers: list, min_cut_nodes_grouped:dict) -> np.matrix: 
     """
     Calculate the vaccine matrix based on the calculation in the article at the DirLayNet algorithm section.
 
@@ -614,87 +614,62 @@ def calculate_vaccine_matrix(layers:list, min_cut_nodes_grouped:dict) -> np.matr
     logger.info(f"Vaccination Matrix Before roundups:\n{matrix}")
     return matrix
 
+
 def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
     """
-    Convert a matrix with fractional entries to an integral matrix such that
-    the row and column sums are either the floor or ceiling of the original sums.
-    The solution is provided with a construction of a flow graph and then applying a max-flow algorithm on it.
+    Convert a matrix with floating-point values to a matrix with integer values while 
+    preserving the row and column sums.
 
     Parameters:
     ----------
     matrix : np.matrix
-        The input matrix with fractional entries.
+        Input matrix with floating-point values.
 
     Returns:
     -------
     np.matrix
-        The converted integral matrix.
-
-    Examples:
-    --------
-    
+        Matrix with integer values where the row and column sums are adjusted to match
+        the original matrix as closely as possible.
     """
-    # dimensions of the matrix
-    logger.info(f"Applying max-flow to transfer the Vaccine Matrix for integers...")
-    rows, cols = matrix.shape
-    
-    row_sums = np.array(matrix.sum(axis=1)).flatten()
-    col_sums = np.array(matrix.sum(axis=0)).flatten()
-    
-    # logger.info(f"Row sums: {row_sums}")
-    # logger.info(f"Column sums: {col_sums}")
-    
-    G = nx.DiGraph()
-    
-    # add source and sink nodes
-    source = 's'
-    sink = 't'
-    G.add_node(source)
-    G.add_node(sink)
-    
-    # add nodes for rows and columns
-    row_nodes = ['r{}'.format(i) for i in range(rows)]
-    col_nodes = ['c{}'.format(j) for j in range(cols)]
-    G.add_nodes_from(row_nodes)
-    G.add_nodes_from(col_nodes)
-    
-    # add edges from source to row nodes with capacities as the ceiling of row sums
-    for i in range(rows):
-        G.add_edge(source, row_nodes[i], capacity=np.ceil(row_sums[i]))
-    
-    # add edges from column nodes to sink with capacities as the ceiling of column sums
-    for j in range(cols):
-        G.add_edge(col_nodes[j], sink, capacity=np.ceil(col_sums[j]))
-    
-    # add edges from row nodes to column nodes with capacity 1
-    for i in range(rows):
-        for j in range(cols):
-            G.add_edge(row_nodes[i], col_nodes[j], capacity=1)
-    
-    # computes the maximum flow
-    flow_value, flow_dict = nx.maximum_flow(G, source, sink)
-    
-    # builds the integral matrix
-    integral_matrix = np.zeros_like(matrix, dtype=int)
-    for i in range(rows):
-        for j in range(cols):
-            if flow_dict[row_nodes[i]][col_nodes[j]] > 0:
-                integral_matrix[i, j] = np.ceil(matrix[i, j])
-            else:
-                integral_matrix[i, j] = np.floor(matrix[i, j])
 
-    logger.info(f"Integral and final Matrix:\n{integral_matrix}")
+    #Calculate the row sums and column sums
+    row_sums = np.sum(matrix, axis=1)
+    col_sums = np.sum(matrix, axis=0)
+    
+    #Init the integral matrix by rounding the original matrix
+    rounded_matrix = np.round(matrix).astype(int)
+    
+    #Adjust the matrix to ensure row and column sums match the original sums
+    current_row_sums = np.sum(rounded_matrix, axis=1)
+    current_col_sums = np.sum(rounded_matrix, axis=0)
+    
+    #Adjust rows
+    for i in range(len(matrix)):
+        diff = int(round(row_sums[i])) - current_row_sums[i]
+        if diff != 0:
+            # Adjust the largest (or smallest) element in the row
+            idx = np.argmax(matrix[i, :] - rounded_matrix[i, :]) if diff > 0 else np.argmin(matrix[i, :] - rounded_matrix[i, :])
+            rounded_matrix[i, idx] += diff
+        current_row_sums = np.sum(rounded_matrix, axis=1)  # Update row sums after adjustment
+    
+    #Adjust columns
+    for j in range(len(matrix[0])):
+        diff = int(round(col_sums[j])) - current_col_sums[j]
+        if diff != 0:
+            # Adjust the largest (or smallest) element in the column
+            idx = np.argmax(matrix[:, j] - rounded_matrix[:, j]) if diff > 0 else np.argmin(matrix[:, j] - rounded_matrix[:, j])
+            rounded_matrix[idx, j] += diff
+        current_col_sums = np.sum(rounded_matrix, axis=0)  # Update column sums after adjustment
+    
+    return rounded_matrix
 
-    return np.matrix(integral_matrix)
-
-
-def min_budget_calculation(matrix: np.matrix) -> int:
+def min_budget_calculation(matrix: list) -> int:
     """
     Calculate the minimum budget from the matrix.
 
     Parameters:
     ----------
-    matrix : np.matrix
+    matrix : list
         Input matrix.
 
     Returns:
@@ -704,13 +679,13 @@ def min_budget_calculation(matrix: np.matrix) -> int:
 
     Examples:
     --------
-    >>> matrix = np.matrix([[0.5, 1.5], [1.2, 0.8]])
+    >>> matrix = [[0.5, 1.5],[1.2, 0.8]]
     >>> min_budget_calculation(matrix)
-    3
+    2
     """
-    integral_matrix = matrix_to_integers_values(matrix)
-    rows_sum = integral_matrix.sum(axis=1) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
-    min_budget = int(rows_sum.max())
+    integral_matrix = matrix_to_integers_values(np.array(matrix))
+    rows_sum = np.sum(integral_matrix, axis=1) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
+    min_budget = int(np.max(rows_sum))
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
@@ -735,6 +710,8 @@ def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list
 
     num_steps, num_layers = vacc_matrix.shape
     strategy = []
+    chosen_vaccinated_nodes = set()  # Keep track of already vaccinated nodes so we dont chose accidanlty to vaccinate a node which was already selected
+
     for i in range(num_steps):
         for j in range(num_layers):
             num_nodes_to_vaccinate = int(vacc_matrix[i, j])
@@ -743,13 +720,23 @@ def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list
 
             if num_nodes_to_vaccinate > 0:
                 # Extract the nodes to vaccinate
-                selected_nodes = ni_groups[j+1][:num_nodes_to_vaccinate]
+                available_nodes = ni_groups.get(j+1, [])
+                # Filter out already vaccinated nodes
+                nodes_to_consider = [node for node in available_nodes if node not in chosen_vaccinated_nodes]
                 
+                logger.debug(f"The available nodes to vaccinate {nodes_to_consider}")
+
+                # Select nodes to vaccinate from the filtered list
+                selected_nodes = nodes_to_consider[:num_nodes_to_vaccinate]
+
                 logger.debug(f"The selected nodes to vaccinate {selected_nodes}")
+
+                # Update the set of vaccinated nodes
+                chosen_vaccinated_nodes.update(selected_nodes)
 
                 # Create tuples (node, i) and add them directly to strategy
                 strategy.extend((node, i+1) for node in selected_nodes)
-    
+
     # sort the strategy by time stamp. 
     strategy.sort(key=lambda x: (x[1], x[0]))
     return strategy
