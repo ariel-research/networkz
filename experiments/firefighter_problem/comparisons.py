@@ -498,7 +498,6 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
-    Compare_NonSpread()
-    # Compare_SpreadingMinBudget()
+    # Compare_NonSpread()
+    Compare_SpreadingMinBudget()
     #Compare_SpreadingMaxSave()
->>>>>>> 823b923ab277195fdb6543319b124d366ef8441d
