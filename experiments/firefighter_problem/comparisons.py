@@ -118,26 +118,31 @@ def Compare_NonSpread():
     This function runs multiple experiments on randomly generated layered networks
     and plots the results comparing the budget used by different algorithms.
     """
-    ex1 = experiments_csv.Experiment("./experiments/firefighter_problem/", "non_spreading.csv", backup_folder=None)
+    ex1 = experiments_csv.Experiment("./experiments/firefighter_problem/", "non_spreading_minbudget.csv", backup_folder=None)
     ex1.clear_previous_results()  # to clear previous experiments
 
     input_ranges = {
         "algorithm": [non_spreading_dirlaynet_minbudget, non_spreading_minbudget, heuristic_minbudget],
     }
 
+    node_counts = [20, 50, 100, 200, 400]
+    layers_count = [2, 5, 7, 10, 15]
+
     def multiple_runs(runs=10):
-        for _ in range(runs):
-            graph = generate_random_layered_network() 
-            source = 0
-            nodes = list(graph.nodes)
-            nodes.remove(0)
-            num_targets = random.randint(1, int(len(nodes) / 4) + 1)
-            targets = random.sample(nodes, num_targets)
-            for algorithm in input_ranges["algorithm"]:
-                start_time = perf_counter()
-                result = runner_no_spreading(algorithm, graph, source, targets)
-                runtime = perf_counter() - start_time
-                ex1.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "graph_nodes": len(graph.nodes)}, **result})
+        for num_nodes in node_counts:
+            for num_layers in layers_count:
+                graph = generate_random_layered_network(num_nodes,num_layers) 
+                for _ in range(runs):
+                    source = 0
+                    nodes = list(graph.nodes)
+                    nodes.remove(0)
+                    num_targets = random.randint(1, int(len(nodes) / 4) + 1)
+                    targets = random.sample(nodes, num_targets)
+                    for algorithm in input_ranges["algorithm"]:
+                        start_time = perf_counter()
+                        result = runner_no_spreading(algorithm, graph, source, targets)
+                        runtime = perf_counter() - start_time
+                        ex1.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "graph_nodes": len(graph.nodes)}, **result})
         return {"status": "completed"}
 
     # Set a time limit for the entire batch run
@@ -177,7 +182,7 @@ def Compare_NonSpread():
         y_field="Budget_numeric", 
         z_field="algorithm", 
         mean=True,
-        save_to_file="./experiments/firefighter_problem/non_spreading.png"
+        save_to_file="./experiments/firefighter_problem/non_spreading_minbudget.png"
     )
     
     print("\n DataFrame-NonSpread: \n", ex1.dataFrame)
@@ -467,6 +472,12 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
+<<<<<<< HEAD
     #Compare_NonSpread()
     #Compare_SpreadingMinBudget()
     Compare_SpreadingMaxSave()
+=======
+    Compare_NonSpread()
+    # Compare_SpreadingMinBudget()
+    #Compare_SpreadingMaxSave()
+>>>>>>> 823b923ab277195fdb6543319b124d366ef8441d
