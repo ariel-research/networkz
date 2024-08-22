@@ -22,6 +22,7 @@ Shaked Levi
 import logging
 import random
 import networkx as nx
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -54,19 +55,16 @@ def generate_random_DiGraph(
     return G
 
 
-#TODO : make this to receive paramaters
-def generate_random_layered_network():
+def generate_random_layered_network(    
+    num_nodes: int = 100,
+    num_layers: int = 5):
     """
     Generates a directed layered network with a random number of layers and random nodes per layer.
     
     Returns:
         G (networkx.DiGraph): Directed graph representing the layered network.
     """
-    # Randomly decide the number of layers (between 2 and 3 for this example)
-    num_layers = random.randint(5, 10)
-    
-    # Randomly decide the number of nodes per layer (between 1 and 4 for this example)
-    nodes_per_layer = [random.randint(5, 30) for _ in range(num_layers)]
+    nodes_per_layer = [int(np.floor(num_nodes/num_layers)) for _ in range(num_layers)]
     
     G = nx.DiGraph()
     node_id = 1  # Start node_id from 1 because 0 is the source
