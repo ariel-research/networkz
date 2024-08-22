@@ -431,66 +431,6 @@ def Compare_SpreadingMinBudget():
         save_to_file="./experiments/firefighter_problem/spreading_minbudget_50.png"
     )
 
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":10}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_10.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":100}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_100.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":200}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_200.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":400}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_400.png"
-    )
-
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
 
 if __name__ == "__main__":
