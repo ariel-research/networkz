@@ -201,7 +201,7 @@ def Compare_SpreadingMaxSave():
         "algorithm": [spreading_maxsave, heuristic_maxsave]
     }
     
-    node_counts = [10, 50, 100, 200, 400]
+    node_counts = [50, 100, 200, 400]
     edge_probabilities = [0.1, 0.25, 0.5, 0.8]
     budget_range = [1,2,3,5,7,10]
 
@@ -312,21 +312,6 @@ def Compare_SpreadingMaxSave():
         sharey=True,
         mean=True,
         save_to_file="./experiments/firefighter_problem/spreading_maxsave_400_edge_prob.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=cleaned_csv_file,
-        filter={"graph_nodes":10}, 
-        subplot_rows=2,
-        subplot_cols=2,
-        x_field="Budget", 
-        y_field="Nodes_Saved", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_maxsave_10_edge_prob.png"
     )
 
     multi_plot_results(
@@ -443,7 +428,67 @@ def Compare_SpreadingMinBudget():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_splitted.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_50.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":10}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_10.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":100}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_100.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":200}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_200.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":400}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_400.png"
     )
 
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
@@ -453,6 +498,7 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
-    # Compare_NonSpread()
-    Compare_SpreadingMinBudget()
+    Compare_NonSpread()
+    # Compare_SpreadingMinBudget()
     #Compare_SpreadingMaxSave()
+>>>>>>> 823b923ab277195fdb6543319b124d366ef8441d
