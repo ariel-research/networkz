@@ -125,7 +125,7 @@ def Compare_NonSpread():
         "algorithm": [non_spreading_dirlaynet_minbudget, non_spreading_minbudget, heuristic_minbudget],
     }
 
-    def multiple_runs(runs=30):
+    def multiple_runs(runs=10):
         for _ in range(runs):
             graph = generate_random_layered_network() 
             source = 0
@@ -196,8 +196,8 @@ def Compare_SpreadingMaxSave():
         "algorithm": [spreading_maxsave, heuristic_maxsave]
     }
     
-    node_counts = [100, 200, 400]
-    edge_probabilities = [0.1, 0.5, 0.8]
+    node_counts = [10, 50, 100, 200, 400]
+    edge_probabilities = [0.1, 0.25, 0.5, 0.8]
     budget_range = [1,2,3,5,7,10]
 
     def multiple_runs(runs=10):
@@ -267,8 +267,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":100}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -282,8 +282,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":200}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -297,8 +297,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":400}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -307,6 +307,36 @@ def Compare_SpreadingMaxSave():
         sharey=True,
         mean=True,
         save_to_file="./experiments/firefighter_problem/spreading_maxsave_400_edge_prob.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":10}, 
+        subplot_rows=2,
+        subplot_cols=2,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_10_edge_prob.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":50}, 
+        subplot_rows=2,
+        subplot_cols=2,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_50_edge_prob.png"
     )
 
     print("\n DataFrame-NonSpread: \n", ex2.dataFrame)
@@ -325,10 +355,10 @@ def Compare_SpreadingMinBudget():
         "algorithm": [spreading_minbudget, heuristic_minbudget]
     }
     
-    node_counts = [100, 200, 400]
-    edge_probabilities = [0.1, 0.5, 0.8]
+    node_counts = [10, 50, 100, 200, 400]
+    edge_probabilities = [0.1, 0.25, 0.5, 0.8]
 
-    def multiple_runs(runs=15):
+    def multiple_runs(runs=10):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -387,19 +417,79 @@ def Compare_SpreadingMinBudget():
 
     multi_plot_results(
         results_csv_file=preprocessed_csv_file,
-        filter={}, 
-        subplot_rows=3,
-        subplot_cols=1,
-        x_field="edge_probability", 
+        filter={"graph_nodes":50}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
         y_field="Budget_numeric", 
         z_field="algorithm", 
-        subplot_field="graph_nodes",
+        subplot_field="edge_probability",
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_edge_prob.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_50.png"
     )
-    
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":10}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_10.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":100}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_100.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":200}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_200.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=preprocessed_csv_file,
+        filter={"graph_nodes":400}, 
+        subplot_rows=2,
+        subplot_cols=2,
+         x_field="edge_probability", 
+        y_field="Budget_numeric", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_400.png"
+    )
+
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
 
 if __name__ == "__main__":
