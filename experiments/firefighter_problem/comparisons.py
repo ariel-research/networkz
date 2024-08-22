@@ -360,7 +360,7 @@ def Compare_SpreadingMinBudget():
         "algorithm": [spreading_minbudget, heuristic_minbudget]
     }
     
-    node_counts = [10, 50, 100, 200, 400]
+    node_counts = [10, 20, 50, 100 , 200 , 400]
     edge_probabilities = [0.1, 0.25, 0.5, 0.8]
 
     def multiple_runs(runs=10):
@@ -400,8 +400,19 @@ def Compare_SpreadingMinBudget():
 
     results['Budget_numeric'] = results['Budget'].apply(extract_budget_numeric)
 
-    # Drop rows where the 'Budget_numeric' is not available
+    # Ensure 'Budget_numeric' column is numeric and drop rows with NaNs
+    results['Budget_numeric'] = pd.to_numeric(results['Budget_numeric'], errors='coerce')
     results = results.dropna(subset=['Budget_numeric'])
+
+    # Ensure 'Budget_numeric' is an integer
+    results['Budget_numeric'] = results['Budget_numeric'].astype(int)
+
+    # Ensure 'graph_nodes' column is numeric and drop rows with NaNs
+    results['graph_nodes'] = pd.to_numeric(results['graph_nodes'], errors='coerce')
+    results = results.dropna(subset=['graph_nodes'])
+
+    # Ensure 'graph_nodes' is an integer
+    results['graph_nodes'] = results['graph_nodes'].astype(int)
 
     # Save the preprocessed DataFrame to a temporary CSV file
     preprocessed_csv_file = "./experiments/firefighter_problem/spreading_minbudget_preprocessed.csv"
@@ -409,7 +420,7 @@ def Compare_SpreadingMinBudget():
 
     print("\n DataFrame-NonSpread: \n", results)
 
-    # Plot the results using the preprocessed CSV file
+    # # Plot the results using the preprocessed CSV file
     single_plot_results(
         results_csv_file=preprocessed_csv_file,
         filter={}, 
@@ -422,77 +433,17 @@ def Compare_SpreadingMinBudget():
 
     multi_plot_results(
         results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":50}, 
+        filter={}, 
         subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
+        subplot_cols=3,
+        x_field="edge_probability", 
         y_field="Budget_numeric", 
         z_field="algorithm", 
-        subplot_field="edge_probability",
+        subplot_field="graph_nodes",
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_50.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":10}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_10.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":100}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_100.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":200}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_200.png"
-    )
-
-    multi_plot_results(
-        results_csv_file=preprocessed_csv_file,
-        filter={"graph_nodes":400}, 
-        subplot_rows=2,
-        subplot_cols=2,
-         x_field="edge_probability", 
-        y_field="Budget_numeric", 
-        z_field="algorithm", 
-        subplot_field="edge_probability",
-        sharex=True,
-        sharey=True,
-        mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_400.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_splitted.png"
     )
 
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
@@ -502,6 +453,6 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
-    Compare_NonSpread()
-    # Compare_SpreadingMinBudget()
+    # Compare_NonSpread()
+    Compare_SpreadingMinBudget()
     #Compare_SpreadingMaxSave()
