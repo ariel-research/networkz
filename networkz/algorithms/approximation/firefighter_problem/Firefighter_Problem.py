@@ -19,6 +19,7 @@ Shaked Levi
 """
 
 import networkx as nx
+import numpy as np
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
@@ -347,8 +348,8 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     G_reduction_min_cut = min_cut_with_node_capacity(G, source=source, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
-    integer_matrix = matrix_to_integers_values(vacc_matrix)
-    min_budget = min_budget_calculation(vacc_matrix)
+    integer_matrix = matrix_to_integers_values(np.array(vacc_matrix))
+    min_budget = min_budget_calculation(integer_matrix)
     strategy = dirlay_vaccination_strategy(integer_matrix, N_groups)
 
     logger.info(f"Returning minimum budget: {min_budget} and the vaccination strategy: {strategy}")

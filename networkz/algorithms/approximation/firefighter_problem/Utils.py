@@ -40,7 +40,7 @@ node_colors = {
     'directly vaccinated': 'green',
     'default' : "#00FFD0"
 }
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('firefighter_problem_main')
 
 # ============================ Validation Functions ============================
 
@@ -632,7 +632,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
         the original matrix as closely as possible.
     """
 
-    logger.info ("Converting the matrix to integer values..")
+    logger.info("Converting the matrix to integer values..")
 
     #get the row sums and column sums
     row_sums = np.sum(matrix, axis=1)
@@ -663,7 +663,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
             rounded_matrix[idx, j] += diff
         current_col_sums = np.sum(rounded_matrix, axis=0) 
 
-    logger.info("Integer matrix as follows -", rounded_matrix)
+    logger.info(f"Integer matrix as follows:{rounded_matrix}")
     
     return rounded_matrix
 
@@ -687,8 +687,7 @@ def min_budget_calculation(matrix: list) -> int:
     >>> min_budget_calculation(matrix)
     2
     """
-    integral_matrix = matrix_to_integers_values(np.array(matrix))
-    rows_sum = np.sum(integral_matrix, axis=1) # we get column sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
+    rows_sum = np.sum(matrix, axis=1) # we get row sum as we want to -> on time step i, vaccinate Mij nodes from layer j , for all i ≤ j ≤ .
     min_budget = int(np.max(rows_sum))
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
