@@ -19,6 +19,7 @@ Shaked Levi
 """
 
 import networkx as nx
+import numpy as np
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
@@ -26,10 +27,10 @@ from networkz.algorithms.max_flow_with_node_capacity import min_cut_with_node_ca
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
 def setup_logger(logger):
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+    console_handler.setLevel(logging.DEBUG)
     
     formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     console_handler.setFormatter(formatter)
@@ -347,8 +348,8 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     G_reduction_min_cut = min_cut_with_node_capacity(G, source=source, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
-    integer_matrix = matrix_to_integers_values(vacc_matrix)
-    min_budget = min_budget_calculation(vacc_matrix)
+    integer_matrix = matrix_to_integers_values(np.array(vacc_matrix))
+    min_budget = min_budget_calculation(integer_matrix)
     strategy = dirlay_vaccination_strategy(integer_matrix, N_groups)
 
     logger.info(f"Returning minimum budget: {min_budget} and the vaccination strategy: {strategy}")
@@ -415,7 +416,7 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
         if spreading:
             spread_vaccination(Graph, vaccinated_nodes)
         for i in range(budget):
-            logger.info(f"Calculating the best direct vaccination strategy for the current time step that saves more new node in targets (Current budget: {budget})")
+            logger.info(f"Calculating the best direct vaccination strategy for the current time step that saves more new node in targets (Current budget: {i+1} out of {budget})")
             node_to_vaccinate, nodes_saved = find_best_neighbor(Graph, infected_nodes, local_targets, targets)
             if node_to_vaccinate is not None:
                 logger.info(f"Found {node_to_vaccinate} as a solution for current timestamp, appending to vaccination strategy and vaccinating the node")

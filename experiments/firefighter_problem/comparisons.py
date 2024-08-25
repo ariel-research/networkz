@@ -118,26 +118,31 @@ def Compare_NonSpread():
     This function runs multiple experiments on randomly generated layered networks
     and plots the results comparing the budget used by different algorithms.
     """
-    ex1 = experiments_csv.Experiment("./experiments/firefighter_problem/", "non_spreading.csv", backup_folder=None)
+    ex1 = experiments_csv.Experiment("./experiments/firefighter_problem/", "non_spreading_minbudget.csv", backup_folder=None)
     ex1.clear_previous_results()  # to clear previous experiments
 
     input_ranges = {
         "algorithm": [non_spreading_dirlaynet_minbudget, non_spreading_minbudget, heuristic_minbudget],
     }
 
-    def multiple_runs(runs=30):
-        for _ in range(runs):
-            graph = generate_random_layered_network() 
-            source = 0
-            nodes = list(graph.nodes)
-            nodes.remove(0)
-            num_targets = random.randint(1, int(len(nodes) / 4) + 1)
-            targets = random.sample(nodes, num_targets)
-            for algorithm in input_ranges["algorithm"]:
-                start_time = perf_counter()
-                result = runner_no_spreading(algorithm, graph, source, targets)
-                runtime = perf_counter() - start_time
-                ex1.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "graph_nodes": len(graph.nodes)}, **result})
+    node_counts = [20, 50, 100, 200, 400]
+    layers_count = [2, 5, 7, 10, 15]
+
+    def multiple_runs(runs=10):
+        for num_nodes in node_counts:
+            for num_layers in layers_count:
+                graph = generate_random_layered_network(num_nodes,num_layers) 
+                for _ in range(runs):
+                    source = 0
+                    nodes = list(graph.nodes)
+                    nodes.remove(0)
+                    num_targets = random.randint(1, int(len(nodes) / 4) + 1)
+                    targets = random.sample(nodes, num_targets)
+                    for algorithm in input_ranges["algorithm"]:
+                        start_time = perf_counter()
+                        result = runner_no_spreading(algorithm, graph, source, targets)
+                        runtime = perf_counter() - start_time
+                        ex1.add({**{"algorithm": algorithm.__name__, "runtime": runtime, "graph_nodes": len(graph.nodes)}, **result})
         return {"status": "completed"}
 
     # Set a time limit for the entire batch run
@@ -177,7 +182,7 @@ def Compare_NonSpread():
         y_field="Budget_numeric", 
         z_field="algorithm", 
         mean=True,
-        save_to_file="./experiments/firefighter_problem/non_spreading.png"
+        save_to_file="./experiments/firefighter_problem/non_spreading_minbudget.png"
     )
     
     print("\n DataFrame-NonSpread: \n", ex1.dataFrame)
@@ -196,8 +201,8 @@ def Compare_SpreadingMaxSave():
         "algorithm": [spreading_maxsave, heuristic_maxsave]
     }
     
-    node_counts = [100, 200, 400]
-    edge_probabilities = [0.1, 0.5, 0.8]
+    node_counts = [50, 100, 200, 400]
+    edge_probabilities = [0.1, 0.25, 0.5, 0.8]
     budget_range = [1,2,3,5,7,10]
 
     def multiple_runs(runs=10):
@@ -267,8 +272,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":100}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -282,8 +287,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":200}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -297,8 +302,8 @@ def Compare_SpreadingMaxSave():
     multi_plot_results(
         results_csv_file=cleaned_csv_file,
         filter={"graph_nodes":400}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=2,
         x_field="Budget", 
         y_field="Nodes_Saved", 
         z_field="algorithm", 
@@ -307,6 +312,21 @@ def Compare_SpreadingMaxSave():
         sharey=True,
         mean=True,
         save_to_file="./experiments/firefighter_problem/spreading_maxsave_400_edge_prob.png"
+    )
+
+    multi_plot_results(
+        results_csv_file=cleaned_csv_file,
+        filter={"graph_nodes":50}, 
+        subplot_rows=2,
+        subplot_cols=2,
+        x_field="Budget", 
+        y_field="Nodes_Saved", 
+        z_field="algorithm", 
+        subplot_field="edge_probability",
+        sharex=True,
+        sharey=True,
+        mean=True,
+        save_to_file="./experiments/firefighter_problem/spreading_maxsave_50_edge_prob.png"
     )
 
     print("\n DataFrame-NonSpread: \n", ex2.dataFrame)
@@ -325,10 +345,10 @@ def Compare_SpreadingMinBudget():
         "algorithm": [spreading_minbudget, heuristic_minbudget]
     }
     
-    node_counts = [100, 200, 400]
-    edge_probabilities = [0.1, 0.5, 0.8]
+    node_counts = [10, 20, 50, 100 , 200 , 400]
+    edge_probabilities = [0.1, 0.25, 0.5, 0.8]
 
-    def multiple_runs(runs=15):
+    def multiple_runs(runs=10):
         for num_nodes in node_counts:
             for edge_prob in edge_probabilities:
                 graph = generate_random_DiGraph(num_nodes=num_nodes, edge_probability=edge_prob, seed=None)
@@ -365,8 +385,19 @@ def Compare_SpreadingMinBudget():
 
     results['Budget_numeric'] = results['Budget'].apply(extract_budget_numeric)
 
-    # Drop rows where the 'Budget_numeric' is not available
+    # Ensure 'Budget_numeric' column is numeric and drop rows with NaNs
+    results['Budget_numeric'] = pd.to_numeric(results['Budget_numeric'], errors='coerce')
     results = results.dropna(subset=['Budget_numeric'])
+
+    # Ensure 'Budget_numeric' is an integer
+    results['Budget_numeric'] = results['Budget_numeric'].astype(int)
+
+    # Ensure 'graph_nodes' column is numeric and drop rows with NaNs
+    results['graph_nodes'] = pd.to_numeric(results['graph_nodes'], errors='coerce')
+    results = results.dropna(subset=['graph_nodes'])
+
+    # Ensure 'graph_nodes' is an integer
+    results['graph_nodes'] = results['graph_nodes'].astype(int)
 
     # Save the preprocessed DataFrame to a temporary CSV file
     preprocessed_csv_file = "./experiments/firefighter_problem/spreading_minbudget_preprocessed.csv"
@@ -374,7 +405,7 @@ def Compare_SpreadingMinBudget():
 
     print("\n DataFrame-NonSpread: \n", results)
 
-    # Plot the results using the preprocessed CSV file
+    # # Plot the results using the preprocessed CSV file
     single_plot_results(
         results_csv_file=preprocessed_csv_file,
         filter={}, 
@@ -388,8 +419,8 @@ def Compare_SpreadingMinBudget():
     multi_plot_results(
         results_csv_file=preprocessed_csv_file,
         filter={}, 
-        subplot_rows=3,
-        subplot_cols=1,
+        subplot_rows=2,
+        subplot_cols=3,
         x_field="edge_probability", 
         y_field="Budget_numeric", 
         z_field="algorithm", 
@@ -397,9 +428,9 @@ def Compare_SpreadingMinBudget():
         sharex=True,
         sharey=True,
         mean=True,
-        save_to_file="./experiments/firefighter_problem/spreading_minbudget_edge_prob.png"
+        save_to_file="./experiments/firefighter_problem/spreading_minbudget_50.png"
     )
-    
+
     print("\n DataFrame-NonSpread: \n", ex3.dataFrame)
 
 if __name__ == "__main__":
@@ -407,6 +438,6 @@ if __name__ == "__main__":
 
     setup_global_logger(level=logging.DEBUG)
 
-    #Compare_NonSpread()
+    # Compare_NonSpread()
     Compare_SpreadingMinBudget()
     #Compare_SpreadingMaxSave()
