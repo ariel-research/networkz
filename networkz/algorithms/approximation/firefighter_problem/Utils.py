@@ -485,7 +485,7 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int) -> list:
     >>> G.nodes(data=True)
     NodeDataView({1: {}, 2: {'capacity': 0.5454545454545455}, 3: {'capacity': 0.27272727272727276}, 4: {'capacity': 0.18181818181818182}})
     """
-    logger.debug(f"Starting to adjust node capacity for dirlay graph nodes...") 
+    logger.info(f"Starting to adjust node capacity for dirlay graph nodes...") 
 
     layers = (list(nx.bfs_layers(graph,source)))
     harmonic_sum = 0.0
@@ -494,7 +494,7 @@ def adjust_nodes_capacity(graph:nx.DiGraph, source:int) -> list:
     for index in range(1,len(layers)):
         for node in layers[index]:
             graph.nodes[node]['capacity'] = 1/(index*harmonic_sum)
-            logger.info(f"Added Capacity {1/(index*harmonic_sum)} for node: {node}") 
+            logger.debug(f"Added Capacity {1/(index*harmonic_sum)} for node: {node}") 
 
     logger.info(f"Done with adding capacity for nodes, with Layers: {layers}")       
 
@@ -632,18 +632,20 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
         the original matrix as closely as possible.
     """
 
-    #Calculate the row sums and column sums
+    logger.info ("Converting the matrix to integer values..")
+
+    # Step 1: Calculate the row sums and column sums
     row_sums = np.sum(matrix, axis=1)
     col_sums = np.sum(matrix, axis=0)
     
-    #Init the integral matrix by rounding the original matrix
+    # Step 2: Initialize the integral matrix by rounding the original matrix
     rounded_matrix = np.round(matrix).astype(int)
     
-    #Adjust the matrix to ensure row and column sums match the original sums
+    # Step 3: Adjust the matrix to ensure row and column sums match the original sums
     current_row_sums = np.sum(rounded_matrix, axis=1)
     current_col_sums = np.sum(rounded_matrix, axis=0)
     
-    #Adjust rows
+    # Step 4: Adjust rows
     for i in range(len(matrix)):
         diff = int(round(row_sums[i])) - current_row_sums[i]
         if diff != 0:
@@ -652,7 +654,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
             rounded_matrix[i, idx] += diff
         current_row_sums = np.sum(rounded_matrix, axis=1)  # Update row sums after adjustment
     
-    #Adjust columns
+    # Step 5: Adjust columns
     for j in range(len(matrix[0])):
         diff = int(round(col_sums[j])) - current_col_sums[j]
         if diff != 0:
@@ -660,6 +662,8 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
             idx = np.argmax(matrix[:, j] - rounded_matrix[:, j]) if diff > 0 else np.argmin(matrix[:, j] - rounded_matrix[:, j])
             rounded_matrix[idx, j] += diff
         current_col_sums = np.sum(rounded_matrix, axis=0)  # Update column sums after adjustment
+
+    logger.info("Integer matrix as follows -", rounded_matrix)
     
     return rounded_matrix
 
@@ -710,7 +714,7 @@ def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list
 
     num_steps, num_layers = vacc_matrix.shape
     strategy = []
-    chosen_vaccinated_nodes = set()  # Keep track of already vaccinated nodes so we dont chose accidanlty to vaccinate a node which was already selected
+    vaccinated_nodes = set()  # Keep track of already vaccinated nodes so we dont chose accidanlty to vaccinate a node which was already selected
 
     for i in range(num_steps):
         for j in range(num_layers):
@@ -722,7 +726,7 @@ def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list
                 # Extract the nodes to vaccinate
                 available_nodes = ni_groups.get(j+1, [])
                 # Filter out already vaccinated nodes
-                nodes_to_consider = [node for node in available_nodes if node not in chosen_vaccinated_nodes]
+                nodes_to_consider = [node for node in available_nodes if node not in vaccinated_nodes]
                 
                 logger.debug(f"The available nodes to vaccinate {nodes_to_consider}")
 
@@ -732,7 +736,7 @@ def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list
                 logger.debug(f"The selected nodes to vaccinate {selected_nodes}")
 
                 # Update the set of vaccinated nodes
-                chosen_vaccinated_nodes.update(selected_nodes)
+                vaccinated_nodes.update(selected_nodes)
 
                 # Create tuples (node, i) and add them directly to strategy
                 strategy.extend((node, i+1) for node in selected_nodes)
