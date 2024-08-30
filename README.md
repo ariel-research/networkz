@@ -63,7 +63,7 @@ G.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
 strategy, saved_nodes = nx.spreading_maxsave(G, budget = 1, source = 0, targets = [1,2,3,4,5,6]) 
 # Will return ([(2, 1), (4, 2)], {2, 3, 4, 5, 6})
 
-min_budget, strategy = nx.spreading_minbudget(G2, source = 0,targets = [1,2,3,4,5,6]) 
+min_budget, strategy = nx.spreading_minbudget(G, source = 0,targets = [1,2,3,4,5,6]) 
 min_budget, strategy = nx.non_spreading_minbudget(G, source = 0,targets = [1,2,3,4,5,6])
 # Both will return (2, [(1, 1), (2, 1)])
 ```
