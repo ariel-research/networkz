@@ -26,20 +26,8 @@ import logging
 from networkz.algorithms.max_flow_with_node_capacity import min_cut_with_node_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
-def setup_logger(logger):
-    logger.setLevel(logging.DEBUG)
-    
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG)
-    
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    
-    logger.addHandler(console_handler)
-    return logger
 
-logger = logging.getLogger('firefighter_problem')
-
+logger = logging.getLogger(__name__)
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> tuple[list, set]:    
     """

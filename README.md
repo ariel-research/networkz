@@ -50,9 +50,7 @@ print(F)
 ### Approximating The Fire-Fighter Problem
 The Firefighter problem models the case where a diffusive process such as an infection (or an idea, a computer virus, a fire) is spreading through a network, and our goal is to contain this infection by using targeted vaccinations.
 
-Networkz implements several algorithms to approximate solutions for the fire-fighter problems in 2 models: spreading & non-spreading, where the virus/fire always spreads but the spread of vaccination is dependant on the model.
-
-Under each such model, we are intrested in two problem types: MaxSave (save as many nodes from the target list given a budget) and MinBudget (What is the minimum budget needed to save all of the node target list)
+Networkz implements several algorithms to approximate solutions for the fire-fighter problems in 2 models: spreading & non-spreading, where the virus/fire always spreads but the spread of vaccination is dependant on the model. Under each such model, we are intrested in two problem types: MaxSave (save as many nodes from the target list given a budget) and MinBudget (What is the minimum budget needed to save all of the node target list)
 
 ```python
 import networkz as nx
@@ -78,6 +76,17 @@ G.add_edges_from([(0,1),(0,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,5),(4,5)])
 # The algorithm will check if this is actually a directed-layered network graph
 min_budget, strategy = nx.non_spreading_dirlaynet_minbudget(G, source = 0,targets = [1,2,3,4,5])
 # Will return (2, [(1, 1), (2, 1)])
+```
+
+The library also implements two local-search based heuristic algorithms (MaxSave & MinBudget), which are applicable to both spreading models and may return better results under certain conditions: MaxSave may save more nodes on dense graph (>0.5 edge probability), and MinBudget may return a smaller budget for sparser graphs (<0.5 edge probability)
+
+```python
+import networkz as nx
+G = nx.DiGraph()
+G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
+G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
+strategy, saved_nodes = nx.heuristic_maxsave(G, budget = 1, source = 0, targets = [1, 2, 3], spreading = False) # ([(1, 1)], {1, 3})
+min_budget, strategy = nx.heuristic_minbudget(G, source = 0, targets = [1, 2, 3], spreading = True) # (2, [(1, 1), (2, 1)])
 ```
 
 See the [algorithms in actions](https://the-firefighters.github.io/WebsiteGit/) for more information and a virtual sandbox to run and observe the algirithms.
