@@ -40,7 +40,7 @@ node_colors = {
     'directly vaccinated': 'green',
     'default' : "#00FFD0"
 }
-logger = logging.getLogger('firefighter_problem_main')
+logger = logging.getLogger('firefighter_problem')
 
 # ============================ Validation Functions ============================
 

@@ -38,7 +38,7 @@ def setup_logger(logger):
     logger.addHandler(console_handler)
     return logger
 
-logger = logging.getLogger('firefighter_problem_main')
+logger = logging.getLogger('firefighter_problem')
 
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> tuple[list, set]:    
