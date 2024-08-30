@@ -38,7 +38,7 @@ See [demo website](https://rmm.csariel.xyz/) for more information.
 ### Maximum-Weight Fractional Matching
 Maximum-weight fractional matching is a graph optimization problem where the goal is to find a set of edges with maximum total weight, allowing for fractional inclusion of edges.
 
-```
+```python
 import networkz as nx
 G = nx.Graph()
 G.add_nodes_from(["a1", "a2"])
@@ -54,7 +54,7 @@ Networkz implements several algorithms to approximate solutions for the fire-fig
 
 Under each such model, we are intrested in two problem types: MaxSave (save as many nodes from the target list given a budget) and MinBudget (What is the minimum budget needed to save all of the node target list)
 
-```
+```python
 import networkz as nx
 G = nx.DiGraph()
 G.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
@@ -69,7 +69,7 @@ min_budget, strategy = nx.non_spreading_minbudget(G, source = 0,targets = [1,2,3
 ```
 
 Another algorithm which is implemented in networkz is MinBudget in a non-spreading model (vaccine doesn't spread), running on a directed-layered network graph:
-```
+```python
 import networkz as nx
 G = nx.DiGraph()
 G.add_nodes_from([0,1,2,3,4,5], status="vulnerable")
