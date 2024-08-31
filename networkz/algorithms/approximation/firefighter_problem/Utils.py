@@ -32,14 +32,6 @@ class Status(Enum):
     VACCINATED = "vaccinated"
     DIRECTLY_VACCINATED = "directly vaccinated"
 
-
-node_colors = {
-    'vulnerable': 'gray',
-    'infected': 'red',
-    'vaccinated': 'blue',
-    'directly vaccinated': 'green',
-    'default' : "#00FFD0"
-}
 logger = logging.getLogger('firefighter_problem')
 
 # ============================ Validation Functions ============================
@@ -368,7 +360,6 @@ def spread_virus(graph:nx.DiGraph, infected_nodes:list) -> bool:
                 logger.debug("SPREAD VIRUS: Node " + f'{neighbor}' + " has been infected from node " + f'{node}')
 
     infected_nodes.clear()
-    #display_graph(graph)
     for node in new_infected_nodes:
         infected_nodes.append(node)  
     return bool(infected_nodes)
@@ -404,7 +395,6 @@ def spread_vaccination(graph:nx.DiGraph, vaccinated_nodes:list) -> None:
                 logger.debug("SPREAD VACCINATION: Node " + f'{neighbor}' + " has been vaccinated from node " + f'{node}')
 
     vaccinated_nodes.clear()
-    #display_graph(graph)
     for node in new_vaccinated_nodes:
         vaccinated_nodes.append(node)
     return
@@ -430,7 +420,6 @@ def vaccinate_node(graph:nx.DiGraph, node:int) -> None:
     """
     graph.nodes[node]['status'] = Status.DIRECTLY_VACCINATED.value
     logger.info("Node " + f'{node}' + " has been directly vaccinated")
-    #display_graph(graph)
     return
 
 def clean_graph(graph:nx.DiGraph) -> None:
@@ -535,7 +524,6 @@ def create_st_graph(graph:nx.DiGraph, targets:list, new_target:str) -> nx.DiGrap
     G.add_node(new_target, status = Status.VULNERABLE.value)
     for node in targets:
         G.add_edge(node, new_target)
-    #display_graph(G)
 
     logger.info(f"Done creating a s-t graph") 
     return G
@@ -816,24 +804,6 @@ def find_best_neighbor(graph: nx.DiGraph, infected_nodes: list, remaining_target
 # ===========================  End Heuristic Utilities ================================
 
 # ===========================  General Utilities ======================================
-def display_graph(graph:nx.DiGraph) -> None:
-    """
-    Display the graph using Matplotlib.
-
-    Parameters
-    ----------
-    graph : nx.DiGraph
-        Directed graph.
-    """
-    pos = nx.shell_layout(graph)
-    colors = [node_colors.get(data.get('status', 'default'), 'default') for node, data in graph.nodes(data=True)]
-    nx.draw(graph, pos, node_color=colors, with_labels=True, font_weight='bold')
-    
-    if nx.get_edge_attributes(graph, 'weight'):
-        edge_labels = nx.get_edge_attributes(graph, 'weight')
-        nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
-    plt.show()
-    return
 
 def parse_json_to_networkx(json_data):
     """
