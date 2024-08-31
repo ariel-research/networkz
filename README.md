@@ -2,11 +2,11 @@
 
 NetworkZ is a library of graph algorithms in Python. It is an extension of the [NetworkX](https://github.com/networkx/networkx). It contains (by import) everything that is in NetworkX, plus some additional algorithms that were submitted into NetworkX but not merged yet. Currently, NetworkZ contains the following additional algorithms:
 
-* [Rank-maximal matching](networkz/algorithms/bipartite/rank_maximal_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
-* [Maximum-weight fractional matching](networkz/algorithms/max_weight_fractional_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
-* [Social-aware coalition formation](networkz/algorithms/approximation/coalition_formation.py) - by Victor Kushnir.
-* [Minimum cut on a graph with node capacity](networkz/algorithms/max_flow_with_node_capacity.py): by Yuval Bubnovsky, Almog David and Shaked Levi.
-* [Several approximate solutions to the Firefighter problem](networkz/algorithms/approximation/firefighter_problem): by Yuval Bubnovsky, Almog David and Shaked Levi.
+- [Rank-maximal matching](networkz/algorithms/bipartite/rank_maximal_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
+- [Maximum-weight fractional matching](networkz/algorithms/max_weight_fractional_matching.py): by Oriya Alperin, Liel Vaknin and Amiel Lejzor.
+- [Social-aware coalition formation](networkz/algorithms/approximation/coalition_formation.py) - by Victor Kushnir.
+- [Minimum cut on a graph with node capacity](networkz/algorithms/max_flow_with_node_capacity.py): by Yuval Bubnovsky, Almog David and Shaked Levi.
+- [Several approximate solutions to the Firefighter problem](networkz/algorithms/approximation/firefighter_problem): by Yuval Bubnovsky, Almog David and Shaked Levi.
 
 ## Installation
 
@@ -16,10 +16,10 @@ pip install networkz
 
 This installs the latest version of networkx, and the new algorithms added in networkz.
 
-
 ## Usage
 
 ### Rank Maximal Matching
+
 A rank-maximal matching is a matching that maximizes the number of agents who are matched to their 1st priority; subject to that, it maximizes the number of agents matched to their 2nd priority; and so on.
 
 ```python
@@ -34,8 +34,8 @@ print(matching)
 
 See [demo website](https://rmm.csariel.xyz/) for more information.
 
-
 ### Maximum-Weight Fractional Matching
+
 Maximum-weight fractional matching is a graph optimization problem where the goal is to find a set of edges with maximum total weight, allowing for fractional inclusion of edges.
 
 ```python
@@ -48,6 +48,7 @@ print(F)
 ```
 
 ### Approximating The Fire-Fighter Problem
+
 The Firefighter problem models the case where a diffusive process such as an infection (or an idea, a computer virus, a fire) is spreading through a network, and our goal is to contain this infection by using targeted vaccinations.
 
 Networkz implements several algorithms to approximate solutions for the fire-fighter problems in 2 models: spreading & non-spreading, where the virus/fire always spreads but the spread of vaccination is dependant on the model. Under each such model, we are intrested in two problem types: MaxSave (save as many nodes from the target list given a budget) and MinBudget (What is the minimum budget needed to save all of the node target list)
@@ -55,22 +56,23 @@ Networkz implements several algorithms to approximate solutions for the fire-fig
 ```python
 import networkz as nx
 G = nx.DiGraph()
-G.add_nodes_from([0,1,2,3,4,5,6], status="vulnerable")
+G.add_nodes_from([0,1,2,3,4,5,6])
 G.add_edges_from([(0,1),(0,2),(1,2),(1,4),(2,3),(2,6),(3,5)])
 
-strategy, saved_nodes = nx.spreading_maxsave(G, budget = 1, source = 0, targets = [1,2,3,4,5,6]) 
+strategy, saved_nodes = nx.spreading_maxsave(G, budget = 1, source = 0, targets = [1,2,3,4,5,6])
 # Will return ([(2, 1), (4, 2)], {2, 3, 4, 5, 6})
 
-min_budget, strategy = nx.spreading_minbudget(G, source = 0,targets = [1,2,3,4,5,6]) 
+min_budget, strategy = nx.spreading_minbudget(G, source = 0,targets = [1,2,3,4,5,6])
 min_budget, strategy = nx.non_spreading_minbudget(G, source = 0,targets = [1,2,3,4,5,6])
 # Both will return (2, [(1, 1), (2, 1)])
 ```
 
 Another algorithm which is implemented in networkz is MinBudget in a non-spreading model (vaccine doesn't spread), running on a directed-layered network graph:
+
 ```python
 import networkz as nx
 G = nx.DiGraph()
-G.add_nodes_from([0,1,2,3,4,5], status="vulnerable")
+G.add_nodes_from([0,1,2,3,4,5])
 G.add_edges_from([(0,1),(0,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,5),(4,5)])
 
 # The algorithm will check if this is actually a directed-layered network graph
@@ -83,7 +85,7 @@ The library also implements two local-search based heuristic algorithms (MaxSave
 ```python
 import networkz as nx
 G = nx.DiGraph()
-G.add_nodes_from([0, 1, 2, 3], status="vulnerable")
+G.add_nodes_from([0, 1, 2, 3])
 G.add_edges_from([(0, 1), (0, 2), (1, 2), (1, 3)])
 strategy, saved_nodes = nx.heuristic_maxsave(G, budget = 1, source = 0, targets = [1, 2, 3], spreading = False) # ([(1, 1)], {1, 3})
 min_budget, strategy = nx.heuristic_minbudget(G, source = 0, targets = [1, 2, 3], spreading = True) # (2, [(1, 1), (2, 1)])
@@ -95,14 +97,8 @@ See the [algorithms in actions](https://the-firefighters.github.io/WebsiteGit/) 
 
 (TODO)
 
-
 ## Contribution
 
 Any additions or bug-fixes to `networkx` should first be submitted there, according to the [NetworkX Contributor Guide](https://github.com/networkx/networkx/blob/main/CONTRIBUTING.rst).
 
 If the pull-request is not handled, you are welcome to submit it here too.
-
-
-
-
-
