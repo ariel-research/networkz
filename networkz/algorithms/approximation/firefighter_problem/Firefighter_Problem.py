@@ -26,20 +26,8 @@ import logging
 from networkz.algorithms.max_flow_with_node_capacity import min_cut_with_node_capacity
 from networkz.algorithms.approximation.firefighter_problem.Utils import *
 
-def setup_logger(logger):
-    logger.setLevel(logging.DEBUG)
-    
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG)
-    
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    console_handler.setFormatter(formatter)
-    
-    logger.addHandler(console_handler)
-    return logger
 
-logger = logging.getLogger('firefighter_problem_main')
-
+logger = logging.getLogger(__name__)
 
 def spreading_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, stop_condition=None) -> tuple[list, set]:    
     """
@@ -339,12 +327,10 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
        logger.error("The graph is not a DAG graph, thus cannot run the algorithm")
        return
     
-    #display_graph(Graph)
     logger.info(f"Starting the non_spreading_dirlaynet_minbudget function with source node {source} and targets: {targets}")
 
     layers = adjust_nodes_capacity(Graph, source)
     G = create_st_graph(Graph, targets, 't')
-    #display_graph(G)
     G_reduction_min_cut = min_cut_with_node_capacity(G, source=source, target='t')
     N_groups = min_cut_N_groups(G_reduction_min_cut,layers)
     vacc_matrix = calculate_vaccine_matrix(layers, N_groups)
@@ -400,7 +386,6 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     logger.info(f"Starting the heuristic_maxsave function with source node {source}, budget {budget}, targets: {targets}, and spreading: {spreading}")
 
     clean_graph(Graph)
-    #display_graph(Graph)
     local_targets = targets.copy()
     infected_nodes = []
     vaccinated_nodes = []
@@ -409,7 +394,6 @@ def heuristic_maxsave(Graph:nx.DiGraph, budget:int, source:int, targets:list, sp
     can_spread = True
     Graph.nodes[source]['status'] = Status.INFECTED.value
     infected_nodes.append(source)
-    #display_graph(Graph)
     time_step = 1
 
     while can_spread:
