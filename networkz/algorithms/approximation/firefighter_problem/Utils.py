@@ -19,7 +19,6 @@ Shaked Levi
 
 import networkx as nx
 import networkx.algorithms.connectivity as algo 
-import matplotlib.pyplot as plt
 import numpy as np
 from enum import Enum
 import copy
