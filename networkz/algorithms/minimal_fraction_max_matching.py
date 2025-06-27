@@ -1,5 +1,3 @@
-"""Functions for computing and verifying matchings in a graph."""
-
 from itertools import combinations, repeat
 from typing import Any, Dict, List, Optional, Tuple, Union
 import networkx as nx
@@ -10,15 +8,7 @@ __all__ = [
     "minimal_fraction_max_matching"
 ]
 
-# ---------------------------------------------------------------------------
-# Logging setup
-# ---------------------------------------------------------------------------
-logging.basicConfig(level=logging.DEBUG, force=True,  # force = reconfigure
-                    format="%(levelname)s | %(name)s | %(message)s",
-                    )
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG) 
-
 
 @not_implemented_for("multigraph")
 @not_implemented_for("directed")

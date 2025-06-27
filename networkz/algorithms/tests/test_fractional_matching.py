@@ -3,7 +3,7 @@ import pulp
 
 import pytest
 import networkx as nx
-from networkz.algorithms.matching import minimal_fraction_max_matching
+from networkz.algorithms.minimal_fraction_max_matching import minimal_fraction_max_matching
 
 #1 
 def test_empty_graph():
