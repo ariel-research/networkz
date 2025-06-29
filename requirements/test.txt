@@ -1,2 +1,2 @@
 networkx[test]
-pulp
+pulp>=2.8
