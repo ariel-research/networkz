@@ -1,5 +1,3 @@
-from itertools import combinations, repeat
-from typing import Any, Dict, List, Optional, Tuple, Union
 import networkx as nx
 from networkx.utils import not_implemented_for
 import logging 
@@ -78,8 +76,8 @@ class FractionalMatchingSolver:
         # These will be initialized in each solve iteration
         self.labels = {}
         self.preds = {}
-    
-    def solve(self) -> Dict[Tuple[Any, Any], float]:
+
+    def solve(self):
         """Find a maximum fractional matching."""
         # Main loop: keeps trying to augment the matching until no further improvement
         while True:
@@ -152,7 +150,7 @@ class FractionalMatchingSolver:
                 self.preds[node] = None
         log.debug("Labels initialized: %s \n finshed the initilization", self.labels)
 
-    def _edge_scan(self) -> Optional[Tuple[Any, Any]]:
+    def _edge_scan(self):
         """
         Step 2 (Edge scan).
         Scan every edge [u,v] with u labelled "+". 
@@ -186,7 +184,7 @@ class FractionalMatchingSolver:
         # No augmenting structure found
         return None
     # Helper function to build the cycle
-    def _build_cycle(self,path_u: list[Any], path_v: list[Any]) -> list[Any]:
+    def _build_cycle(self,path_u, path_v) :
         """
         Return the ordered list of vertices that form the simple cycle
         u → ... → v → u (edge v-u closes it).
@@ -204,7 +202,7 @@ class FractionalMatchingSolver:
         cycle = path_u[:idx_u + 1] + list(reversed(path_v[:idx_v]))
         return cycle            # starts with u, ends with v
 
-    def _augment(self, u: Any, v: Any) -> None:
+    def _augment(self, u, v) -> None:
         """
         Step 3 (Augment).
         Trace back from u and v via preds to their respective unsaturated roots,
@@ -275,7 +273,7 @@ class FractionalMatchingSolver:
                 self.x[(b, a)] = self.x[(a, b)]
 
     
-    def _label_or_augment(self, u: Any, v: Any) -> None:
+    def _label_or_augment(self, u, v) -> None:
         """
         Step 4 (Label or augment).
         If v is saturated but has an incident edge j with x[j]==1, then
