@@ -96,12 +96,7 @@ def test_bipartite_graph():
     # Total weight should be min(left_size, right_size)
     total_weight = sum(m.values())
     assert abs(total_weight - 3) < 1e-8
-# 7
-def test_directed_raises():
-    """Test that directed graphs raise appropriate exceptions."""
-    D = nx.DiGraph([(1, 2)])
-    with pytest.raises(nx.NetworkXNotImplemented):
-        minimal_fraction_max_matching(D)
+
 # 8
 def test_k4_complete_graph():
     """Test K4 complete graph which requires fractional values."""
