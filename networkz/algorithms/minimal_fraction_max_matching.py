@@ -1,5 +1,4 @@
 import networkx as nx
-from networkx.utils import not_implemented_for
 import logging 
 
 __all__ = [
@@ -8,9 +7,6 @@ __all__ = [
 
 log = logging.getLogger(__name__)
 
-@not_implemented_for("multigraph")
-@not_implemented_for("directed")
-@nx._dispatchable
 def minimal_fraction_max_matching(G: nx.Graph):
     """Find a maximum fractional matching in the graph with the minimum 0.5 edges.
 
