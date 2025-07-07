@@ -7,6 +7,7 @@ NetworkZ is a library of graph algorithms in Python. It is an extension of the [
 - [Social-aware coalition formation](networkz/algorithms/approximation/coalition_formation.py) - by Victor Kushnir.
 - [Minimum cut on a graph with node capacity](networkz/algorithms/max_flow_with_node_capacity.py): by Yuval Bubnovsky, Almog David and Shaked Levi.
 - [Several approximate solutions to the Firefighter problem](networkz/algorithms/approximation/firefighter_problem): by Yuval Bubnovsky, Almog David and Shaked Levi.
+- [Minimal fraction maximum matching](networkz/algorithms/minimal_fraction_max_matching.py): by Roi Sibony.
 
 ## Installation
 
@@ -92,6 +93,25 @@ min_budget, strategy = nx.heuristic_minbudget(G, source = 0, targets = [1, 2, 3]
 ```
 
 See the [algorithms in actions](https://the-firefighters.github.io/WebsiteGit/) for more information and a virtual sandbox to run and observe the algirithms.
+
+### Minimal Fraction Maximum Matching
+
+A fractional matching is a generalization of traditional matching where each edge can have a value of 0, 0.5, or 1, with the constraint that the sum of edge values incident to any vertex cannot exceed 1. The minimal fraction maximum matching algorithm finds a maximum fractional matching that minimizes the number of edges with value 0.5.
+
+```python
+import networkz as nz
+G = nz.Graph()
+G.add_nodes_from([1, 2, 3, 4])
+G.add_edges_from([(1, 2), (1, 3), (2, 3), (3, 4)])
+matching = nz.minimal_fraction_max_matching(G)
+print(matching)  # {(1, 2): 1, (3, 4): 1}
+
+# Triangle example (requires fractional values)
+G = nz.Graph([(1, 2), (1, 3), (2, 3)])
+matching = nz.minimal_fraction_max_matching(G)
+print(matching)  # {(1, 2): 0.5, (1, 3): 0.5, (2, 3): 0.5}
+```
+See the [AlgorithmWebSite](https://roisi20041.csariel.xyz) for online use of the algorithm on a given/random graph.
 
 ### Social-Aware Coalition Formation
 
