@@ -25,7 +25,7 @@ This corresponds to the contiguous oriented labeling definition from the paper:
 """
 
 import logging
-from typing import Any, Optional
+from typing import Any, Optional, Tuple, List
 
 import networkz as nx
 
@@ -36,7 +36,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-def find_uv_to_make_bridgeless(G: nx.Graph) -> tuple | None:
+def find_uv_to_make_bridgeless(G: nx.Graph) -> Optional[Tuple]:
     """
     Find vertices u and v such that adding edge (u,v) makes the graph G bridgeless.
 
@@ -88,7 +88,7 @@ def find_uv_to_make_bridgeless(G: nx.Graph) -> tuple | None:
     return None
 
 
-def contiguous_oriented_labeling(G: nx.Graph) -> list[tuple[int, Any, Any]] | None:
+def contiguous_oriented_labeling(G: nx.Graph) -> Optional[List[Tuple[int, Any, Any]]]:
     """
     Create a contiguous oriented labeling for an almost bridgeless graph.
 
@@ -422,7 +422,7 @@ def verify_contiguous_labeling(
     return True
 
 
-def show_labeling(labeling: list[tuple[int, Any, Any]] | None) -> None:
+def show_labeling(labeling: Optional[List[Tuple[int, Any, Any]]]) -> None:
     """
     Print a human-readable representation of the edge labeling.
 
