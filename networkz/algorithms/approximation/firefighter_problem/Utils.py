@@ -19,7 +19,6 @@ Shaked Levi
 
 import networkx as nx
 import networkx.algorithms.connectivity as algo 
-import numpy as np
 from enum import Enum
 import copy
 import logging
@@ -568,7 +567,7 @@ def min_cut_N_groups(min_cut_nodes: set, layers: list) -> dict:
     return groups
 
 
-def calculate_vaccine_matrix(layers: list, min_cut_nodes_grouped:dict) -> np.matrix: 
+def calculate_vaccine_matrix(layers: list, min_cut_nodes_grouped:dict): 
     """
     Calculate the vaccine matrix based on the calculation in the article at the DirLayNet algorithm section.
 
@@ -588,6 +587,8 @@ def calculate_vaccine_matrix(layers: list, min_cut_nodes_grouped:dict) -> np.mat
     --------
     
     """
+    import numpy as np
+
     logger.info(f"Calculating the Vaccine Matrix...")
 
     matrix_length = max(min_cut_nodes_grouped.keys()) 
@@ -602,7 +603,7 @@ def calculate_vaccine_matrix(layers: list, min_cut_nodes_grouped:dict) -> np.mat
     return matrix
 
 
-def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
+def matrix_to_integers_values(matrix):
     """
     Convert a matrix with floating-point values to a matrix with integer values while 
     preserving the row and column sums.
@@ -618,6 +619,7 @@ def matrix_to_integers_values(matrix: np.matrix) -> np.matrix:
         Matrix with integer values where the row and column sums are adjusted to match
         the original matrix as closely as possible.
     """
+    import numpy as np
 
     logger.info("Converting the matrix to integer values..")
 
@@ -679,7 +681,7 @@ def min_budget_calculation(matrix: list) -> int:
     logger.info(f"Min budget needed to save the target nodes: {min_budget}")
     return min_budget
 
-def dirlay_vaccination_strategy(vacc_matrix: np.matrix, ni_groups: dict) -> list:
+def dirlay_vaccination_strategy(vacc_matrix, ni_groups: dict) -> list:
     """
     Determines a feasible vaccination strategy given the vaccine matrix and the nodes from each layer.
 

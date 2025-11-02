@@ -1,6 +1,3 @@
-import numpy as np
-from scipy.optimize import linprog
-
 import networkz as nx
 from networkz import incidence_matrix
 
@@ -110,6 +107,8 @@ def maximum_weight_fractional_matching(G: nx.Graph, weight="weight", **linprog_o
     ----------
     https://en.wikipedia.org/wiki/Fractional_matching
     """
+    import numpy as np
+    from scipy.optimize import linprog
 
     if G.number_of_nodes() == 0 or G.number_of_edges() == 0:
         return dict()

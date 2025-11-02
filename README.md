@@ -8,6 +8,8 @@ NetworkZ is a library of graph algorithms in Python. It is an extension of the [
 - [Minimum cut on a graph with node capacity](networkz/algorithms/max_flow_with_node_capacity.py): by Yuval Bubnovsky, Almog David and Shaked Levi.
 - [Several approximate solutions to the Firefighter problem](networkz/algorithms/approximation/firefighter_problem): by Yuval Bubnovsky, Almog David and Shaked Levi.
 - [Minimal fraction maximum matching](networkz/algorithms/minimal_fraction_max_matching.py): by Roi Sibony.
+- [Contiguous oriented labeling](networkz/algorithms/contiguous_labeling.py): by Ghia Serhan.
+
 
 ## Installation
 

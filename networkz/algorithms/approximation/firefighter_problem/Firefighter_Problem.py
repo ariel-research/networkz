@@ -19,7 +19,6 @@ Shaked Levi
 """
 
 import networkx as nx
-import numpy as np
 import networkx.algorithms.connectivity as algo 
 import math
 import logging
@@ -321,6 +320,7 @@ def non_spreading_dirlaynet_minbudget(Graph:nx.DiGraph, source:int, targets:list
     >>> non_spreading_dirlaynet_minbudget(G4,0,[1,2,3,4,5])
     (2, [(1, 1), (2, 1)])
     """
+    import numpy as np
 
     validate_parameters(Graph, source, targets)
     if not is_dag(Graph):
